@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>字符编码 | Poxi哥的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="从刚接触计算机理论起，就被灌输这是一台只认识0、1的机器，数字、字符串、声音、图像、视频等都可以在计算机中表示，这就是所谓的数字化吧。 大于0、1的整数表示既然说到了，字符编码，想必已经理解了这个问题只有0、1怎么表示2、3、4这些数字呢？，表示如下1234560000 -&amp;gt; 00001 -&amp;gt; 10010 -&amp;gt; 20011 -&amp;gt; 30100 -&amp;gt; 4... 采用进位使">
+<meta name="keywords" content="编码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="字符编码">
+<meta property="og:url" content="http://blog.ouronghui.com/2017/06/21/字符编码/index.html">
+<meta property="og:site_name" content="Poxi哥的博客">
+<meta property="og:description" content="从刚接触计算机理论起，就被灌输这是一台只认识0、1的机器，数字、字符串、声音、图像、视频等都可以在计算机中表示，这就是所谓的数字化吧。 大于0、1的整数表示既然说到了，字符编码，想必已经理解了这个问题只有0、1怎么表示2、3、4这些数字呢？，表示如下1234560000 -&amp;gt; 00001 -&amp;gt; 10010 -&amp;gt; 20011 -&amp;gt; 30100 -&amp;gt; 4... 采用进位使">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-22T06:09:17.211Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="字符编码">
+<meta name="twitter:description" content="从刚接触计算机理论起，就被灌输这是一台只认识0、1的机器，数字、字符串、声音、图像、视频等都可以在计算机中表示，这就是所谓的数字化吧。 大于0、1的整数表示既然说到了，字符编码，想必已经理解了这个问题只有0、1怎么表示2、3、4这些数字呢？，表示如下1234560000 -&amp;gt; 00001 -&amp;gt; 10010 -&amp;gt; 20011 -&amp;gt; 30100 -&amp;gt; 4... 采用进位使">
+  
+    <link rel="alternate" href="/atom.xml" title="Poxi哥的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Poxi哥的博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">种一棵树最好的时间是十年前，其次是现在。</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.ouronghui.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-字符编码" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/06/21/字符编码/" class="article-date">
+  <time datetime="2017-06-21T02:31:46.000Z" itemprop="datePublished">2017-06-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      字符编码
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>从刚接触计算机理论起，就被灌输这是一台只认识0、1的机器，数字、字符串、声音、图像、视频等都可以在计算机中表示，这就是所谓的数字化吧。</p>
+<h3 id="大于0、1的整数表示"><a href="#大于0、1的整数表示" class="headerlink" title="大于0、1的整数表示"></a>大于0、1的整数表示</h3><p>既然说到了，字符编码，想必已经理解了这个问题<code>只有0、1怎么表示2、3、4这些数字呢？</code>，表示如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">0000 -&gt; 0</span><br><span class="line">0001 -&gt; 1</span><br><span class="line">0010 -&gt; 2</span><br><span class="line">0011 -&gt; 3</span><br><span class="line">0100 -&gt; 4</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<p>采用进位使用多个bit位来表示就可以了，小数的表示这里就不展开说了，有兴趣的可以从这里看。</p>
+<h4 id="TODO-内存位置"><a href="#TODO-内存位置" class="headerlink" title="TODO: 内存位置,"></a>TODO: 内存位置,</h4><p>bit 单元格，内存里面茫茫一片的<code>01...</code>， 内存并不去区分这个<code>01</code>是<code>十进制1中的01</code>，还是<code>10进制2中的01</code>  ，怎么区分这个交由具体的程序去做， <a href="http://www.cnblogs.com/little-YTMM/p/5058354.html" target="_blank" rel="noopener">关于CPU位数，OS位数以及内存大小关系</a></p>
+<p>内存位置16进制编号，一个网格，网格上每个都有编号，用16进制表示，<code>0x....</code>表示</p>
+<p>程序指引 int a = 1; int b = 1</p>
+<h3 id="字符编码"><a href="#字符编码" class="headerlink" title="字符编码"></a>字符编码</h3><p>进入今天的正题<code>字符编码</code>，同样的问题<code>0、1怎么来表示字符呢，比如hello、你好？</code></p>
+<p><strong>抽象的字符编码层面：把一个字符“编码”到一个数字</strong></p>
+<p><strong>具体的字符编码层面：把抽象层面的数字“编码”成最终的储存形式，明确是定长还是变长；定长的话是定几个字节；用变长的话有哪几种字节长度，具体如何实现；</strong></p>
+<h4 id="Unicode-与-UTF-X"><a href="#Unicode-与-UTF-X" class="headerlink" title="Unicode 与 UTF-X"></a>Unicode 与 UTF-X</h4><p><a href="http://naotu.baidu.com/file/91e22aa3101b248bb9fb207c7d878826" target="_blank" rel="noopener">脑图</a></p>
+<ul>
+<li>Unicode 只是符号集，规定了符号与二进制代码的关系，没有规定二进制代码应该如何存储</li>
+<li>UTF-X 根据Unicode来进行存储，涉及具体的编码; <ul>
+<li>最终的存储形式 定长还是变长；</li>
+<li>如果是变长有哪几种字节长度，具体如何实现；</li>
+</ul>
+</li>
+</ul>
+<p>一般来说，字符集(关系表) 与 具体实现的编码是，1对1的关系，像ASCII、GB2312(EUC-CN存储)等，但是 Unicode 与 UTF-X 是1对多的，UTF-X 有UTF-8、UTF-16、UTF-32等</p>
+<h4 id="Unicode-码点-code-point"><a href="#Unicode-码点-code-point" class="headerlink" title="Unicode 码点(code point)"></a>Unicode 码点(code point)</h4><ul>
+<li>码点格式：表现形式<code>U+[XX]XXXX</code>，X为16进制数字，<strong>4-6位表示</strong>。</li>
+<li>码点范围：码点范围: <code>U+0000~U+10FFFF</code>；两种理解思路:<ol>
+<li><code>U+10FFFF</code> 1*16^5 + 16^4 = 1114112</li>
+<li><code>U+10FFFF + 1 = U+110000</code>个，前一个1是后一个1的16倍，<code>(16+1) * 65536 = 1114112</code></li>
+</ol>
+</li>
+<li>17个面，每个面可表示65536个符<ul>
+<li>BMP(Basic Multilingual Plan 基本多语言平面) <a href="http://unifoundry.com/pub/unifont-7.0.03/unifont-7.0.03.bmp" target="_blank" rel="noopener">BMP字符集-鸟瀚图</a></li>
+<li>SP(Supplementary Plans 增补平面)</li>
+</ul>
+</li>
+</ul>
+<h4 id="编码单元-code-unit"><a href="#编码单元-code-unit" class="headerlink" title="编码单元 (code unit)"></a>编码单元 (code unit)</h4><p><code>UTF-X</code> 中<code>X</code>就代表了多少个比特位表示一个编码单元。<code>Unicode</code>码点最大<code>10FFFF</code>最大21位</p>
+<p>UTF-8: 8bit即单字节为1个编码单元，UTF-16: 16bit即2个字节为1个编码单元, UTF-32：32bit即4个字节为1个编码单元</p>
+<h4 id="定长编码-与-变长编码"><a href="#定长编码-与-变长编码" class="headerlink" title="定长编码 与 变长编码"></a>定长编码 与 变长编码</h4><p>定长编码：意味着这类编码使用固定长度的字节，如<code>ASCII</code>固定占1个字节长度、<code>UTF-32</code>固定占4个字节长度。特点：复杂度低，其存在的问题是<strong>定多长，定少了不够用，定多了浪费空间</strong></p>
+<p>变长编码：字符所占长度不固定，如<code>UTF-8</code>占1/2/3/4个字节长度、<code>UTF-16</code>占2/4个字节长度。特点：具有一定复杂度，其核心解决的问题是<strong>如何区分不同的变长字节</strong></p>
+<p>定长编码的读取我们好理解，一次读固定长度的字节，根据码表将二进制翻译字符显示即可；写入时根据字符翻译成二进制，不足固定长度，向前补0即可；</p>
+<p>那变长编码的读取和写入呢？</p>
+<h4 id="变长编码的实现一——UTF-8"><a href="#变长编码的实现一——UTF-8" class="headerlink" title="变长编码的实现一——UTF-8"></a>变长编码的实现一——UTF-8</h4><p><code>UTF-8</code>：<code>UTF-8</code>利用高位保留来做区分来解决上面提到的<strong>如何区分不同的变长字节</strong>问题，缺点就是减少了有效编码空间</p>
+<p>这种编码方式类似<code>前缀编码</code>：<strong>设计长短不等的编码，则必须是任一字符不是另一字符编码的前缀</strong> ,就像压缩算法中应用的<code>哈夫曼编码</code></p>
+<p><code>UTF-8</code>单个字节字符的字节<code>0开头</code>，<code>n</code>个字节的字符高字节是<code>n个1开头</code>，其中开头字节就像前缀一样。由于高位不同，<strong>多字节不会包含一字节的模式</strong>，0开头的字节不会出现在多字节字符编码中，二字节的模式不会出现在三字节模式中，也不会出现在四字节模式中；三字节的模式中也不会出现在四字节模式中；</p>
+<table>
+<thead>
+<tr>
+<th>UNICODE码点范围</th>
+<th>UTF-8</th>
+<th>UTF-8二进制</th>
+<th>有效编码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>U+0000~U+007F</td>
+<td>1字节</td>
+<td>0XXXXXXX</td>
+<td>2^7=128个(ASCII)</td>
+</tr>
+<tr>
+<td>U+0080~U+07FF</td>
+<td>2字节</td>
+<td>110XXXXX 10XXXXXX</td>
+<td>2^11=2048个</td>
+</tr>
+<tr>
+<td>U+0800~U+FFFF</td>
+<td>3字节</td>
+<td>1110XXXX 10XXXXXX 10XXXXXX</td>
+<td>2^16=65536个</td>
+</tr>
+<tr>
+<td>U+010000~U+10FFFF</td>
+<td>4字节</td>
+<td>11110XXX 10XXXXXX 10XXXXXX 10XXXXXX</td>
+<td>2^21=2097152个</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>UTF-8多字节二进制规则：<strong>首字节前n位为1，n+1位为0；后面字节前两位为0</strong></li>
+<li>UTF-8多(n)字节有效编码位：<code>(n*8)-(n+1+(n-1)*2)=5n+1</code></li>
+</ul>
+<p>上面有效编码可以看出来，ASCII段占1个字节、大多数字符是占1或者3个字节的，一些生僻极其罕见的才会占4个字节</p>
+<h4 id="变长编码的实现二——UTF-16"><a href="#变长编码的实现二——UTF-16" class="headerlink" title="变长编码的实现二——UTF-16"></a>变长编码的实现二——UTF-16</h4><p><code>UTF-16</code>: <code>UTF-16</code>是使用所谓的代理区来实现。从<a href="http://unifoundry.com/pub/unifont-7.0.03/unifont-7.0.03.bmp" target="_blank" rel="noopener">BMP字符集-鸟瀚图</a>可以看到<code>D8-D9</code>整行都是空，这块空白就是所谓的<strong>代理区(Surrogate Area)</strong>。</p>
+<p>代理区实现原理：我们来自己实现一种字符编码来体验下<code>代理区</code>吧</p>
+<p>大多数占2个字节，生僻极其罕见的占4个字节。</p>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><ul>
+<li><p>ASCII: 计算机早期应用，只在美国，33个计算机控制字符、33个英文标点字符、10个数字字符、52个大小写字母字符，33+33+10+52=128 用一个字节的后7位表示，还空闲一个高位<code>0XXX XXXX</code></p>
+</li>
+<li><p>EASCII: 计算机发展至欧洲，欧洲国家128个字符不够用，利用ASCII字节空闲的最高位扩展128个.</p>
+</li>
+<li><p>GB2312: 国标，每个汉字及符号以两个字节来表示，第一个字节为“高位字节”，第二个字节为“低位字节”</p>
+</li>
+<li><p>GBK: 国标扩展</p>
+</li>
+<li><p>EUC: EUC-CN ，Extended Unix Code，是一个使用8位编码来表示字符的方法</p>
+</li>
+<li><p>BIG5: 港澳台同胞</p>
+</li>
+<li><p>两个独立的尝试创立单一字符集的组织:</p>
+<ul>
+<li>国际标准化组织（ISO）</li>
+<li>由Xerox、Apple等软件制造商于1988年组成的统一码联盟</li>
+</ul>
+</li>
+<li><p>UNICODE: Unicode是Unicode Standard（Unicode标准）,定义了码点与字符的关系</p>
+</li>
+<li><p>ISO: 国际标准化组织 </p>
+</li>
+<li><p>UCS: <a href="https://zh.wikipedia.org/wiki/%E9%80%9A%E7%94%A8%E5%AD%97%E7%AC%A6%E9%9B%86" target="_blank" rel="noopener">通用字符集(Universal Character Set)</a>，由ISO制定的<code>ISO 10646</code>标准；</p>
+<ul>
+<li>UCS-4: <code>ISO 10646</code>标准定义了一个32位的编码形式，称作UCS-4。<a href="https://zh.wikipedia.org/wiki/UTF-32" target="_blank" rel="noopener">UTF-32</a>和UCS4能表示的字符是相同的。</li>
+<li>UCS-2: 类似<code>UCS-4</code>，使用16位的编码形式。<a href="https://zh.wikipedia.org/wiki/UTF-16" target="_blank" rel="noopener">UTF-16</a>可看成是UCS-2的父集</li>
+</ul>
+</li>
+<li><p>BOM: Byte Order Mark，UTF-8采用字节为编码单元，没有字节序问题，常见的是UTF-16的字节序问题。</p>
+<ul>
+<li>UTF-16LE, 小尾序，Little Endian，也叫小端序，这里的端是指末端的意思， BOM 标记 <code>FF EE</code>， 小的作为尾巴在后面。<code>windows txt 另存时的Unicde 为UTF-16LE</code></li>
+<li>UTF-16BE, 大尾序, Big  Endian，也叫大端序，这里的端也是指末端的意思，BOM 标记 <code>EE FF</code>， 大的作为尾巴在后面。<code>很多编码语言如java、javascript内码采用UTF-16BE</code></li>
+<li>另外UTF-32也有大端小端的问题</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2017/06/21/字符编码/" data-id="cjjwhr4y4004i8crjf7lnqb5g" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编码/">编码</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/06/21/java多线程补充-LockSupport类/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          java多线程补充-LockSupport类
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/06/15/java线程池实现原理分析/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">java线程池实现原理分析</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/">HTTP</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/通信/">通信</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/PostgreSQL/">PostgreSQL</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/">PostgreSQL</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/数据库/">数据库</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/">WEB</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/安全/">安全</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript语言/">javascript语言</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/英语/">英语</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计划/">计划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机基础/">计算机基础</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMD/">CMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CommonJS/">CommonJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript基础/">javascript基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/n2n/">n2n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/健身/">健身</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/协议/">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程-锁/">多线程 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/意志/">意志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/授权/">授权</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模块化/">模块化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码阅读/">源码阅读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/版本控制/">版本控制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编码/">编码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/英语/">英语</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计划/">计划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运动/">运动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CMD/" style="font-size: 10px;">CMD</a> <a href="/tags/Centos软件安装/" style="font-size: 15px;">Centos软件安装</a> <a href="/tags/CommonJS/" style="font-size: 10px;">CommonJS</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/PostgreSQL基础/" style="font-size: 15px;">PostgreSQL基础</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/javascript函数/" style="font-size: 15px;">javascript函数</a> <a href="/tags/javascript基础/" style="font-size: 15px;">javascript基础</a> <a href="/tags/n2n/" style="font-size: 10px;">n2n</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/健身/" style="font-size: 10px;">健身</a> <a href="/tags/协议/" style="font-size: 10px;">协议</a> <a href="/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/tags/多线程-锁/" style="font-size: 10px;">多线程 锁</a> <a href="/tags/安全/" style="font-size: 10px;">安全</a> <a href="/tags/意志/" style="font-size: 10px;">意志</a> <a href="/tags/授权/" style="font-size: 10px;">授权</a> <a href="/tags/模块化/" style="font-size: 10px;">模块化</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/源码阅读/" style="font-size: 10px;">源码阅读</a> <a href="/tags/版本控制/" style="font-size: 10px;">版本控制</a> <a href="/tags/编码/" style="font-size: 15px;">编码</a> <a href="/tags/编程/" style="font-size: 10px;">编程</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/运动/" style="font-size: 10px;">运动</a> <a href="/tags/阅读/" style="font-size: 10px;">阅读</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/07/22/大白话简记TCP/">大白话简记TCP</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/22/再理一遍OAuth2.0/">再理一遍OAuth2.0</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/22/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2018/03/01/搭建-ELK-日志中心/">搭建 ELK 日志中心</a>
+          </li>
+        
+          <li>
+            <a href="/2018/02/22/Spring-生命周期/">Spring 生命周期</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 orh<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

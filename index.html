@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Poxi哥的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Poxi哥的博客">
+<meta property="og:url" content="http://blog.ouronghui.com/index.html">
+<meta property="og:site_name" content="Poxi哥的博客">
+<meta property="og:locale" content="zh-CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Poxi哥的博客">
+  
+    <link rel="alternate" href="/atom.xml" title="Poxi哥的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Poxi哥的博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">种一棵树最好的时间是十年前，其次是现在。</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.ouronghui.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-大白话简记TCP" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/07/22/大白话简记TCP/" class="article-date">
+  <time datetime="2018-07-22T06:53:53.000Z" itemprop="datePublished">2018-07-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/计算机基础/">计算机基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/07/22/大白话简记TCP/">大白话简记TCP</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="ISO-定的-OSI-七层模型"><a href="#ISO-定的-OSI-七层模型" class="headerlink" title="ISO 定的 OSI 七层模型"></a>ISO 定的 OSI 七层模型</h4><h4 id="协议族五层"><a href="#协议族五层" class="headerlink" title="协议族五层"></a>协议族五层</h4><h4 id="TCP-生命周期"><a href="#TCP-生命周期" class="headerlink" title="TCP 生命周期"></a>TCP 生命周期</h4><p><img src="http://wx3.sinaimg.cn/mw690/929194b4gy1ffpbganvcij20ob0r40ut.jpg" alt="tcp连接生命周期"></p>
+<ul>
+<li><p><strong>对于建链接的3次握手</strong> 主要是初始化<code>Sequence Number</code>的初始值。通信的双方要互相知道对方初始化的<code>Sequence Number</code>(缩写<code>ISN</code>: <code>Initial Sequence Number</code>)，所以叫<code>SYN</code>,全称：Synchronize Sequence Number。这个同步序号作为此TCP连接后面数据通信的序号，以保证应用层能处理乱序、重复、丢失的问题。</p>
+</li>
+<li><p><strong>对于4次挥手</strong> 其实你仔细看是2次，因为TCP是全双工的，所以双方都会发出<code>FIN</code>、<code>ACK</code>一次请求和应答。只不过有一方是被动的，所以看上去就像是4次挥手。如果两边同时发出断开的请求，那就会进入到<code>CLOSING</code>的状态，然后到达<code>TIME_WAIT</code>状态。下图是双方同时段连接的示意图：</p>
+</li>
+</ul>
+<p><img src="http://wx1.sinaimg.cn/mw690/929194b4gy1ffpc8nbexoj20ii0emjs4.jpg" alt="同时发起断开请求"></p>
+<p>因为双方同时发起了<code>FIN</code>，都认为自己是<code>FIN发起的主动方</code>，各自都进入<code>FIN_WAIT_1</code>状态，都在等待对方<code>被动</code>发出<code>FIN</code>请求，同时双方都收到对方的<code>FIN</code>请求，于是各自应答对方<code>ACK</code>，对方进入<code>CLOSING</code>状态，这个<code>CLOSING</code>都是在等待前面提到<code>等待对方发出被动的FIN请求</code>，都在互相等待，那就像<code>死锁</code>了，这里的解决方案就是进入<code>CLOSING</code>状态时同时开启<code>TIME_WAIT</code>等待指定的时机后会自动进入<code>CLOSED</code>状态。</p>
+<p>下面我们用<code>电话通话</code>的例子来比拟下这里的建立连接3次握手，断开链接4次挥手。</p>
+<h5 id="打电话的3次握手"><a href="#打电话的3次握手" class="headerlink" title="打电话的3次握手"></a>打电话的3次握手</h5><blockquote>
+<p>A: 你听到我说话么？                  – 1. 发往<code>B</code>的一个握手请求。发出问题让对方回答，目的是为了验证自己说的话对方能听到，即验证<code>自己的话筒</code> -&gt; <code>对方的听筒</code>这条链路。</p>
+</blockquote>
+<blockquote>
+<p>B: 我听到你说话，你能听到我说话吗？    –2. 发往<code>A</code>的一个握手请求。回答对方的问题，让对方知道他的验证通过。自己再发出问题，目的是为了验证自己说的话对方能听到，也就是：<code>B的话筒</code> -&gt; <code>A的听筒</code>这条链路是通的。</p>
+</blockquote>
+<blockquote>
+<p>A: 我也能听到你说话                  – 3. 发往<code>B</code>的一个握手请求。回答<code>B</code>的问题，让<code>B</code>知道他说的话自己也能听到。</p>
+</blockquote>
+<h5 id="4次挥手挂电话"><a href="#4次挥手挂电话" class="headerlink" title="4次挥手挂电话"></a>4次挥手挂电话</h5><blockquote>
+<p>A: 我的话说完了，要挂电话了，你说完了么？ (发起断开 <code>A -&gt; B</code> 的请求)</p>
+</blockquote>
+<blockquote>
+<p>B: 好吧（应答下对方的挂掉意思本方已经收到, 这里意味着 <code>A -&gt; B</code> 不会再发起新的请求，只有应答）</p>
+</blockquote>
+<blockquote>
+<p>….</p>
+</blockquote>
+<blockquote>
+<p>B: 我也说完了，我也要挂电话了 （发起断开 <code>B -&gt; A</code>链路的请求）</p>
+</blockquote>
+<blockquote>
+<p>A: 好的 （应答对方，意味<code>B -&gt; A</code>的链路也断开了，整个连接完整断开）</p>
+</blockquote>
+<p>这里要解释的一点是，上面<code>B</code>的连在一起的两句话，为什么不能像建立连接时候的两句话再一次请求里一次说掉呢？ 因为<code>bye bye</code>前可能还有话正在说，而<code>hello</code>是对话的开始，之前没有别的话。</p>
+<h4 id="几个需要注意的事情"><a href="#几个需要注意的事情" class="headerlink" title="几个需要注意的事情"></a>几个需要注意的事情</h4><ul>
+<li><p><strong>关于建连接SYN超时</strong> 试想一下，如果<code>server</code>接到了<code>client</code>的<code>SYN</code>请求，然后应答了<code>ACK-SYN</code>后<code>client</code>掉线，<code>server</code>端没有收到<code>client</code>回来的<code>ACK</code>，那么连接处于一个中间的状态，既没成功，也没失败。于是<code>server</code>端如果在一定时间内没有收到<code>ACK</code>,<code>TCP</code>回重发<code>ACK-SYN</code>。在<code>Linux</code>下，默认重试次数是5次，5次重试的时间间隔分别是：<code>1s, 2s, 4s, 8s, 16s, 32s</code>,所以总共需要<code>1s+2s+4s+8s+16s+32s = 2^6 -1 = 63s</code>，<code>TCP</code>才会断开这个连接</p>
+</li>
+<li><p><strong>关于SYN Flood攻击</strong> 一些恶意的人就为此制造了<code>SYN Flood</code>攻击——给服务器发了一个<code>SYN</code>后就下线，于是服务器默认等63s才会断开连接，这样攻击者重复这个过程就可以把服务器<code>SYN连接队列</code>耗尽，让正常的连接请求不能处理。于是，<code>Linux</code>下给了一个叫<code>tcp_syncookies</code>的参数来应对这个事——当<code>SYN连接队列</code>满了以后，<code>TCP</code>会通过源地址端口、目标地址端口和时间戳打造出一个特别的<code>Sequence Number</code>发回去(又叫<code>cookie</code>)，如果是攻击者则不会有响应，如果是正常连接，则会把这个<code>SYN cookie</code>发回来，然后服务端可以通过<code>cookie</code>来建连接(即使你不在<code>SYN队列中</code>)，请注意<strong>请先千万别用<code>tcp_syncookies</code>来处理正常的大负载连接的情况</strong>。因为<code>syncookies</code>是妥协版的<code>TCP</code>协议，并不严谨。对于正常的请求有三个参数可供调整，第一个是：<code>tcp_synack_retries</code>可以减少重试次数；第二个是：<code>tcp_max_syn_backlog</code>，可以增大<code>SYN</code>连接数；第三个是：<code>tcp_abort_on_overflow</code> 处理不过来就直接拒绝连接。</p>
+</li>
+<li><p><strong>关于<code>ISN</code>的初始化</strong> <code>ISN</code>是不能用<code>hard code</code>的，不然会有问题——如果连接建立好始终使用<code>1</code>来作<code>ISN</code>,<code>client</code>发了<code>30</code>个<code>segment</code>过去，但是网络断了，于是<code>client</code>重连，又用<code>1</code>做<code>ISN</code>，但是之前连接的那些包到了，于是就被当成了新连接的包，此时，<code>client</code>的<code>Sequence Number</code>可能是<code>3</code>，而<code>server</code>端认为<code>client</code>的这个号是30了。全乱了。<a href="http://tools.ietf.org/html/rfc793" target="_blank" rel="noopener">RFC793</a>中说，<code>ISN</code>会和一个假的时钟绑在一起，这个时钟会在每<code>4微秒</code>对<code>ISN</code>做加一操作，知道超过<code>2^32</code>，又从<code>0</code>开始。这样，一个<code>ISN</code>的周期大约是<code>4.55个小时</code>。因为，我们假设我们的<code>TCP segment</code>在网络上的存货时间不会超过<code>Maximun Segment Lifetime</code>(MSL)，所以，只要<code>MSL</code>的值小于<code>4.55小时</code>，那么我们就不会重用到<code>ISN</code></p>
+</li>
+<li><p><strong>关于<code>MSL</code>和<code>TIME_WAIT</code></strong> 在<code>TCP</code>的状态图中，从<code>TIME_WAIT</code>状态到<code>CLOSED</code>状态，有一个超时设置是<code>2*MSL</code>(RFC793定义<code>MSL</code>为<code>分钟</code>,<code>Linux</code>设置为<code>30s</code>)，为什么要有<code>TIME_WAIT</code>，不直接转成<code>CLOSED</code>状体呢？主要有两个原因：1) <code>TIME_WAIT</code>确保有足够的时机让对方收到<code>ACK</code>，如果被动关闭的那方没有收到<code>ACK</code>，就会触发被动端重发<code>FIN</code>，一来一去正好<code>2个MSL</code>  2) 有足够的时间让这个连接不会跟后面的连接混在一起（你要知道，有些路由器会缓存<code>IP数据包</code>，如果连接被重用了，那么这些延迟收到的包就有可能会跟新连接混在一起）</p>
+</li>
+<li><p><strong>关于<code>TIME_WAIT</code>数量太多</strong> 从上面的描述我们可以知道，<code>TIME_WAIT</code>是一个很重要的状态，但是如果在大并发的短链接下，<code>TIME_WAIT</code>就会太多，这也会消耗很多系统资源。只要搜一下，就会发现多数方式会教你设置两个参数，一个<code>tcp_tw_reuse</code>，另一叫<code>tcp_tw_recycle</code>，这两个参数默认是关闭的后者<code>recycle</code>比前者更激进，<code>reuse</code>要温柔一些。另外，如果使用<code>tcp_tw_reuse</code>，必须设置<code>tcp_timestamps=1</code>，否则无效。这里，你一定要注意，<strong>打开这两个参数会有比较大的坑——可能会让<code>TCP</code>连接出一些诡异的问题</strong></p>
+<ul>
+<li>关于<code>tcp_tw_reuse</code> 官方文档上说<code>tcp_tw_reuse</code>加上<code>tcp_timestamps</code>可以保证协议角度上的安全，但是你需要<code>tcp_timestamps</code>在两端都被打开</li>
+<li>关于<code>tcp_tw_recycle</code> 如果<code>tcp_tw_recycle</code>打开的话，会假设对端开启了<code>tcp_timestamps</code>，然后回去比较时间戳，如果时间戳变大，就可以重用。但是，如果对端是一个<code>NAT</code>网络的话（如：一个公司只用一个IP出公网）或是对端的<code>IP</code>被另一台重用了，这个事就复杂了。建链接的<code>SYN</code>可能被直接丢掉（你可以看到<code>connnection time out</code>的错误）</li>
+<li>关于<code>tcp_max_tw_buckets</code> 这个是控制并发<code>TIME_WAIT</code>的数量，默认值是<code>180000</code>，如果超限，那么系统会把多的destory掉，然后在日志里打上警告（如：<code>time wait bucket table overflow</code>），官网文档说这个参数用来对抗<code>DDOS</code>攻击的。也说的<code>180000</code>默认值并不小。这个还要根据实际的情况考虑。</li>
+</ul>
+</li>
+</ul>
+<p><code>TIME_WAIT</code>意味是你主动断开连接的，如果对方断连接，那么这个破问题就是对方的了。另外如果你的服务器是<code>HTTP</code>服务器，那么设置一个<code>HTTP的KeepAlive</code>相当重要（浏览器会重用一个<code>TCP</code>连接处理多个<code>HTTP</code>请求），让客户端去断链接。</p>
+<h4 id="数据传输中的-Sequence-Number"><a href="#数据传输中的-Sequence-Number" class="headerlink" title="数据传输中的 Sequence Number"></a>数据传输中的 Sequence Number</h4><p>参考自：<a href="http://coolshell.cn/articles/11564.html" target="_blank" rel="noopener">TCP 的那些事儿</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2018/07/22/大白话简记TCP/" data-id="cjjwhr4y1004e8crj9lmgibtd" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/协议/">协议</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-再理一遍OAuth2.0" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/07/22/再理一遍OAuth2.0/" class="article-date">
+  <time datetime="2018-07-22T06:09:34.366Z" itemprop="datePublished">2018-07-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/WEB/">WEB</a>►<a class="article-category-link" href="/categories/WEB/安全/">安全</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/07/22/再理一遍OAuth2.0/">再理一遍OAuth2.0</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>OAuth在我印象中已经啃过几次了。大多数时候，好记性还是不如烂笔头，对自己的记忆力太过自信了，当时理解了，觉的妙，但是现在只记得一个妙字了，至于其它的已经忘的差不多了…</p>
+<p>所以最好趁自己刚理解的那一刻，赶紧的尽量用自己组织的语言记录下来。</p>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>首先，想到<code>OAuth 2.0</code>，脑海中先弹出<strong>三方交互</strong>的概念，三方即如下：</p>
+<ul>
+<li><strong>资源提供者</strong></li>
+<li><strong>用户(资源拥有者)</strong></li>
+<li><strong>获取资源者</strong></li>
+</ul>
+<p>在来挨个解释下，<strong>资源提供者</strong>，好比新浪微博提供了发微博、获取微博列表，百度网盘提供了存储文件、访问文件列表的服务，其中新浪微博、百度网盘都是资源的提供者。<strong>用户</strong>就是资源拥有者，具体的某条微博、网盘里的某个照片都是具体用户的，没有得到用户允许，资源提供者不可供其他应用使用。<strong>获取资源者</strong> 就是一些非资源提供者的应用想要访问这些资源，比如一款冲印照片的应用需要访问你网盘里的照片。</p>
+<p><code>资源提供者</code>、<code>获取资源者</code>、<code>用户(资源拥有者)</code>，为了引用方便，我们先将分别简称其为：<code>B1</code>、<code>B2</code>、<code>C</code>。站在<code>B1</code>的角度来说，它定义了OAuth服务，交互细节都有它来设计，整个流程都需要依赖它，其一般是拥有众多用户的高可用服务。对于<code>B2</code>来说，它“觊觎”<code>B1</code>庞大的用户群以及用户资源(为用户省心，避免再注册于在上传资源)，它的最终目的是通过<code>Access Token</code>拿到想要的资源。对于<code>C</code>来说，它其实既是<code>B1</code>的用户，也是<code>B2</code>的用户，<code>C</code>在整个过程中只需要选中同意还是不同意。</p>
+<p>搞清楚了这些概念后，如果你要做应用，最好确定下你是要做<strong>提供者的应用</strong> 还是<strong>获取者的应用</strong>，前者相当于是要在基于现有服务，整理好资源提供一整套<code>OAuth 2.0</code>的Server，后者作为一个<code>OAuth 2.0</code>的Client相对较为简单。</p>
+<h2 id="软件架构概念"><a href="#软件架构概念" class="headerlink" title="软件架构概念"></a>软件架构概念</h2><p>有了以上的概念我们就能从宏观上来理解为什么会有OAht2.0的存在。如果要从软件上来实现它，基于以上三者，我们还需要细分一下，如下：</p>
+<ul>
+<li>资源提供者<ul>
+<li><strong>HTTP service</strong>: HTTP服务提供商</li>
+<li><strong>Resource Server</strong>: 资源服务器，可能你需要整理归类下现有的资源，有的资源可能不需要列入资源服务器。比如<a href="http://open.weibo.com/apps/4307576/privilege" target="_blank" rel="noopener">新浪微博的接口分组</a></li>
+<li><strong>Authorization server</strong>: 认证服务，提供资源的授权服务</li>
+</ul>
+</li>
+<li>用户(资源拥有者)<ul>
+<li><strong>Resource Owner</strong>: 资源拥拥有者，用户</li>
+<li><strong>User Agent</strong>: 用户代理，这个就代表着用户，一般就是浏览器、操作界面。</li>
+</ul>
+</li>
+<li>获取资源者<ul>
+<li><strong>Third-part application</strong>： 第三方应用程序</li>
+</ul>
+</li>
+</ul>
+<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><ul>
+<li>作为第三方应用，避免注册环节，用微博、微信、QQ等登录/注册</li>
+<li>作为三方应用，访问用户的资源，比如分享微博，打印网盘照片等</li>
+</ul>
+<h2 id="运行流程"><a href="#运行流程" class="headerlink" title="运行流程"></a>运行流程</h2><p><code>OAuth 2.0</code>的运行流程如下：(referrence from <a href="https://www.rfc-editor.org/rfc/rfc6749.txt" target="_blank" rel="noopener">RFC-6749</a>)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">+--------+                               +---------------+</span><br><span class="line">|        |--(A)- Authorization Request -&gt;|   Resource    |</span><br><span class="line">|        |                               |     Owner     |</span><br><span class="line">|        |&lt;-(B)-- Authorization Grant ---|               </span><br><span class="line">|        |                               +---------------+</span><br><span class="line">|        |</span><br><span class="line">|        |                               +---------------+</span><br><span class="line">|        |--(C)-- Authorization Grant --&gt;| Authorization |</span><br><span class="line">| Client |                               |     Server    |</span><br><span class="line">|        |&lt;-(D)----- Access Token -------|               |</span><br><span class="line">|        |                               +---------------+</span><br><span class="line">|        |</span><br><span class="line">|        |                               +---------------+</span><br><span class="line">|        |--(E)----- Access Token ------&gt;|    Resource   </span><br><span class="line">|        |                               |     Server    |</span><br><span class="line">|        |&lt;-(F)--- Protected Resource ---|               |</span><br><span class="line">+--------+                               +---------------+</span><br></pre></td></tr></table></figure></p>
+<p>步骤如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(A) 用户打开客户端后，客户端要求用户授权</span><br><span class="line">(B) 用户同意给予客户端授权</span><br><span class="line">(C) 客户端使用上一步获得的授权，向认证服务器申请令牌。</span><br><span class="line">(D) 认证服务器对客户端进行认证后，确认无误，同意发放令牌</span><br><span class="line">(E) 客户端使用令牌，向资源服务器申请获取资源</span><br><span class="line">(F) 资源服务器确认令牌无误，同意向客户端开放资源</span><br></pre></td></tr></table></figure></p>
+<p>简单的来分析下，上面的流程是以请求为载体流转的，最终拿到Access token需要经过几个步骤，但是拿到的Access Token在失效前一直可以重复使用，也就是后面对资源的请求都是请求-应答这种方式。得到Access Token前花费两次“请求-响应”，一次是询问用户是否授权，另外一次是根据授权码请求得到Access Token。这一点与我们平时的普通web应用不同，平时web的认证只需要一次登录“请求-响应”，一般请求携带着用户名、密码，响应头里设置客户端sessionid至cookie。为什么前者需要两次，而后者只需要一次呢？因为后者服务端只需要验证用户名密码是否正确，而前者则需要转个弯，三方应用先向用户申请，申请同意过后再向资源提供的应用申请。</p>
+<h2 id="授权模式"><a href="#授权模式" class="headerlink" title="授权模式"></a>授权模式</h2><p>前面讲到三方应用要向用户申请授权，这个过程要怎么做才合适呢？很显然这个<strong>授权的界面</strong>不能由第三来做，不然就没一点意义了，这个授权的界面都是资源提供方来做的，一般在界面还会提示一些文字让用户确认该界面是资源官方提供的，比如新浪微博:<br><img src="http://wx4.sinaimg.cn/mw690/929194b4gy1fh6smtxhlsj20h00980t5.jpg" alt=""><br>这个提醒大多数普通用户是忽略的，因为现在也很少有黑客用这种方式用来盗取微博的密码了，不过这种方式在仿银行的网站上存在很多。</p>
+<p>客户端必须得到用户的授权（authorization grant），才能获取令牌（Access Token），OAuth2.0定义了四种授权方式。</p>
+<ul>
+<li>授权码模式 （authorization code）</li>
+<li>简化模式 （implicit）</li>
+<li>密码模式 （resource owner password credentials）</li>
+<li>客户端模式 （client credentials）</li>
+</ul>
+<h2 id="授权码模式"><a href="#授权码模式" class="headerlink" title="授权码模式"></a>授权码模式</h2><p>授权码模式（authorization code）是功能最完整、流程最严密的授权模式。它的特点是通过客户端的后台服务器，与“服务提供商”的认证服务器进行互动。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">+----------+</span><br><span class="line">| Resource |</span><br><span class="line">|   Owner  |</span><br><span class="line">|          |</span><br><span class="line">+----------+</span><br><span class="line">     ^</span><br><span class="line">     |</span><br><span class="line">    (B)</span><br><span class="line">+----|-----+          Client Identifier      +---------------+</span><br><span class="line">|         -+----(A)-- &amp; Redirection URI ----&gt;|               |</span><br><span class="line">|  User-   |                                 | Authorization |</span><br><span class="line">|  Agent  -+----(B)-- User authenticates ---&gt;|     Server    |</span><br><span class="line">|          |                                 |               |</span><br><span class="line">|         -+----(C)-- Authorization Code ---&lt;|               |</span><br><span class="line">+-|----|---+                                 +---------------+</span><br><span class="line">  |    |                                         ^      v</span><br><span class="line"> (A)  (C)                                        |      |</span><br><span class="line">  |    |                                         |      |</span><br><span class="line">  ^    v                                         |      |</span><br><span class="line">+---------+                                      |      |</span><br><span class="line">|         |&gt;---(D)-- Authorization Code ---------&apos;      |</span><br><span class="line">|  Client |          &amp; Redirection URI                  |</span><br><span class="line">|         |                                             |</span><br><span class="line">|         |&lt;---(E)----- Access Token -------------------&apos;</span><br><span class="line">+---------+       (w/ Optional Refresh Token)</span><br></pre></td></tr></table></figure></p>
+<p>执行步骤：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. 用户访问客户端，后者将其导向认证服务器 ----------------- 比如打开：https://passport.csdn.net/ ，点击“微博登录”，其链接导向的是：https://api.weibo.com/oauth2/authorize?client_id=2601122390&amp;response_type=code&amp;redirect_uri=https%3A%2F%2Fpassport.csdn.net%2Faccount%2Flogin%3Foauth_provider%3DSinaWeiboProvider</span><br><span class="line">2. 用户选择是否给客户端授权</span><br><span class="line">3. 假设用户选择了授权，认证服务器将用户导向至客户端事先指定的“重定向URI”（redirect URI），同时在URI后会附上一个授权码-----------------比如前面的新浪：点击授权，请求api.weibo/oauth2/autorize，响应“302”（重定向），响应头中的Location=https://passport.csdn.net/account/login?oauth_provider=SinaWeiboProvider&amp;code=fbfd1c75c3309bb653a7c0816f919f49 ，即重定向地址。</span><br><span class="line">4. 客户端根据“附带了授权码code的重定向URI”请求，即重定向的实现，客户端的后台服务器上向认证服务器申请令牌-token，这个请求-响应对于客户端与用户是不可见的</span><br><span class="line">5. 认证服务器对授权码和重定向URI确认无误后，向客户端发送访问令牌（access token）和更新令牌（refresh token）</span><br></pre></td></tr></table></figure></p>
+<p>看下上面的一些请求细节。<br>第一步，客户端导向认证服务器的URI的参数：</p>
+<ul>
+<li>clietn_id: 客户端ID，这个一般是三方应用向OAuth服务提供者申请得到的，签发后一般是固定不变的。</li>
+<li>response_type: 授权类型，必选项，此处固定值为code。</li>
+<li>redirect_uri: 表示重定向URI，可选项。</li>
+<li>scope: 申请的权限范围，可选项。</li>
+<li>state: 表示客户端当前状态，自定义之，认证服务器会原封不动的返回这个值。</li>
+</ul>
+<p>第二步，授权界面：</p>
+<ul>
+<li>用户如果在资源提供方还未进行过认证(登录)，那么需要用户先登录认证，会有用户名、密码等登录表单，登录通过后再是授权界面</li>
+</ul>
+<p>第三步，授权与否：</p>
+<ul>
+<li>前面的步骤的假设是，用户选择了授权，界面上有时会有“取消”按钮，当用户拒绝授权时也可以通过URI重定向通知到客户端用户的行为</li>
+</ul>
+<p>第四步，带授权码的URI重定向跳转，客户端的后台服务向认证服务器申请token</p>
+<ul>
+<li>授权码code，为了安全一般具有时效性，通常是10分钟，且使用一次后失效。该code与client_id是一一对应关系，即其他应用使用这个code是无效的，另外重定向的URI也是与之对应相对固定的。</li>
+<li>申请token的参数：（地址类似：POST //github.com/login/oauth/access_token）<ul>
+<li>grant_type：表示授权模式，必选项，此处为“authorization_code” （与之相呼应的是第一步请求里的 response_type=code）</li>
+<li>code：表示上一步获得的授权码，必选项</li>
+<li>redirect_uri：表示重定向URI，必选项，与第一步请求里的redirect_uri保持一致</li>
+<li>client_id：表示客户端ID，必选项</li>
+<li>client_secret：三方应用与OAuth服务商协商所得，注意保密，不要放置到客户端。（为什么不用上面的用户授权码code直接作为access token的原因其实也就在这里）</li>
+</ul>
+</li>
+</ul>
+<p>第五步，认证服务器检查token请求，响应参数如下：</p>
+<ul>
+<li>access_token：表示访问令牌</li>
+<li>token_type：表示令牌类型，可以是bearer或mac类型</li>
+<li>expires_in：表示过期时间，单位为秒。如果省略该参数，必须在其他地方设置过期时间</li>
+<li>refresh_token：表示更新令牌，用来获取下一次的访问令牌，可选项。</li>
+<li>scope：表示授权范围，如果与客户端申请的范围一致，可省略。</li>
+</ul>
+<h2 id="其他三种授权模式"><a href="#其他三种授权模式" class="headerlink" title="其他三种授权模式"></a>其他三种授权模式</h2><p>关于这三种模式，这里只会简单的记录下，如果需要详细了解，可以点文章末尾的链接去看阮一峰的文章。</p>
+<ul>
+<li>简化模式（implicit grant type）<ul>
+<li>其特点是<strong>跳过了授权码</strong>这个步骤，所有步骤在浏览器中完成。 ——<a href="https://segmentfault.com/q/1010000008974042" target="_blank" rel="noopener">疑问</a></li>
+</ul>
+</li>
+<li>密码模式（Resource Owner Password Credentials Grant）<ul>
+<li>用户向客户端提供用户名、密码</li>
+<li>客户端使用用户提交的信息，提交给认证服务器申请令牌 <strong>通常这个客户端必须是高度可信任的</strong>，不然会有泄密的可能。</li>
+</ul>
+</li>
+<li>客户端模式（Client Credentials Grant）<ul>
+<li>客户端使用自己的名义，而不是用户的名义，向认证服务器认证。其实整个过程不存在授权，只有一个认证，就是服务器认证客户端是可信客户端。</li>
+</ul>
+</li>
+</ul>
+<h2 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h2><p><a href="http://jinnianshilongnian.iteye.com/blog/2038646" target="_blank" rel="noopener">OAuth2集成——《跟我学Shiro》</a></p>
+<h2 id="关于安全"><a href="#关于安全" class="headerlink" title="关于安全"></a>关于安全</h2><p>从以上的实现机制，可以看出最终是为了得到<code>token</code>。其实这个<code>token</code>与平时web会话客户端的那个 <code>sessionid</code>的本质意义是一样的，都是用户的身份标识。<br>为了<code>sessionid</code>的安全我们一般会做两点，后台设置的response cookie是<code>httpOnly</code>的，也就是js不可读取保证客户端安全，另外就是使用<code>https</code>保证传输通道的安全。按照这个思路我们可以类比下这个<code>token</code>该怎么在安全方面有所保障。</p>
+<ul>
+<li>尽量保证token 不能被三方代码访问</li>
+<li>请求token IP的白名单</li>
+</ul>
+<p>安全问题，需要好好权衡，“三道安全门”你自己进门都会很困难，“一道安全门”足已，重要的是你要保护好自己的钥匙，插在门上不拔，再多安全门也没用。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>细节总难被记住，单个的web项目的身份认证只需要一个登录请求即可，而OAuth2.0涉及的是三方，会有两次请求，记忆的转弯点在这里，所以我的总结就是<strong>请求授权码，请求token</strong>。</p>
+<hr>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://www.barretlee.com/blog/2016/01/10/oauth2-introduce/" target="_blank" rel="noopener">小胡子哥——简述 OAuth 2.0 的运作流程</a></li>
+<li><a href="https://www.zhihu.com/question/20274730" target="_blank" rel="noopener">知乎——Oauth的access token 安全么?</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html" target="_blank" rel="noopener">阮一峰——理解OAuth 2.0</a></li>
+<li><a href="http://www.zhenchao.org/categories/protocol/" target="_blank" rel="noopener">小米-振超——指间生活——token类型、协议等</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2018/07/22/再理一遍OAuth2.0/" data-id="cjjwhr4xw00458crj8jbi5aby" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全/">安全</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/授权/">授权</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/07/22/hello-world/" class="article-date">
+  <time datetime="2018-07-22T05:38:51.936Z" itemprop="datePublished">2018-07-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/07/22/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2018/07/22/hello-world/" data-id="cjjwhr4x6002v8crj8o0c0ono" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-搭建-ELK-日志中心" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/03/01/搭建-ELK-日志中心/" class="article-date">
+  <time datetime="2018-03-01T00:47:40.000Z" itemprop="datePublished">2018-03-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/03/01/搭建-ELK-日志中心/">搭建 ELK 日志中心</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2018/03/01/搭建-ELK-日志中心/" data-id="cjjwhr4y7004m8crj38ny1qih" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Spring-生命周期" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/02/22/Spring-生命周期/" class="article-date">
+  <time datetime="2018-02-22T01:25:00.000Z" itemprop="datePublished">2018-02-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/02/22/Spring-生命周期/">Spring 生命周期</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="http://wx4.sinaimg.cn/large/929194b4gy1fooy17jd8aj21kw0qnteq.jpg" alt="Spring Bean 初始化时序图"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2018/02/22/Spring-生命周期/" data-id="cjjwhr4wy002h8crj503s7evn" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-n2n点对点通信" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/01/04/n2n点对点通信/" class="article-date">
+  <time datetime="2018-01-04T03:23:12.000Z" itemprop="datePublished">2018-01-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/04/n2n点对点通信/">n2n点对点通信</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="N2N介绍"><a href="#N2N介绍" class="headerlink" title="N2N介绍"></a>N2N介绍</h4><p>通过N2N即可组成局域网，在外面可以访问家里的路由器、机器。</p>
+<ul>
+<li>Supernode 中心节点，并不参与两台主机间直接通信, 只是起到媒人的作用。</li>
+<li>Edge 节点都会建立tun/tap虚拟网卡，用作n2n网络的入口，Edge节点就可以互通了。</li>
+</ul>
+<h4 id="V1-与-V2"><a href="#V1-与-V2" class="headerlink" title="V1 与 V2"></a>V1 与 V2</h4><p>n2n有V1和V2两个版本， 两个版本不兼容，据说V1的性能还略高于V2,V2是增加了一些安全相关的提升。</p>
+<p>所以我这里都是<strong>基于V1版本</strong>搭建的。</p>
+<h4 id="Linux-Supernode-的安装"><a href="#Linux-Supernode-的安装" class="headerlink" title="Linux Supernode 的安装"></a>Linux Supernode 的安装</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/meyerd/n2n</span><br><span class="line">$ <span class="built_in">cd</span> n2n/n2n_v1</span><br><span class="line">$ make</span><br><span class="line">$ make install 2&gt;&amp;1 | tee  make.log</span><br></pre></td></tr></table></figure>
+<p>启动：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ nohup supernode -l 86 -v -f &gt; supernode.log &amp;</span><br></pre></td></tr></table></figure>
+<p>#### </p>
+<h4 id="Ubuntu-Edge-的安装"><a href="#Ubuntu-Edge-的安装" class="headerlink" title="Ubuntu Edge 的安装"></a>Ubuntu Edge 的安装</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/meyerd/n2n</span><br><span class="line">$ <span class="built_in">cd</span> n2n/n2n_v1</span><br><span class="line">$ make</span><br><span class="line">$ sudo make install</span><br><span class="line">$ sudo su</span><br><span class="line">$ apt install uml-utilities</span><br><span class="line">$ tunctl -t tun0</span><br><span class="line">$ sudo edge -d n2n0 -c orh -k 123 -m c2:27:ad:05:b3:a5 -a 10.8.1.7 -l 104.128.82.194:86 -r -f</span><br></pre></td></tr></table></figure>
+<h4 id="Openwrt-Edge的安装"><a href="#Openwrt-Edge的安装" class="headerlink" title="Openwrt  Edge的安装"></a>Openwrt  Edge的安装</h4><p>这里我是在虚拟机中安装的<code>Openwrt</code>可以先下载虚拟机文件，虚拟机</p>
+<p><code>http://downloads.openwrt.org/attitude_adjustment/12.09/x86/generic/openwrt-x86-generic-combined-ext4.vdi</code></p>
+<p>安装与配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ opkg update</span><br><span class="line">$ opkg install n2n</span><br><span class="line">$ </span><br><span class="line">$ vim /etc/config/n2n</span><br><span class="line">$ option ipaddr           <span class="string">'10.2.5.1'</span></span><br><span class="line">$ option supernode        <span class="string">'104.128.82.194'</span></span><br><span class="line">$ option port             <span class="string">'86'</span></span><br><span class="line">$ <span class="comment"># 为自己的N2N网络组织机构取个名字</span></span><br><span class="line">$ option community        <span class="string">'orh'</span></span><br><span class="line">$ <span class="comment"># 其他设备要使用相同的组织机构名和密码才能加入</span></span><br><span class="line">$ option key              <span class="string">'123'</span></span><br><span class="line">$ option route            <span class="string">'1'</span></span><br></pre></td></tr></table></figure>
+<p>启用，启动、停止：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/n2n <span class="built_in">enable</span></span><br><span class="line">/etc/init.d/n2n start</span><br><span class="line">/etc/init.d/n2n stop</span><br></pre></td></tr></table></figure>
+<p>参考文章：</p>
+<ul>
+<li><a href="http://gohom.win/2016/09/03/n2n-p2pnet/" target="_blank" rel="noopener">P2P网络-n2n穿墙</a></li>
+<li><a href="https://wiki.openwrt.org/zh-cn/doc/techref/opkg" target="_blank" rel="noopener">OPKG包管理</a></li>
+<li><a href="http://openwrt.jaru.eu.org/chaos_calmer/ar71xx/packages/" target="_blank" rel="noopener">Openwrt离线包</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2018/01/04/n2n点对点通信/" data-id="cjjwhr4xh003f8crj3s4lb9d9" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/n2n/">n2n</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-关于那道Integer-1000-1000-返回false，100-100-返回-true的题目" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/10/25/关于那道Integer-1000-1000-返回false，100-100-返回-true的题目/" class="article-date">
+  <time datetime="2017-10-25T03:10:56.000Z" itemprop="datePublished">2017-10-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/25/关于那道Integer-1000-1000-返回false，100-100-返回-true的题目/">关于那道Integer: 1000 == 1000 返回false，100 == 100 返回 true的题目</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>前段时间看到了那篇<a href="http://mp.weixin.qq.com/s?__biz=MzUxOTMyMzE2Mg==&amp;mid=2247492934&amp;idx=1&amp;sn=81e40f81110d4239bd1bdfe28d51bc09&amp;source=41&amp;ascene=2&amp;devicetype=android-23&amp;version=26051035&amp;nettype=WIFI&amp;abtest_cookie=AgABAAgADAADAJ6GHgAKiB4AJIgeAAAA&amp;wx_header=1" target="_blank" rel="noopener">为什么1000 == 1000返回为False，而100 == 100会返回为True?</a></p>
+<h4 id="一、现象：主要代码如下，请先猜测-1、2的结果输出"><a href="#一、现象：主要代码如下，请先猜测-1、2的结果输出" class="headerlink" title="一、现象：主要代码如下，请先猜测 1、2的结果输出"></a>一、现象：主要代码如下，请先猜测 1、2的结果输出</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Integer a = 1000, b = 1000; </span><br><span class="line">System.out.println(a == b);//1</span><br><span class="line">Integer c = 100, d = 100; </span><br><span class="line">System.out.println(c == d);//2</span><br></pre></td></tr></table></figure>
+<p><strong>一般</strong>你会拿到结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">false</span><br><span class="line">true</span><br></pre></td></tr></table></figure></p>
+<p>这里我强调了是在<strong>一般情况下</strong>，原文中并没有写到是一般，我们不更改代码，第一个<code>a == b</code>结果也可能返回<code>true</code>，修改<code>jvm</code>参数配置就可以达到这种效果，文章的最后我提供了测试代码。</p>
+<p>其实出现不同的原因是在这里：</p>
+<ul>
+<li><code>Integer a = 100</code> ==&gt; 创建了<code>Integer</code>对象 <code>Integer.valueOf(i)</code>，方法经过判断会是下面两种情况的一种：<ol>
+<li><code>IntegerCache.cache[n]</code> </li>
+<li><code>new Integer(i)</code></li>
+</ol>
+</li>
+</ul>
+<p>会有两种情况：一种会新建对象，一种返回一个缓存的对象</p>
+<p><code>==</code> 用来比较值的，对象的值是否相等请使用 <code>obj.equals(o)</code>，这里两个<code>Integer</code>对象使用<code>==</code>来比较本身就是一种<strong>“不正当使用”</strong>，对象<code>==</code>取的是对象内存地址。</p>
+<p>下面我们看下这个<code>IntegerCache.cache</code>的缓存区间：</p>
+<ul>
+<li><code>cache[]</code>: <code>final int low = -128</code> ， <code>final int high</code>: <code>sun.misc.VM.getSavedProperty(&quot;java.lang.Integer.IntegerCache.high&quot;);</code> or <code>127</code></li>
+</ul>
+<h4 id="二、为什么默认是-128-127-呢？"><a href="#二、为什么默认是-128-127-呢？" class="headerlink" title="二、为什么默认是[-128...127]呢？"></a>二、为什么默认是<code>[-128...127]</code>呢？</h4><p>个人认为可能主要有以下两个原因：</p>
+<ul>
+<li>日常生活经常使用到的数字，比如年龄，成绩，物品个数等等</li>
+<li>“科学边界” 一个字节，即 <code>2^8</code>，256个数字，带上符号就是 [-128…127]</li>
+</ul>
+<h4 id="三、总结强调下"><a href="#三、总结强调下" class="headerlink" title="三、总结强调下"></a>三、总结强调下</h4><p>使用科学的方法来判断相等：</p>
+<ul>
+<li>值类型相等比较没得选 用 <code>==</code></li>
+<li>对象相等比较使用<code>.equals</code></li>
+</ul>
+<p>另外，如果你的程序比较特殊，有大量的 <code>&lt; 128</code> 或 <code>&gt; 127</code> 的数字存在，你可以尝试考虑调节下参数<code>java.lang.Integer.IntegerCache.high</code>，当然这是一种锱铢必较的手段，会带来一些交付上的问题，就是每个环境可能都要加上此配置，这里只是一种优化上的思路假设。</p>
+<h4 id="四、附加-测试"><a href="#四、附加-测试" class="headerlink" title="四、附加-测试"></a>四、附加-测试</h4><p><strong>测试 场景：1 千万的 Integer数组，将每个设值为[0, 1000]的随机整数，对比初始时间、各代空间占比</strong><br>总的对比结果如下（前者代表默认，后者代表–XX:AutoBoxCacheMax=1000）：</p>
+<ol>
+<li>申请1千万数组空间时间无差异，都是在 10ms 左右</li>
+<li>遍历设值初始值，前者会隐式的使用 new，耗时 3000ms左右，后者会隐式命中 cache，耗时 300ms, 相差10倍</li>
+<li>各空间使用对比<ul>
+<li>前者 eden 空间 使用比后者 eden 空间 大出 1倍</li>
+<li>前者 old 空间使用了 126M，后者没有使用 old空间</li>
+</ul>
+</li>
+</ol>
+<p>源码请看<a href="https://github.com/elegance/dev-demo/blob/master/java-demo/src/main/java/org/orh/basic/IntegerCacheTest.java" target="_blank" rel="noopener">这里</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2017/10/25/关于那道Integer-1000-1000-返回false，100-100-返回-true的题目/" data-id="cjjwhr4xv00418crj97m1ni9b" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/源码/">源码</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-再读数据结构" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/10/17/再读数据结构/" class="article-date">
+  <time datetime="2017-10-17T05:25:17.000Z" itemprop="datePublished">2017-10-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/数据结构/">数据结构</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/17/再读数据结构/">再读数据结构</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>再次读《大话数据结构》这本书，回过头再跟着书系统的走一遍，记录巩固下基础。</p>
+<h4 id="1-数据结构绪论"><a href="#1-数据结构绪论" class="headerlink" title="1. 数据结构绪论"></a>1. 数据结构绪论</h4><p>数据结构是相互之间存在一种或多种特定关系的数据元素集合。</p>
+<h5 id="1-1-基本概念与术语"><a href="#1-1-基本概念与术语" class="headerlink" title="1.1 基本概念与术语"></a>1.1 基本概念与术语</h5><ul>
+<li>数据： 描述客观事物的符号，是计算机中可以操作的对象。包括数值、字符、声音、图像、视频等等。</li>
+<li>数据元素：组成数据的、有一定意义的基本单位。如人类中，数据元素是人，畜类中 牛、马、羊都是数据元素。</li>
+<li>数据项：一个数据元素可以由若干个数据项组成。比如人这样数据元素，可以有眼、鼻、嘴、手等等这些数据项。<strong>数据项是数据不可分割的最小单位</strong>。在数据结构中，我们把数据项定义为最小单位，有助于更好的解决问题。</li>
+<li>数据对象：是性质相同的数据元素的集合，是数据的子集。</li>
+<li>数据结构：结构，简单的理解就是关系，即数据元素相互间关系形成的集合。</li>
+</ul>
+<h5 id="1-2-逻辑结构与物理结构"><a href="#1-2-逻辑结构与物理结构" class="headerlink" title="1.2 逻辑结构与物理结构"></a>1.2 逻辑结构与物理结构</h5><p><strong>物理结构是面向计算机的，逻辑机构是面向问题的。</strong> 其基本目标就是将数据及其逻辑关系存储到计算机的内存中。</p>
+<h6 id="1-2-1-物理结构"><a href="#1-2-1-物理结构" class="headerlink" title="1.2.1 物理结构"></a>1.2.1 物理结构</h6><p>数据在计算机内的存储形式，也称之为存储结构。</p>
+<ul>
+<li><p><strong>顺序存储</strong> : 数据元素存放在地址连续的储存单元中。<br><img src="http://wx2.sinaimg.cn/mw690/929194b4gy1fgmtzre5ouj20b402agm0.jpg" alt=""></p>
+</li>
+<li><p><strong>链式存储</strong>: 把数据元素存放在任意的存储单元里。数据元素的存储关系不能反映其逻辑关系，需要指针存放数据元素的地址。<br><img src="http://wx2.sinaimg.cn/mw690/929194b4gy1fgmu3lswuwj209207v74z.jpg" alt=""></p>
+</li>
+</ul>
+<h6 id="1-2-2-逻辑结构"><a href="#1-2-2-逻辑结构" class="headerlink" title="1.2.2 逻辑结构"></a>1.2.2 逻辑结构</h6><p>数据对象中数据元素之间的关系，逻辑结构分为以下四种：</p>
+<ul>
+<li><p><strong>集合结构</strong>：集合结构中的数据元素同属一个集合，他们之间没有任何关系。<br><img src="http://wx1.sinaimg.cn/mw690/929194b4gy1fgmu3m85mdj208b07uq3p.jpg" alt=""></p>
+</li>
+<li><p><strong>线性结构</strong>: 线性结构中的数据元素之间是一对一的关系。<br><img src="http://wx4.sinaimg.cn/mw690/929194b4gy1fgmu3ml3gfj207a05nq3a.jpg" alt=""></p>
+</li>
+<li><p><strong>树形结构</strong>: 树形结构中的数据元素是一对多的关系。<br><img src="http://wx4.sinaimg.cn/mw690/929194b4gy1fgmu3n1lylj208f05gjru.jpg" alt=""></p>
+</li>
+<li><p><strong>图形结构</strong>: 图形结构中的数据元素是多对多的关系。<br><img src="http://wx3.sinaimg.cn/mw690/929194b4gy1fgmu3nm4wjj207y06kt99.jpg" alt=""></p>
+</li>
+</ul>
+<p>另外，我们用示意图表示数据的逻辑结构时，要注意两点：</p>
+<ul>
+<li>每个数据元素看做一个节点，用圆圈表示</li>
+<li>元素间的逻辑关系用节点之间的连线表示，如果这个关系是有方向的，那么用带箭头连线表示</li>
+</ul>
+<h5 id="1-3-抽象数据类型"><a href="#1-3-抽象数据类型" class="headerlink" title="1.3 抽象数据类型"></a>1.3 抽象数据类型</h5><h6 id="1-3-1-数据类型"><a href="#1-3-1-数据类型" class="headerlink" title="1.3.1 数据类型"></a>1.3.1 数据类型</h6><p>数据类型是指一组性质相同的值的集合及定义在此集合上的一些操作的总称。</p>
+<p>我的理解中，数据类型分一下：</p>
+<ul>
+<li>计算机只认0、1数值类型</li>
+<li>编程语言既要面向计算机、又要面向开发人员，则基于0、1包装了便于开发使用的类型：整形、长整形、字符型、字符串等等</li>
+<li>开发人员基于开发语言为了满足业务需要，可能需要包装更多的数据类型</li>
+</ul>
+<h6 id="1-3-2-抽象数据类型"><a href="#1-3-2-抽象数据类型" class="headerlink" title="1.3.2 抽象数据类型"></a>1.3.2 抽象数据类型</h6><p>对已有的数据类型进行抽象，就有了抽象数据类型。<br><strong>抽象数据类型（Abstract Data Type, ADT）: 是指一个数学模型及定义在该模型上的一组操作</strong>，后面会用以下格式来表示抽象数据类型：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ADT 抽象数据类型名称</span><br><span class="line">DATA</span><br><span class="line">    数据元素之间逻辑关系的定义</span><br><span class="line">Operation</span><br><span class="line">    操作1</span><br><span class="line">        初始条件</span><br><span class="line">        操作结果描述</span><br><span class="line">    操作2</span><br><span class="line">        ...</span><br><span class="line">    操作n</span><br><span class="line">        ...</span><br><span class="line">endADT</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-算法"><a href="#2-算法" class="headerlink" title="2. 算法"></a>2. 算法</h4><h5 id="2-1-算法的定义"><a href="#2-1-算法的定义" class="headerlink" title="2.1 算法的定义"></a>2.1 算法的定义</h5><p>算法是解决特定问题求解步骤的描述，在计算机中表现为指令的有限序列，并且每条指令表示一个或多个操作。</p>
+<h5 id="2-2-算法的特性"><a href="#2-2-算法的特性" class="headerlink" title="2.2 算法的特性"></a>2.2 算法的特性</h5><p>五个基本特性：输入、输出、有穷性、确定性和可行性</p>
+<h5 id="2-3-算法效率的度量方法"><a href="#2-3-算法效率的度量方法" class="headerlink" title="2.3 算法效率的度量方法"></a>2.3 算法效率的度量方法</h5><h6 id="2-3-1-事后统计方法"><a href="#2-3-1-事后统计方法" class="headerlink" title="2.3.1 事后统计方法"></a>2.3.1 事后统计方法</h6><p>所谓“是骡子是马，拉出来溜溜”。比较容易想到的方法就是，通过对算法的数据测试，利用计算机的计时功能，来度量不同算法效率的高低，平常见到的<code>benchmark</code>就应该属于此类。</p>
+<h6 id="2-3-2-事前统计方法"><a href="#2-3-2-事前统计方法" class="headerlink" title="2.3.2 事前统计方法"></a>2.3.2 事前统计方法</h6><p>为了对算法的评判更加科学，计算机前辈们研究出一种叫做事前分析估算的方法。<strong>事前分析估算方法：在计算机程序编制之前，依据统计方法对算法进行估算</strong><br>如以下有两种方法实现的指定范围内的求和实现：<br>第一种算法：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i, sum = <span class="number">0</span>, n = <span class="number">100</span>;        <span class="comment">/* 执行 1 次 */</span></span><br><span class="line"><span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= n; i++) &#123;      <span class="comment">/* 执行 n+1 次 */</span></span><br><span class="line">    sum = sum + i;              <span class="comment">/* 执行 n 次 */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%d"</span>, sum);              <span class="comment">/* 执行 1 次*/</span></span><br></pre></td></tr></table></figure></p>
+<p>第二种算法：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> sum = <span class="number">0</span>, n = <span class="number">100</span>;           <span class="comment">/* 执行 1 次*/</span></span><br><span class="line">sum = (<span class="number">1</span> + n) * n/<span class="number">2</span>;            <span class="comment">/* 执行 1 次*/</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%d"</span>, sum);              <span class="comment">/* 执行 1 次*/</span></span><br></pre></td></tr></table></figure></p>
+<p>显然第一种算法执行了 <code>2n + 3</code>次，第二种算法是<code>3</code>次; 事实上两个算法的首、尾语句都是一样的，我们把循环看作一个整体，那么两个算法其实就是<code>n</code>次与<code>1</code>次的差距。算法好坏显而易见。</p>
+<h5 id="2-4-函数的渐进增长"><a href="#2-4-函数的渐进增长" class="headerlink" title="2.4 函数的渐进增长"></a>2.4 函数的渐进增长</h5><p><img src="http://wx3.sinaimg.cn/mw690/929194b4gy1fgn1bv8smqj20fx046mye.jpg" alt=""><br>随着n的增加，算法A比算法B越来越好(执行的次数比B少)。于是我们可以得出结论，算法A总体上要算法B。 此时我们给出这样的定义，输入规模n，在没有限制的情况下，只要超过一个数值N，这个函数总是大于另一个函数，我们称函数是渐进增长的。<br>从中可以发现，随着n的增大，后面的<code>+3</code>、<code>+1</code>其实不影响最终算法变化，所以，<strong>我们可以忽略这些加法常数</strong>。<br>我们来看第二个例子，算法C是<code>4n + 8</code>，算法D是<code>2n² + 1</code>:<br><img src="http://wx2.sinaimg.cn/mw690/929194b4gy1fgn1wgesojj20fq04pmyl.jpg" alt=""><br>对比可以看出：<strong>最高次项相乘的常数并不重要</strong></p>
+<p><strong>判断一个算法的效率时，函数中的常数和其他次要项常常可以忽略，而更应该关注主项(最高阶项)</strong></p>
+<h5 id="2-5-算法时间复杂度"><a href="#2-5-算法时间复杂度" class="headerlink" title="2.5 算法时间复杂度"></a>2.5 算法时间复杂度</h5><p>在进行算法分析时，语句总的执行次数T(n)是关于问题规模n的函数，进而分析T(n)随着n的变化情况并确定T(n)的数量。算法的时间复杂度，也就是算法的时间量度，记作：T(n)=O(f(n))。它表示随问题规模n的增大，算法执行时间的增长率和f(n)的增长率相同，称作算法的渐进时间复杂度，简称为时间复杂度。<br>用大写的<code>O()</code>来体现算法时间复杂度的记法，称之为<code>大O记法</code>。比如<code>O(n)</code>、<code>O(1)</code>、<code>O(n²)</code>我们取的非官方名称分别为：线性阶、常数阶、平方阶。</p>
+<h5 id="2-6-推导大O阶方法"><a href="#2-6-推导大O阶方法" class="headerlink" title="2.6 推导大O阶方法"></a>2.6 推导大O阶方法</h5><p>推导大O阶：</p>
+<ol>
+<li>用常数 1 取代运行时间中所有的加法常数</li>
+<li>在修改后的运行次数函数中，只保留最高阶</li>
+<li>如果最高阶存在且不为1，则去除与这个项相乘的常数</li>
+</ol>
+<h5 id="2-7-常见的时间复杂度"><a href="#2-7-常见的时间复杂度" class="headerlink" title="2.7 常见的时间复杂度"></a>2.7 常见的时间复杂度</h5><p><img src="http://wx3.sinaimg.cn/mw690/929194b4gy1fgqhynlnhuj208m05uq40.jpg" alt=""></p>
+<h4 id="3-线性表"><a href="#3-线性表" class="headerlink" title="3 线性表"></a>3 线性表</h4><p><strong>线性表：零个或多个数据元素的有限序列</strong><br>特点：</p>
+<ul>
+<li>序列，即元素间有顺序，若存在多个元素，则第一个元素无前驱，最后一个无后继，其他每个元素有且只有一个前驱和后继</li>
+<li>有限</li>
+</ul>
+<h5 id="3-1-线性表的抽象数据类型"><a href="#3-1-线性表的抽象数据类型" class="headerlink" title="3.1 线性表的抽象数据类型"></a>3.1 线性表的抽象数据类型</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ADT 线性表(List)</span><br><span class="line">Data</span><br><span class="line">    线性表的数据对象集合为&#123;a₁,a₂...an&#125;，每个元素的类型均为DataType。其中第一个元素除外，每一个元素有且只有一个直接前驱元素；最后一个元素除外，每一个元素有且只有一个直接后继元素。数据之间的关系是一对一。</span><br><span class="line">Operation</span><br><span class="line">    InitList(*L): 初始化操作，建立一个空的线性表 L。</span><br><span class="line">    ListEmpty(L): 若线性表为空，返回true，否则返回false。</span><br><span class="line">    ClearList(*L): 将线性表清空。</span><br><span class="line">    GetElem(L, i, *e): 将线性表L中的第i个元素返回给e。</span><br><span class="line">    LocateElem(L, e): 在线性表L中查找与给定值e相等的元素，如果查找成功，返回该元素在表中的序号表示成功；否则，返回0表示失败。</span><br><span class="line">    ListInsert(L*, i, e): 在线性表L中的第i个位置插入新元素e。</span><br><span class="line">    ListDelete(L*, i, *e): 删除线性表L中第i个位置的元素，并用e返回其值。</span><br><span class="line">    ListLength(L): 返回线性表L的元素个数。</span><br><span class="line">endADT</span><br></pre></td></tr></table></figure>
+<p>对于实际问题中涉及的更复杂的操作，完全可以基于以上的基本操作的组合来实现。</p>
+<h5 id="3-2-线性表的顺序存储结构"><a href="#3-2-线性表的顺序存储结构" class="headerlink" title="3.2 线性表的顺序存储结构"></a>3.2 线性表的顺序存储结构</h5><p>下面看一下线性表的两种物理存储结构的第一种，顺序存储结构：<strong>用一段连续的存储单元依次存储线性表的数据元素。</strong><br>顺序存储示意图：<br><img src="http://wx3.sinaimg.cn/mw690/929194b4gy1fgqj7mkv1hj20b901rt8p.jpg" alt=""><br>在内存中申请一段连续的地址，用来存储元素，那么这段地址长度意味着这个线性表的长度，实际使用个数代表元素实际长度。</p>
+<h6 id="3-2-1-顺序结构的插入与删除"><a href="#3-2-1-顺序结构的插入与删除" class="headerlink" title="3.2.1 顺序结构的插入与删除"></a>3.2.1 顺序结构的插入与删除</h6><p>排队插入示意图：<br><img src="http://wx2.sinaimg.cn/mw690/929194b4gy1fgqjl5xa81j20ce07n0uc.jpg" alt=""><br>插入算法思路：</p>
+<ul>
+<li>检查插入位置</li>
+<li>如果线性表长度大于等于数组长度，则抛出异常或动态增加容量(java ArrayList Arrays.copy 新开辟空间)</li>
+<li><strong>从最后元素向前遍历至第i个位置，分别将他们向后移动一位</strong> ——(插入位置的后面的元素都需要站起来往后挪位置)</li>
+<li>新元素插入位置i处</li>
+<li>表长加1</li>
+</ul>
+<p>删除示意图：<br><img src="http://wx4.sinaimg.cn/mw690/929194b4gy1fgqjl6i8dcj20eg08tmys.jpg" alt=""><br>删除算法思路：</p>
+<ul>
+<li>检查删除位置</li>
+<li>去除删除元素</li>
+<li><strong>从删除元素位置开始遍历到最后一个元素，分别将他们向前移动一个位置</strong> </li>
+<li>表长减1</li>
+</ul>
+<p>优点：</p>
+<ul>
+<li>无需为表达元素间的逻辑关系而增加存储空间</li>
+<li>可以快速地取表中任一位置的元素</li>
+</ul>
+<p>缺点:</p>
+<ul>
+<li>插入和删除操作需要移动大量元素</li>
+<li>确定存储空间大小的问题(多了浪费，少了不够用，再申请影响性能)</li>
+</ul>
+<h5 id="3-4-线性表的链式存储结构"><a href="#3-4-线性表的链式存储结构" class="headerlink" title="3.4 线性表的链式存储结构"></a>3.4 线性表的链式存储结构</h5><p>线性表顺序结构存储最大的问题就是插入、删除时，其他位置的元素需要挪位置，链式存储结构的线性表能够解决此问题。链式存储结构不考虑相邻位置，那有空位就到哪里，只是让每个元素知道它的下一个元素的位置在哪里。<br><img src="http://wx2.sinaimg.cn/mw690/929194b4gy1fgmu3lswuwj209207v74z.jpg" alt=""></p>
+<ul>
+<li><strong>节点（Node）分为两部分，数据域与指针域，数据域存储元素数据信息，指针域存储下一个节点地址。</strong><br>单链表中，用C语言描述如下：<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">Node</span> &#123;</span></span><br><span class="line">    ElemType data;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Node</span> *<span class="title">next</span>;</span></span><br><span class="line">&#125; Node;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">Node</span> *<span class="title">LinkList</span>;</span> <span class="comment">/*定义LinkList*/</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h6 id="3-4-1-单链表的读取"><a href="#3-4-1-单链表的读取" class="headerlink" title="3.4.1 单链表的读取"></a>3.4.1 单链表的读取</h6><p>在顺序存储结构的线性表中，我们根据元素位置取元素是非常容易的。但在单链表中，没有办法一开始就知道，必须得从头开始找。<br>获取链表第i个数据的算法思路：</p>
+<ul>
+<li>声明一个节点p指向链表第一个节点，初始化j从1开始；</li>
+<li>当 j&lt;i 时，就遍历链表，让p的指针向后移动，不断指向下一节点，j累加1；</li>
+<li>若到链表末尾p为空，则说明第i个元素不存在</li>
+<li>否则查找成功，返回节点p的数据</li>
+</ul>
+<p>单链表中没有定义表长，所以事先不知道要循环多少次，其核心思想就是<strong>工作指针后移</strong></p>
+<h6 id="3-4-2-单链表的插入与删除"><a href="#3-4-2-单链表的插入与删除" class="headerlink" title="3.4.2 单链表的插入与删除"></a>3.4.2 单链表的插入与删除</h6><p>插入示意图：<br><img src="http://wx4.sinaimg.cn/mw690/929194b4gy1fgqlowjswxj207n04t3yr.jpg" alt=""><br>我们可以看出来，新元素的插入，主要操作：新元素指针域指向后一个元素，更新前一个元素的指针域指向新元素。</p>
+<p>删除示意图：<br><img src="http://wx3.sinaimg.cn/mw690/929194b4gy1fgqlowx93ej20ax04vaan.jpg" alt=""><br>同样可以看出来，元素的删除，主要操作：被删除元素的前一个元素更新指针域为被删除元素的指针域地址、销毁(返回)被删除元素</p>
+<h5 id="3-5-静态链表"><a href="#3-5-静态链表" class="headerlink" title="3.5 静态链表"></a>3.5 静态链表</h5><p><strong>用数组描述的链表叫做静态链表</strong> ，数组元素由两个数据域组成：</p>
+<ul>
+<li>data 存放数据元素</li>
+<li>cur 游标，相当于单链表中的next指针，存放该元素的后继元素在数组中的下表</li>
+</ul>
+<h5 id="3-6-循环链表"><a href="#3-6-循环链表" class="headerlink" title="3.6 循环链表"></a>3.6 循环链表</h5><p><strong>将终端节点的指针指向头结点</strong>，是整个单链表形成一个环，这种头尾相连的单链表称为单循环链表。</p>
+<h5 id="3-7-双向链表"><a href="#3-7-双向链表" class="headerlink" title="3.7 双向链表"></a>3.7 双向链表</h5><p><strong>在单链表的节点中增加一个指针，将其指向前驱节点</strong></p>
+<h5 id="3-8-线性表总结"><a href="#3-8-线性表总结" class="headerlink" title="3.8 线性表总结"></a>3.8 线性表总结</h5><p><img src="http://wx2.sinaimg.cn/mw690/929194b4gy1fgsrksslsdj20fd047jsl.jpg" alt=""></p>
+<h4 id="4-栈与队列"><a href="#4-栈与队列" class="headerlink" title="4 栈与队列"></a>4 栈与队列</h4><p><strong>栈是限定仅在表尾进行插入和删除操作的线性表。</strong></p>
+<p><strong>队列是只允许在一端进行插入操作、而在另一端进行删除操作的线性表</strong></p>
+<h5 id="4-1-栈"><a href="#4-1-栈" class="headerlink" title="4.1 栈"></a>4.1 栈</h5><p>手枪的弹匣就像是栈，放子弹进弹匣就是入栈，开枪打出子弹则是出栈。<br><img src="http://wx4.sinaimg.cn/mw690/929194b4gy1fgsrzqdlw9j20fh05g3zd.jpg" alt=""></p>
+<h6 id="4-1-1-栈的抽象数据类型"><a href="#4-1-1-栈的抽象数据类型" class="headerlink" title="4.1.1 栈的抽象数据类型"></a>4.1.1 栈的抽象数据类型</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ADT 栈(stack)</span><br><span class="line">DATA</span><br><span class="line">    同线性表。元素具有相同的类型，相邻元素有前驱、后继关系。</span><br><span class="line">Operation</span><br><span class="line">    InitStack(*s): 初始化操作，建立一个空栈S。</span><br><span class="line">    DestoryStack(*S): 若栈存在，则销毁它。</span><br><span class="line">    ClearStack(*S): 将栈清空。</span><br><span class="line">    StackEmpty(*S): 若栈为空，返回true，否则返回false。</span><br><span class="line">    GetTop(S, *e): 若栈存在且非空，用e返回S的栈顶元素。</span><br><span class="line">    Push(*S, e): 若栈存在，则插入新元素e到S中，并成为栈顶元素。</span><br><span class="line">    Pop(*S, *e): 删除栈S中的栈顶元素，并用e返回其值。</span><br><span class="line">    StackLength(S): 返回栈S中的元素个数。</span><br><span class="line">endADT</span><br></pre></td></tr></table></figure>
+<p>由于<code>栈</code>本身是一个线性表，所以之前提到过的线性表的顺序存储和链式存储，对于<code>栈</code>也同样适用。</p>
+<h6 id="4-1-2-栈的顺序存储结构"><a href="#4-1-2-栈的顺序存储结构" class="headerlink" title="4.1.2 栈的顺序存储结构"></a>4.1.2 栈的顺序存储结构</h6><p>看下栈的结构定义：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> SElementType; <span class="comment">/* SElementType 类型根据实际情况而定，这里假设为int*/</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">    SElementType data[MAXSIZE];</span><br><span class="line">    <span class="keyword">int</span> top;    <span class="comment">/* 用于记录栈顶 */</span></span><br><span class="line">&#125;SqStack;</span><br></pre></td></tr></table></figure></p>
+<p>栈就像”阉割”版的线性表，强调的是栈顶的操作，高级语言中一般会提供<code>push</code>、<code>pop</code>、<code>peek</code>这样的方法。<br>这里用java简单的实现了顺序存储的栈<a href="https://github.com/elegance/dev-demo/blob/master/java-demo/src/main/java/org/orh/data/structure/MyStack.java" target="_blank" rel="noopener">MyStack</a></p>
+<h6 id="4-1-3-栈的链式存储结构"><a href="#4-1-3-栈的链式存储结构" class="headerlink" title="4.1.3 栈的链式存储结构"></a>4.1.3 栈的链式存储结构</h6><p>栈的链式存储结构，简称链栈。<br>栈的操作都是在栈顶上的，那链式存储的栈将栈顶放到链表的头部还是尾部呢？ 链表本身有头指针，栈也需要栈顶指针，所以合二为一，将栈顶放在单链表的头部。<br>这里就不过多介绍链式存储的栈了，其对比顺序存储栈的特点体现在链式存储上。</p>
+<h5 id="4-2-队列"><a href="#4-2-队列" class="headerlink" title="4.2 队列"></a>4.2 队列</h5><p>队列就像排队买票，强调的是新来的人排在队尾，买票的人在队头，强调先进先出。</p>
+<h6 id="4-2-1-队列的抽象数据类型"><a href="#4-2-1-队列的抽象数据类型" class="headerlink" title="4.2.1 队列的抽象数据类型"></a>4.2.1 队列的抽象数据类型</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ADT 队列(Queue)</span><br><span class="line">DATA</span><br><span class="line">    同线性表。元素具有相同的类型，相邻元素具有前驱、后继关系。</span><br><span class="line">Operation</span><br><span class="line">    InitQueue(*Q): 初始化队列Q。</span><br><span class="line">    DestoryQueue(*Q): 销毁队列Q。</span><br><span class="line">    ClearQueue(*Q): 清空队列Q。</span><br><span class="line">    QueueEmpty(Q): 若队列为空，则返回false，否则返回true。</span><br><span class="line">    GetHead(Q, *e): 若队列Q非空，则用e返回队列Q的队头元素。</span><br><span class="line">    EnQueue(*Q, e): 入队列，插入新的元素e至队列Q中并成为队尾。</span><br><span class="line">    DeQueue(*Q, e): 出队列，删除队列Q中的队头元素，并用e返回。</span><br><span class="line">    QueueLength(Q): 返回队列Q的元素个数。</span><br><span class="line">endADT</span><br></pre></td></tr></table></figure>
+<h6 id="4-2-2-循环队列"><a href="#4-2-2-循环队列" class="headerlink" title="4.2.2 循环队列"></a>4.2.2 循环队列</h6><p>同样，队列也是一种特殊的线性表，也有顺序存储和链式存储。</p>
+<p>队列顺序存储的问题：与顺序存储的线性表不同，如果单纯用数组首个元素作为队列头，最后一个元素作为队列尾，那么元素出队列，数组内的元素就需要往前移动，很明显队列就是专门用来处理入队、出队的数据类型，不像线性表的数据是单调读多、单调写多。所以就有了循环队列来解决这个问题。<br>头尾相连顺序存储结构的队列。<br>使用<code>front</code>表示头，<code>rear</code>表示尾。<br><img src="http://wx2.sinaimg.cn/mw690/929194b4gy1fgv54pvgd7j209z040glq.jpg" alt=""><br>这样有一个问题，空队列时 <code>front == rear</code>、队列满时也是如此，那怎么区分呢？<br>有两种方法：</p>
+<ul>
+<li>另外定义一个flag，用来记录队列为空或已满</li>
+<li>队列留空一格，也就是说队列满时，数组中还有一个空闲单元</li>
+</ul>
+<p>用java实现的循环队列：<a href="https://github.com/elegance/dev-demo/blob/master/java-demo/src/main/java/org/orh/data/structure/MyArrayQueue.java" target="_blank" rel="noopener">MyArrayQueue.java</a></p>
+<h4 id="5-串"><a href="#5-串" class="headerlink" title="5. 串"></a>5. 串</h4><p><code>串</code>是由零个或多个字符组成的有限序列，又名字符串。</p>
+<h5 id="5-1-串的比较"><a href="#5-1-串的比较" class="headerlink" title="5.1 串的比较"></a>5.1 串的比较</h5><p>两个数字很容易比较大小。<code>2 &gt; 1</code>，这完全正确，可是两个字符串比较呢？比如“silly”、“stupid”这样同样表达“愚蠢的”单词字符串，它们在计算机中的大小取决于挨个字母的前后顺序。首个字母“s”忽相等，第二个字母“i”字母比“t”字母靠前，所以<code>i &lt; t</code>，故 <code>silly &lt; stupid</code>。<br>实际上，串的比较是通过组成串的字符之间的编码来进行的，比如这里的纯英文字母可以采用<code>ascii</code>编码来比较。</p>
+<h5 id="5-2-串的抽象数据类型"><a href="#5-2-串的抽象数据类型" class="headerlink" title="5.2 串的抽象数据类型"></a>5.2 串的抽象数据类型</h5><p>串的逻辑结构和线性表和相似，不同之处在于串针对的是字符集，也就是串中的元素都是字符，哪怕串的字符是“123”，或者“2010-10-10”，其中每个元素都是字符，它们只能理解为长度为3和长度为10的字符串。<br>因此，对于串的基本操作与线性表的操作是由很大差别的。线性表关注的是单个元素的操作，比如操作一个元素、插入或删除一个元素，但字符串更多的是查找字符串位置、得到指定位置子串、替换子串等操作。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">ADT 串(String)</span><br><span class="line">Data</span><br><span class="line">    串中元素仅由一个字符组成，相邻元素具有前驱和后继关系。</span><br><span class="line">Operation</span><br><span class="line">    StrAssign(T, *chars): 生成一个其值等于字符串常量chars的串T。</span><br><span class="line">    StrCopy(T, S): 由串S复制得串T。</span><br><span class="line">    ClearString(S): 将串清空。</span><br><span class="line">    StringEmpty(S): 若串S为空，返回true，否则返回false。</span><br><span class="line">    StrLength(S): 返回串S的元素个数，即串长度。</span><br><span class="line">    StrCompare(S, T): 若S&gt;T，返回值大于0，若S=T，返回0，若S&lt;T，返回值小于0。</span><br><span class="line">    Concat(T, S1, S2): 用T返回S1和S2联接而成的新串。</span><br><span class="line">    SubString(Sub, S, Pos, len): 串S存在，1≤pos≤StrLength(S)，且0≤len≤StrLength(S)-pos+1，用Sub返回串S的第pos个字符起长度为len的子串。</span><br><span class="line">    Index(S, T, Pos): 串S和T存在，T是非空串，1≤pos≤StrLenght(S)。若主串S中存在和串T值相等的子串，则返回它在主串S中第pos个字符之后第一次出现的位置，否则为0。</span><br><span class="line">    Replace(S, T, V): 串S、T、V存在，T是非空串。用V替换主串S中出现的所有与T相等不重叠的子串。</span><br><span class="line">    StrInsert(S, pos, len): 串S、T存在，1≤pos≤StrLength(S)+1。在串S的第pos个字符之前插入串T。</span><br><span class="line">    StrDelete(S, pos, len): 串S存在，1≤pos≤StrLenght(S)-len+1。从串S中删除第pos个字符起长度为len的子串。</span><br><span class="line">endADT</span><br></pre></td></tr></table></figure></p>
+<h5 id="5-3-串的存储结构"><a href="#5-3-串的存储结构" class="headerlink" title="5.3 串的存储结构"></a>5.3 串的存储结构</h5><h6 id="5-3-1-串的顺序存储结构"><a href="#5-3-1-串的顺序存储结构" class="headerlink" title="5.3.1 串的顺序存储结构"></a>5.3.1 串的顺序存储结构</h6><p>串的顺序存储结构使用一组地址连续的存储单元来存储串中的字符串序列。按照预定义的大小，为每个定义的串变量分配一个固定长度的存储区。一般是用定长的数组来定义。</p>
+<h6 id="5-3-2-串的链式存储结构"><a href="#5-3-2-串的链式存储结构" class="headerlink" title="5.3.2 串的链式存储结构"></a>5.3.2 串的链式存储结构</h6><p>串的链式存储结构与线性表是相似的，实际中链式存储的串除了在连接串有一定方便之外，总的来说不如顺序存储灵活。</p>
+<h5 id="5-4-朴素的模式匹配算法"><a href="#5-4-朴素的模式匹配算法" class="headerlink" title="5.4 朴素的模式匹配算法"></a>5.4 朴素的模式匹配算法</h5><p><strong>子串的定位操作通常称作串的模式匹配</strong>，比如要从主串S=”goodgoogle”中，找到T=”google”这个子串的位置。我们通常需要下面的的步骤：</p>
+<ol>
+<li>主串S第1位开始，S与T前三个字母都匹配成功，但第4个字母d与g匹配失败。<br><img src="http://wx1.sinaimg.cn/mw690/929194b4gy1fgyoi52ttdj20al030glv.jpg" alt=""></li>
+<li>主串S从第2位开始，o与g匹配失败<br><img src="http://wx1.sinaimg.cn/mw690/929194b4gy1fgyoi5ec6yj20al039wer.jpg" alt=""></li>
+<li>主串S从第3位开始，o与g匹配失败<br><img src="http://wx1.sinaimg.cn/mw690/929194b4gy1fgyoi5qwdyj20ar02yaad.jpg" alt=""></li>
+<li>主串S从第4位开始，d与g匹配失败<br><img src="http://wx1.sinaimg.cn/mw690/929194b4gy1fgyoi6b3vaj20al039glv.jpg" alt=""></li>
+<li>主串S从第5位开始，6个字母全部匹配，匹配成功<br><img src="http://wx1.sinaimg.cn/mw690/929194b4gy1fgyoi6q87qj20aj02x74j.jpg" alt=""><br>总的来说，就是对主串的每一个字符串作为子串开头，与要匹配的字符串进行匹配。对主串做大循环，每个字符开头做T的长度的小循环，直到匹配成功或全部遍历完为止。<br>下面我们用基本的数组来实现这个算法：<a href="https://github.com/elegance/dev-demo/blob/master/java-demo/src/main/java/org/orh/data/structure/CharSequenceCompare.java" target="_blank" rel="noopener">CharSequenceCompare.java</a><br>最好的情况就是一开始就匹配成功，比如“googlegood”中去找“google”时间复杂度为O(1)。平均是(n+m)/2次查找，复杂度为O(n+m)，最坏的情况O((n-m+1)*m)。对于计算机来说，都是处理的二进制0和1的串，一个字符的ASCII码看成是8位的二进制位01，模式匹配操作可说是随处可见，刚才的算法显得太过低效了。</li>
+</ol>
+<h5 id="5-5-KMP模式匹配算法"><a href="#5-5-KMP模式匹配算法" class="headerlink" title="5.5 KMP模式匹配算法"></a>5.5 KMP模式匹配算法</h5><p>KMP算法是一种改进的字符串匹配算法，由D.E.Knuth，J.H.Morris和V.R.Pratt同时发现，因此人们称它为克努特——莫里斯——普拉特操作，简称KMP算法。</p>
+<h6 id="5-5-1-KMP模式匹配算法原理"><a href="#5-5-1-KMP模式匹配算法原理" class="headerlink" title="5.5.1 KMP模式匹配算法原理"></a>5.5.1 KMP模式匹配算法原理</h6><p>如果主串<code>S=abcdefgab</code>，匹配串<code>T=abcdex</code>，如果用前面的朴素算法的话，前5个字母，两个串完全相等，直到第6个字母，“f”与“x”不等，如图：<br><img src="http://wx2.sinaimg.cn/mw690/929194b4gy1fgzrnphd0zj20jk08w0v6.jpg" alt=""><br>接下来，按照朴素算法，2、3、4、5、6，首字符与子串T的首字符均不等。<br>似乎这也是理所当然，原来的算法就是这么设计的。仔细观察发现，对于要匹配的子串T来说，“abcdex”首字母“a”与后面的串“bcdex”中任意一个字符都不相等，那么对于图中①来说，前5位字符分别相等，意味着子串T的首字符“a”不可能与S串的第2位到第5位字符相等。即②、③、④、⑤的判断都是多余的。<br>注意这里是理解KMP算法的关键。如果我们知道T串中<strong>首字符“a”与T中后面的字符均不相等(注意这是前提)</strong>。而T串的第二位的“b”与S串中的“b”在图中①已经判断是相等的，那么也就意味着T串中首字符“a”与S串中第二位“b”是不需要判断也知道他们是不可能相等的，这样上图中②这一步就可以省略。如下：<br><img src="http://wx1.sinaimg.cn/mw690/929194b4gy1fgzst8a4l1j20g30523zr.jpg" alt=""><br>同样道理，在我们知道T串首字符“a”与T中后面的字符均不相等的前提下，T串的“a”与S串后面的“c”、“d”、“e”也都可以在①之后就可以确定不相等，所以算法②③④⑤没有必要，只保留①⑥即可，如下图：<br><img src="http://wx1.sinaimg.cn/mw690/929194b4gy1fh0pzm8kh6j20l003ygmf.jpg" alt=""><br>跟着书中的这些文字转的有些晕了，停顿耗费了不少时间，跟着例子敲了以下的实现，就此带过了！<br>java实现：<a href="https://github.com/elegance/dev-demo/blob/master/java-demo/src/main/java/org/orh/data/structure/CharSequenceKMPCompare.java" target="_blank" rel="noopener">CharSequenceKMPCompare.java</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2017/10/17/再读数据结构/" data-id="cjjwhr4xy00478crjzqzx0s0q" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程/">编程</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-前端与后端的HTTP通信" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/07/12/前端与后端的HTTP通信/" class="article-date">
+  <time datetime="2017-07-12T07:10:20.000Z" itemprop="datePublished">2017-07-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/HTTP/">HTTP</a>►<a class="article-category-link" href="/categories/HTTP/通信/">通信</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/12/前端与后端的HTTP通信/">前端与后端的HTTP通信</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>理解了，不用了又淡忘了，渐渐模糊混淆，感觉耗费大把的经历。</p>
+<h2 id="前端与后端的通信方式"><a href="#前端与后端的通信方式" class="headerlink" title="前端与后端的通信方式"></a>前端与后端的通信方式</h2><p>通信，其实也就是网络通信，所以从<code>Chrome</code>的控制台的<code>Network</code>可以看到前端与后端的通信，如下图：<br><img src="http://wx3.sinaimg.cn/mw690/929194b4gy1fhfr4aok4rj20au00udfn.jpg" alt=""></p>
+<p>我暂时打算记录一下开发经常碰到的问题。</p>
+<h2 id="HTTP-通信"><a href="#HTTP-通信" class="headerlink" title="HTTP 通信"></a>HTTP 通信</h2><p>这里的介绍不会一应俱全，如果有需要你可以去参考一些权威指南。跟着自己的思考，带着一些问题来记录。</p>
+<h4 id="HTTP-是无状态"><a href="#HTTP-是无状态" class="headerlink" title="HTTP 是无状态"></a>HTTP 是无状态</h4><p>就像你在围墙外面，我在围墙里面，我们通过扔纸条的方式来通信，我不知道你是谁。<br>无状态带来的问题很明显，如果有两个人站在墙外，我不知道你是谁，那我们就不能聊一些私密的话题了。<br>在互联网，乃至整个现实世界，要绝对的确认一个人的身份是不可能的，网络上的信息可以被截取、模仿，现实世界有人工智能，就像那句“我不是李开复,我是人工智能。”</p>
+<h4 id="HTTP-请求与响应"><a href="#HTTP-请求与响应" class="headerlink" title="HTTP 请求与响应"></a>HTTP 请求与响应</h4><p>请求与响应就类似传递的信件，一部分是正文，一部分是必要的附加信息比如地址、身份等等。所以HTTP的“信件”分为了head、body部分。像一封信一样，虽然分为head、body但是他们是在一个报文内的。</p>
+<p>HTTP/1.1 head 是文本(ASCII编码), body 可以是文本，也可以是二进制。<br>HTTP/2 则是一个彻底的二进制协议，头、数据体都是二进制，并且统称为“帧”（frame）：头信息帧、数据帧，因为帧可以方便的扩展，解析更为方便，HTTP/2已经定义了近十种帧。</p>
+<p>来看下一个Ajax完整的请求报文：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">POST https://www.tzb360.com/tzb-api/api/public/login HTTP/1.1</span><br><span class="line">Host: www.tzb360.com</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Content-Length: 47</span><br><span class="line">Origin: https://www.tzb360.com</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Safari/537.36</span><br><span class="line">Content-Type: application/x-www-form-urlencoded; charset=UTF-8</span><br><span class="line">Accept: */*</span><br><span class="line">X-Requested-With: XMLHttpRequest</span><br><span class="line">Referer: https://www.tzb360.com/html/common/login.html</span><br><span class="line">Accept-Encoding: gzip, deflate, br</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.8</span><br><span class="line">Cookie: userId=test01; io=j8nS4_Ph2Jaq1aSWAFX4</span><br><span class="line"></span><br><span class="line">loginName=cqtl123&amp;password=tk110234&amp;imgVefCode=</span><br></pre></td></tr></table></figure></p>
+<p>可以看出：</p>
+<ul>
+<li><strong>14行前的是请求头，即head；14行之后的是请求体，即body</strong></li>
+<li><strong>14行本身是分隔，其内容是<code>空行</code>，即CR+LF（Carriage Return 回车， Line Feed 换行）</strong><ul>
+<li>打字机，在纸张上打印字时，分为纵向移动、横向移动。纸张的一行打满后，横向位置回到起点，即携带纸张的车子回到起点即回车；纵方向上向下移动一行，即换行。</li>
+<li>unix 结尾只有换行“\n”，window下是“\r\n”。现象就是：win下的文件在unix下会出现“^M”符号；unix下的文件到win下会连接成一行。</li>
+<li><a href="http://www.ruanyifeng.com/blog/2006/04/post_213.html?bsh_bid=705296311" target="_blank" rel="noopener">关于回车与换行的参考</a></li>
+</ul>
+</li>
+<li><strong>请求地址、cookie、请求内容长度等等都是在请求头内的</strong></li>
+</ul>
+<p>响应头报文如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Server: nginx/1.9.9</span><br><span class="line">Date: Tue, 11 Jul 2017 06:02:51 GMT</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Content-Length: 928</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Set-Cookie: TZB_SESSIONID=5788439a2c524880a5f79c6b81e97fcf; Path=/; HttpOnly</span><br><span class="line"></span><br><span class="line">&#123;&quot;code&quot;:&quot;0000&quot;,&quot;data&quot;:&#123;&#125;,&quot;msg&quot;:&quot;操作成功&quot;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>同样可以看出，也是使用<code>\r\n</code>作为头、体的分隔符的。</p>
+<h4 id="发起请求与后台接收请求"><a href="#发起请求与后台接收请求" class="headerlink" title="发起请求与后台接收请求"></a>发起请求与后台接收请求</h4><p>编码方面这前端请求主要用：<code>XMLHttpRequest/fetch</code>来实现，后台用<code>Spring MVC</code>来实现，只涉及到POST与GET方式的请求。<br>首先有必要讲下请求头中易忘、易混淆的字段：</p>
+<ol>
+<li><code>Content-type</code> ，内容类型，即描述body，作为请求头时，一般有以下4种分类来描述body：<ul>
+<li><code>multipart/form-data;</code> 类似页面表单，支持多字段、多类型。此类型请求体中会有对每个子段的的描述，就像请求体中分了多个子的请求头、请求体。</li>
+<li><code>application/x-www-form-urlencoded</code> “=”号相隔的ascii键值串，非ascii字符与特殊字符需要转码，js中可以使用<code>encodeURIComponent</code>。请求体格式：<code>a=value-a&amp;b=value-b</code></li>
+<li>raw: <code>text/plain</code>、<code>application/json</code>、<code>text/xml</code>，这一类请求意味着请求体是一块整体，告诉服务器按照<code>Content-type</code>来解析这块整体。</li>
+<li>binary: 可以上传单个文件，其body中存储了二进制内容，默认没有设置<code>Content-type</code>。</li>
+</ul>
+</li>
+<li>Request Method <ul>
+<li>POST/PUT/PATCH 可以包含请求体，而其他如<strong>GET是不包括请求体的</strong>。页面上的<code>form</code>如果<code>不科学</code>的使用，会引起误解，比如<code>method=GET</code>，提交时会忽略action问号后的参数，自动将表单内的input转换为地址的QueryString。当<code>method=POST</code>提交时，如果action的QueryString与表单内的字段都会被提交，后台可以从两个来源中得到同样的参数，而可能值不同。</li>
+</ul>
+</li>
+</ol>
+<p>所以有必要强调的是，一般意义上的参数取法是当后台判断请求方法是<code>GET</code>时，取参从QueryString中取，当判断请求的方法是<code>POST</code>时，取参从FormData中取。后台<strong>可以</strong>取到<code>POST</code>请求的QueryString，GET请求是无body的。</p>
+<p>错误的请求头设置，会导致后台不能正常的接收数据，请根据具体的场景选择请求方式、<code>Content-type</code>。</p>
+<p>开发中会碰到一些复杂嵌套的对象需要传输，一般是前端设置<code>ContentType: application/json</code> 也就是body是一个raw，作为一个整体，后端使用<code>@RequestBody</code>描述对象。</p>
+<h6 id="XMLHttpRequest-与-fetch"><a href="#XMLHttpRequest-与-fetch" class="headerlink" title="XMLHttpRequest 与 fetch"></a>XMLHttpRequest 与 fetch</h6><p>使用<code>jquery</code>发起ajax请求时，会有<code>data</code>部分的参数设置，jquery发现请求是get时，会把data对象作为head的queryString提交，如果是POST，则会将data放置到body部分。</p>
+<p><code>fetch</code>方法默认情况下不会发送本地的cookie到服务器，注意如果需要依赖cookie，需要配置<code>credentials</code>，其配置值有：<code>omit</code>、<code>same-origin</code>、<code>include</code>，其意分别为不携带、同源携带、一直携带。更多关于fetch的信息可以参考<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/GlobalFetch/fetch" target="_blank" rel="noopener">MDN-GlobalFetch</a></p>
+<h4 id="HTTP-协议版本"><a href="#HTTP-协议版本" class="headerlink" title="HTTP 协议版本"></a>HTTP 协议版本</h4><p>这里再简单的记录下HTTP的几个版本的区别: （需要明白协议的实现要客户端、服务端共同完成，即新的浏览器、新的Web服务（Nginx/Apache/IIs等））</p>
+<ul>
+<li>HTTP/1.0 每个TCP只能发送一个请求。发完数据就关闭</li>
+<li><p>HTTP/1.1 (当今主流) </p>
+<ul>
+<li>持久连接<code>Connection: keep-alive</code>，TCP默认不关闭，可以供多个请求复用，不用手动声明。连接没有活动，客户端就可以主动关闭连接了。规范的请求是，客户端发送最后一个请求时发送<code>Connection: close</code>，明确要求服务器关闭TCP连接。一般对于同一个域名，浏览器允许建立6个持久连接。</li>
+<li>管道机制（pipelining），同一个TCP中可发送多个请求</li>
+<li>Content-Length字段，一个TCP连接中有多个请求或响应，用长度区分数据边界</li>
+<li>分块传输编码，<code>Content-length</code>的前提是在传输之前就得知道要传输的数据长度，对于一些耗时久、数据块大的操作来说，意味长时等待，这不太合理。更好的办法是产生一块数据，发送一块数据。使用<code>Transfer-Encoding: chunked</code>来表明数据是数量未定的数据块组成，每个非空数据块之前，会有一个16进制的数值，表示这个块的长度，最后一个大小为0的块，表示本轮数据传输完毕。下面有个<code>chunked</code>的响应例子：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200</span><br><span class="line">Content-Type: application/json;charset=UTF-8</span><br><span class="line">Transfer-Encoding: chunked</span><br><span class="line">Date: Wed, 12 Jul 2017 05:47:23 GMT</span><br><span class="line"></span><br><span class="line">7a</span><br><span class="line">&#123;&quot;paramters&quot;:&#123;&quot;key-a&quot;:[&quot;value-a&quot;],&quot;a&quot;:[&quot;value-a&quot;],&quot;b&quot;:[&quot;value-b&quot;]&#125;,&quot;queryString&quot;:&quot;key-a=value-a&quot;,&quot;autoInject-a&quot;:&quot;value-a&quot;&#125;</span><br><span class="line">0</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>HTTP/2 </p>
+<ul>
+<li>二进制协议</li>
+<li>多工，复用的TCP不要求请求与应答顺序一一对应，避免了“队头阻塞”，这样能达到双向、实时，即多工（Multiplexing）</li>
+<li>数据流，一个连接内的数据包，可能归属不同的请求或响应，每个请求或响应的所有数据包，称之为一个数据流（stream）。每个stream都有一个编号，客户端请求的stream编号为奇数，服务端发起的stream为偶数。</li>
+<li>头信息压缩，无状态导致很多字段都是重复的，比如Cookie和UserAgent等。因此引入了头信息压缩机制（header compression），一方面压缩传输，一方面server与client共同维护一张头表，所有字段存入这个表，生成一个索引号，只发索引号来减少传输。</li>
+<li>服务器推送，允许服务器未经请求，主动向客户端发送资源。以前是请求-返回网页，解析网页源码，请求网页依赖的静态资源；而现在可以主动把这些依赖的静态资源随着网页一起发给客户端。</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2017/07/12/前端与后端的HTTP通信/" data-id="cjjwhr4xz004a8crj4lk7jwea" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-java多线程补充-LockSupport类" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/06/21/java多线程补充-LockSupport类/" class="article-date">
+  <time datetime="2017-06-21T02:32:32.000Z" itemprop="datePublished">2017-06-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/21/java多线程补充-LockSupport类/">java多线程补充-LockSupport类</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在之前的<a href="http://blog.ouronghui.com/2017/04/06/java多线程编程核心技术">java多线程编程核心技术</a>文章中，主要是记录了书<code>《Java多线程编程核心技术》</code>的一些内容，其中没有介绍到<code>LockSupport</code>类，但是这个类在<code>jdk</code>源码中也经常会碰到，所以特意拿出来再看一番。</p>
+<h5 id="既然已经有了ReentrantLock，为什么还需要LockSupport呢？"><a href="#既然已经有了ReentrantLock，为什么还需要LockSupport呢？" class="headerlink" title="既然已经有了ReentrantLock，为什么还需要LockSupport呢？"></a>既然已经有了<code>ReentrantLock</code>，为什么还需要<code>LockSupport</code>呢？</h5><p>主要区别在于他们面向的对象不同。</p>
+<p>我们先简单来回顾下<code>ReentrantLock</code>的使用：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">reviewReentrantLock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ReentrantLock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            lock.lock();</span><br><span class="line">            System.out.println(<span class="string">"thread-A doXX"</span>);</span><br><span class="line">            TimeUnit.SECONDS.sleep(<span class="number">3</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            lock.unlock(); <span class="comment">// 记得 finally 中 释放锁</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, <span class="string">"thread-A"</span>).start();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            lock.lock();</span><br><span class="line">            System.out.println(<span class="string">"thread-B doXX"</span>);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, <span class="string">"thread-B"</span>).start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>lock 通常需要在finally中释放</li>
+<li>其它线程取锁将被阻塞</li>
+</ul>
+<p>接下来看下<code>LockSupport</code>要怎么使用，看了下<code>LockSupport</code>的源码有以下特点：</p>
+<ul>
+<li>构造函数是私有的，说明不可手动实例化</li>
+<li>其它的方法都是静态的，说明不用实例化可以直接拿来使用</li>
+</ul>
+<h5 id="尝试1"><a href="#尝试1" class="headerlink" title="尝试1"></a>尝试1</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">useLockSupport</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    LockSupport.park(); <span class="comment">// 等待许可，如果许可可用将立即返回，否则线程将进入休眠状态</span></span><br><span class="line">    System.out.println(<span class="string">"block."</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>运行此方法会发现，控制台的Terminate一直是红色，”block”也不会输出，说明当前线程在park后就被阻塞了</li>
+<li><strong>线程许可默认是被占用的</strong></li>
+</ul>
+<p>可以使用<code>unpark(thread)</code>先取的许可，再执行<code>park</code>,如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">useLockSupport2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Thread thread = Thread.currentThread();</span><br><span class="line">    LockSupport.unpark(thread); <span class="comment">// 为给定的线程提供许可；如果线程在park上被阻塞，那么它将被解除阻塞。否则它的下一次 park 执行将不会被阻塞</span></span><br><span class="line">    LockSupport.park(); <span class="comment">// 等待许可，因为上一步已经提供了，所以会直接往下执行</span></span><br><span class="line">    System.out.println(<span class="string">"block"</span>);  <span class="comment">// 像没事人样，正常输出</span></span><br><span class="line">    LockSupport.park(); <span class="comment">// 等待许可，前面的许可已经被使用了，故此线程将会进入休眠，等待许可</span></span><br><span class="line">    System.out.println(<span class="string">"block 2"</span>);  <span class="comment">// 阻塞，不会被输出</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>“block”会正常输出。</li>
+<li>“block 2”不会输出，线程如果重复调用<code>park</code>，那么线程将会一直阻塞下去，故<strong>LockSupport是不可重入的</strong> ，对比而言<code>ReentrantLock</code>是可重入的，一个线程可以多次获取同一把锁，<code>lock.getHoldCount()</code>方法会得到当前线程持有该锁的个数，也就是<code>lock()</code>方法的次数。总的来说就是：<strong><code>lock.lock()</code>可以重复调用(线程内执行相应的<code>lock.unlock()</code>)，而<code>LockSupport.park()</code>则是单次不重复的，只可等待其他线程<code>LockSupport.unpark(t)</code></strong></li>
+</ul>
+<h5 id="线程等待许可时，被打断时会怎样？"><a href="#线程等待许可时，被打断时会怎样？" class="headerlink" title="线程等待许可时，被打断时会怎样？"></a>线程等待许可时，被打断时会怎样？</h5><p>下面我们看下线程对应中断会怎样响应：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    Thread t = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line">        <span class="keyword">long</span> end = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (end - start &lt;= <span class="number">1000</span>) &#123;</span><br><span class="line">            count++;</span><br><span class="line">            end = System.currentTimeMillis();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.printf(<span class="string">"after 1 second: acount=%s\n"</span>, count);</span><br><span class="line">        </span><br><span class="line">        LockSupport.park(); <span class="comment">// 等待许可</span></span><br><span class="line">        System.out.println(<span class="string">"thread-child over."</span> + Thread.currentThread().isInterrupted());</span><br><span class="line">    &#125;, <span class="string">"thread-child"</span>);</span><br><span class="line">    </span><br><span class="line">    t.start();</span><br><span class="line">    Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">    </span><br><span class="line">    t.interrupt(); <span class="comment">// 中断线程</span></span><br><span class="line">    System.out.println(<span class="string">"main over!"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>控制台输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">after 1 second: acount=85732003</span><br><span class="line">main over!</span><br><span class="line">thread-child over.true</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>并没有抛出异常，程序照常往下执行</li>
+</ul>
+<h4 id="跳回前面的问题小结下-ReentrantLock-与-LockSupport"><a href="#跳回前面的问题小结下-ReentrantLock-与-LockSupport" class="headerlink" title="跳回前面的问题小结下 ReentrantLock 与 LockSupport"></a>跳回前面的问题小结下 ReentrantLock 与 LockSupport</h4><p><code>ReentrantLock</code> 关注线程内部取锁<code>lock()</code>，<code>unlock()</code>的问题，都是<strong>线程内部代码</strong>在掌控锁，自己关注方法内的业务逻辑。<br><code>LockSupport</code> 更倾向线程间的协作，一个线程“LockSupport.park()”等待许可，另外一个线程来“唤醒”等待的线程。</p>
+<p><code>LockSupport</code>像是站在线程间的指挥家，可以指定唤醒哪个线程(<code>LockSupport.unpark(thread)</code>)、什么时候唤醒等。</p>
+<p>更准确的理解可以去查看<code>LockSupport</code>的源码注释。</p>
+<hr>
+<p>主要参考：</p>
+<ul>
+<li><a href="http://blog.csdn.net/aitangyong/article/details/38373137" target="_blank" rel="noopener">LockSupport的park和unpark的基本使用,以及对线程中断的响应性</a></li>
+<li><a href="https://www.zhihu.com/question/26471972/answer/74773092" target="_blank" rel="noopener">Java中Lock和LockSupport的区别到底是什么？</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2017/06/21/java多线程补充-LockSupport类/" data-id="cjjwhr4xe00388crjx2kxgsgk" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程-锁/">多线程 锁</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/">HTTP</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/通信/">通信</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/PostgreSQL/">PostgreSQL</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/">PostgreSQL</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/数据库/">数据库</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/">WEB</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/安全/">安全</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript语言/">javascript语言</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/英语/">英语</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计划/">计划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机基础/">计算机基础</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMD/">CMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CommonJS/">CommonJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript基础/">javascript基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/n2n/">n2n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/健身/">健身</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/协议/">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程-锁/">多线程 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/意志/">意志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/授权/">授权</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模块化/">模块化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码阅读/">源码阅读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/版本控制/">版本控制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编码/">编码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/英语/">英语</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计划/">计划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运动/">运动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CMD/" style="font-size: 10px;">CMD</a> <a href="/tags/Centos软件安装/" style="font-size: 15px;">Centos软件安装</a> <a href="/tags/CommonJS/" style="font-size: 10px;">CommonJS</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/PostgreSQL基础/" style="font-size: 15px;">PostgreSQL基础</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/javascript函数/" style="font-size: 15px;">javascript函数</a> <a href="/tags/javascript基础/" style="font-size: 15px;">javascript基础</a> <a href="/tags/n2n/" style="font-size: 10px;">n2n</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/健身/" style="font-size: 10px;">健身</a> <a href="/tags/协议/" style="font-size: 10px;">协议</a> <a href="/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/tags/多线程-锁/" style="font-size: 10px;">多线程 锁</a> <a href="/tags/安全/" style="font-size: 10px;">安全</a> <a href="/tags/意志/" style="font-size: 10px;">意志</a> <a href="/tags/授权/" style="font-size: 10px;">授权</a> <a href="/tags/模块化/" style="font-size: 10px;">模块化</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/源码阅读/" style="font-size: 10px;">源码阅读</a> <a href="/tags/版本控制/" style="font-size: 10px;">版本控制</a> <a href="/tags/编码/" style="font-size: 15px;">编码</a> <a href="/tags/编程/" style="font-size: 10px;">编程</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/运动/" style="font-size: 10px;">运动</a> <a href="/tags/阅读/" style="font-size: 10px;">阅读</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/07/22/大白话简记TCP/">大白话简记TCP</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/22/再理一遍OAuth2.0/">再理一遍OAuth2.0</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/22/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2018/03/01/搭建-ELK-日志中心/">搭建 ELK 日志中心</a>
+          </li>
+        
+          <li>
+            <a href="/2018/02/22/Spring-生命周期/">Spring 生命周期</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 orh<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

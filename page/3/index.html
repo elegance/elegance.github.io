@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Poxi哥的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Poxi哥的博客">
+<meta property="og:url" content="http://blog.ouronghui.com/page/3/index.html">
+<meta property="og:site_name" content="Poxi哥的博客">
+<meta property="og:locale" content="zh-CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Poxi哥的博客">
+  
+    <link rel="alternate" href="/atom.xml" title="Poxi哥的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Poxi哥的博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">种一棵树最好的时间是十年前，其次是现在。</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.ouronghui.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-vim-技巧手记" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/03/22/vim-技巧手记/" class="article-date">
+  <time datetime="2017-03-22T03:28:42.000Z" itemprop="datePublished">2017-03-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/03/22/vim-技巧手记/">vim 技巧手记</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li><p>根据文件内容查找文件：<code>vimgrep</code></p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">:<span class="keyword">vimgrep</span> /Exception/ *.<span class="built_in">log</span>    #查找目录下  所有含Exception 的 .<span class="built_in">log</span>文件</span><br><span class="line">:<span class="keyword">vimgrep</span> /Exception/ */*.<span class="built_in">log</span> # 遍历子目录</span><br><span class="line">#搜索到的文件列表会加入到quickfix中去，执行:</span><br><span class="line">:<span class="keyword">copen</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>排序，删除重复行</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">:<span class="keyword">sort</span>   //可以直接排序，这个太好用了</span><br><span class="line">:g/^\(.*\)$\n\<span class="number">1</span>$/d                      #去除重复行</span><br><span class="line">:g/\%(^\<span class="number">1</span>$\n\)\@&lt;=\(.*\)$/d     #功能同上，也是去除重复行</span><br><span class="line">:g/\%(^\<span class="number">1</span>\&gt;.*$\n\)\@&lt;=\(\<span class="keyword">k</span>\+\).*$/d  #功能同上，也是去除重复行</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查找忽略大小写</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">:<span class="keyword">set</span> ic  #忽略大小写 <span class="keyword">set</span> ignorecase</span><br><span class="line">:<span class="keyword">set</span> noic #不忽略大小写</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>标记复制、粘贴</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">"ay</span></span><br><span class="line"><span class="comment">"ap</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>数字递增</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">插入模式下：Ctrl+r  ===&gt; =(等号) ===&gt; <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">100</span>)  回车</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>多文件内容查找替换</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">:<span class="keyword">args</span> *.jsp  #第一步：择定范围 *.jsp</span><br><span class="line">:<span class="keyword">argdo</span> %s#<span class="symbol">&lt;title&gt;</span>光大保德信&lt;/title&gt;#<span class="symbol">&lt;title&gt;</span>光大保德信基金&lt;/title&gt;#gc|<span class="keyword">update</span>   #替换内容“|<span class="keyword">update</span>”执行替换后并且存盘。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除/保留匹配的行</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">:g/pattern/d # 用于删除带有指定搜索内容的行</span><br><span class="line">:g!/pattern/d 用于删除不带指定搜索内容的行</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除空白行</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:g/^\s*$/d</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>html标签选中、内容选中</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vat #整个标签</span><br><span class="line">vit #标签的内容</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>正则替换</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">:%s#(<span class="string">"\([A-Z_]\+\)"</span>)#<span class="string">'\1'</span>#g</span><br><span class="line">-- 功能将  (<span class="string">"BIT"</span>) 替换为 <span class="string">'BIT'</span>，将两边的括号去除了，将双引号改为了单引号</span><br><span class="line">-- %s 表示在所有行中搜索替换，若要指定范围可以写成：<span class="number">1</span>,<span class="number">10</span>s、<span class="number">10</span>s、<span class="number">1</span>,$s 分别表示：<span class="number">1</span>-<span class="number">10</span>行、只在第<span class="number">10</span>行、<span class="number">1</span>-最后一行</span><br><span class="line">-- # 跟在上面的s后面，表示使用其作为分隔符，因为/分隔符经常会用于替换内容，使用到就得转义比较麻烦</span><br><span class="line">-- \(、\)、\+、\<span class="number">1</span> 这些是正则表达式的内容，前面两个表示分组捕获，\+ 表示表达式的匹配次数还有*、?等等，\<span class="number">1</span> 则是取前面捕获的第一个分组的内容</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>粘贴时取消小自动缩进</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">:<span class="keyword">set</span> paste # 开启paste模式</span><br><span class="line">:<span class="keyword">set</span> nopaste # 粘贴完毕关闭paste模式</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>BOM标记相关</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">:<span class="keyword">set</span> nobomb #去掉BOM标记</span><br><span class="line">:<span class="keyword">set</span> bomb #加上BOM标记</span><br><span class="line">:<span class="keyword">set</span> bomb? # 查询当前是否有BOM标记</span><br><span class="line">:%!xxd #以<span class="number">16</span>进制模式打开文件，可以看到具体的大端标记或小端标记</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2017/03/22/vim-技巧手记/" data-id="cjjwhr4xn003o8crjrlf1vrvf" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vim/">vim</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Read-Later" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/03/10/Read-Later/" class="article-date">
+  <time datetime="2017-03-10T07:54:02.000Z" itemprop="datePublished">2017-03-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/03/10/Read-Later/">Read Later</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>建立这个<code>Read Later</code>的初衷：一些好的资料没有吸收完全，用其它闲暇的时间来继续吸收，手机、其他PC都可访问。</p>
+<hr>
+
+<h3 id="2017年8月4日09-03-44"><a href="#2017年8月4日09-03-44" class="headerlink" title="2017年8月4日09:03:44"></a>2017年8月4日09:03:44</h3><ol>
+<li><a href="http://ifeve.com/use-bean-validation/" target="_blank" rel="noopener">java Bean Validation</a></li>
+</ol>
+<h3 id="2017年7月5日13-51-38"><a href="#2017年7月5日13-51-38" class="headerlink" title="2017年7月5日13:51:38"></a>2017年7月5日13:51:38</h3><ol>
+<li><a href="http://www.cnblogs.com/weidagang2046/archive/2011/06/04/2063696.html" target="_blank" rel="noopener">幂等性的应用</a></li>
+</ol>
+<h3 id="2017年5月23日15-30-51"><a href="#2017年5月23日15-30-51" class="headerlink" title="2017年5月23日15:30:51"></a>2017年5月23日15:30:51</h3><ol>
+<li><a href="https://blog.oyanglul.us/javascript/functional-javascript.html#sec-2-2" target="_blank" rel="noopener">js之 函数式编程、柯里化、组合等</a></li>
+<li><a href="https://blog.oyanglul.us/javascript/react-transdux-the-clojure-approach-of-flux.html" target="_blank" rel="noopener">react、flux-看我们3天 hackday 都干了些什么</a></li>
+<li><a href="https://github.com/jasonslyvia/a-cartoon-intro-to-redux-cn" target="_blank" rel="noopener">看漫画，学 Redux</a></li>
+</ol>
+<h3 id="2017年5月3日10-17-04"><a href="#2017年5月3日10-17-04" class="headerlink" title="2017年5月3日10:17:04"></a>2017年5月3日10:17:04</h3><ol>
+<li>线程池文章：<ol>
+<li><a href="http://www.kuqin.com/shuoit/20160714/352643.html" target="_blank" rel="noopener">Java 线程池框架核心代码分析</a></li>
+<li><a href="http://blog.csdn.net/evankaka/article/details/51489322" target="_blank" rel="noopener"> Java并发编程与技术内幕:线程池深入理解</a></li>
+</ol>
+</li>
+</ol>
+<h3 id="2017年4月14日15-05-05"><a href="#2017年4月14日15-05-05" class="headerlink" title="2017年4月14日15:05:05"></a>2017年4月14日15:05:05</h3><ol>
+<li><a href="http://daily.zhihu.com/story/4369215" target="_blank" rel="noopener">旧文重读-有哪些生活小习惯，慢慢地可以改变一个人的性格或者生活</a></li>
+<li><a href="http://www.read.org.cn/" target="_blank" rel="noopener">非技术-战隼的学习探索</a></li>
+<li><a href="https://www.zhihu.com/people/warfalcon/answers" target="_blank" rel="noopener">知乎-每天一本书的人-经典回答</a></li>
+</ol>
+<h3 id="2017年4月1日09-07-00"><a href="#2017年4月1日09-07-00" class="headerlink" title="2017年4月1日09:07:00"></a>2017年4月1日09:07:00</h3><ol>
+<li>javap 反汇编器，查看java编译器生成的字节码<ol>
+<li><a href="http://blog.csdn.net/junsure2012/article/details/7099222" target="_blank" rel="noopener">javap -c命令详解</a></li>
+<li><a href="http://www.cnblogs.com/luyanliang/p/5498584.html" target="_blank" rel="noopener">JVM字节码之整型入栈指令(iconst、bipush、sipush、ldc)</a></li>
+<li><a href="http://www.linmuxi.com/2016/06/27/jvm-note-classfile/" target="_blank" rel="noopener">读《深入理解Java虚拟机》-类文件结构</a></li>
+</ol>
+</li>
+<li><a href="https://www.zhihu.com/question/51534501" target="_blank" rel="noopener">有什么相见恨晚的小知识？</a></li>
+<li><a href="https://www.zhihu.com/question/26677313/answer/34173739" target="_blank" rel="noopener">你有什么相见恨晚的英语学习方法？</a></li>
+</ol>
+<h3 id="2017年3月31日13-24-12"><a href="#2017年3月31日13-24-12" class="headerlink" title="2017年3月31日13:24:12"></a>2017年3月31日13:24:12</h3><ol>
+<li><a href="http://blog.csdn.net/Evankaka/article/details/58265019" target="_blank" rel="noopener">Java的Spi机制研究</a></li>
+</ol>
+<h3 id="2017年3月24日09-59-55"><a href="#2017年3月24日09-59-55" class="headerlink" title="2017年3月24日09:59:55"></a>2017年3月24日09:59:55</h3><ol>
+<li><a href="http://blog.csdn.net/yunnysunny/article/details/17482175" target="_blank" rel="noopener">oauth2简单原理描述</a></li>
+</ol>
+<h3 id="2017年3月17日10-56-38-（java性能调优）"><a href="#2017年3月17日10-56-38-（java性能调优）" class="headerlink" title="2017年3月17日10:56:38 （java性能调优）"></a>2017年3月17日10:56:38 （java性能调优）</h3><ol>
+<li>jps、jstack等工具排查问题、微信收藏java 排查问题文章的整理<ol>
+<li><a href="http://www.cnblogs.com/chengJAVA/p/5821218.html" target="_blank" rel="noopener">JVM调优之jstack找出最耗cpu的线程并定位代码</a></li>
+<li><a href="http://blog.csdn.net/feihong247/article/details/7874063" target="_blank" rel="noopener"> Java自带的性能监测工具用法简介——jstack、jconsole、jinfo、jmap、jdb、jsta、jvisualvm</a></li>
+</ol>
+</li>
+<li>javap 查看编译版本信息，主要用于<code>Bad version</code>错误，<a href="http://www.blogjava.net/aoxj/archive/2013/02/17/395349.html" target="_blank" rel="noopener">使用javap命令查看编译版本信息</a></li>
+<li><a href="http://www.blogjava.net/aoxj/MyPosts.html" target="_blank" rel="noopener">编码最佳实践</a><ol>
+<li><a href="http://www.blogjava.net/aoxj/archive/2012/09/06/387170.html" target="_blank" rel="noopener">编码最佳实践(5)–小心！这只是冰山一角</a> - 意想不到的保留了原始对象的引用</li>
+</ol>
+</li>
+<li><a href="http://www.iteye.com/topic/806990" target="_blank" rel="noopener">java线程安全总结</a> 其中有<code>有序性</code>相关，待消化</li>
+<li>好文<a href="http://www.blogjava.net/aoxj/archive/2007/12/05/165536.html" target="_blank" rel="noopener">sun的java编译器对string常量表达式的处理和优化</a> - 关键字：编译器优化、运行时、基本类型、常量优化、final、final 方法</li>
+<li><a href="http://www.blogjava.net/aoxj/archive/2008/01/11/174728.html" target="_blank" rel="noopener">浅谈spring和依赖注入的价值</a> - 关键字：解耦、抽象、分离、provider，扩展思考：依赖注入–对比–内部接口实现、容器IOC</li>
+<li><a href="http://blog.csdn.net/Soft_Po/article/details/53761198" target="_blank" rel="noopener">java常见面试题</a></li>
+</ol>
+<h3 id="2017年3月14日09-27-57（构师-类图-设计）"><a href="#2017年3月14日09-27-57（构师-类图-设计）" class="headerlink" title="2017年3月14日09:27:57（构师-类图-设计）"></a>2017年3月14日09:27:57（构师-类图-设计）</h3><ol>
+<li><a href="http://blog.csdn.net/wqewq19/article/details/52931890" target="_blank" rel="noopener"> 架构师之UML类别图，顺序图，用例图，活动图</a></li>
+</ol>
+<h3 id="2017年3月13日13-56-26"><a href="#2017年3月13日13-56-26" class="headerlink" title="2017年3月13日13:56:26"></a>2017年3月13日13:56:26</h3><ol>
+<li><a href="http://www.tuicool.com/articles/yiyy6bI" target="_blank" rel="noopener">乐观锁的一种实现方式——CAS</a></li>
+<li><a href="http://www.tuicool.com/articles/ru6vUvn" target="_blank" rel="noopener">深入理解Java虚拟机笔记—原子性、可见性、有序性</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/java/j-jtp11234/index.html" target="_blank" rel="noopener">Java 理论与实践: 流行的原子</a><br>Q1: 乐观锁的CAS Atomic类的应用<br>Q2: jdk 5.0 由锁方案改为 原子变量实现 和 需要时进行锁定<br>Q3: 原子性、可见性、有序性的理解</li>
+</ol>
+<h3 id="2017年3月10日16-31-43"><a href="#2017年3月10日16-31-43" class="headerlink" title="2017年3月10日16:31:43"></a>2017年3月10日16:31:43</h3><ol>
+<li><a href="http://www.cnblogs.com/iliuyuet/p/5603618.html" target="_blank" rel="noopener">java堆、栈、堆栈的区别</a>  </li>
+<li><a href="http://blog.csdn.net/ghost_programmer/article/details/40891735" target="_blank" rel="noopener">java中数据的5种存储位置(堆与栈)-生命周期</a></li>
+<li><a href="http://yijiebuyi.com/blog/8f985d539566d0bf3b804df6be4e0c90.html" target="_blank" rel="noopener">git reset revert 回退回滚取消提交返回上一版本</a> 整理入=&gt; <a href="../_drafts/git常用命令.md">git常用命令</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2017/03/10/Read-Later/" data-id="cjjwhr4ww002d8crj9lwak96d" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-svn-分支管理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/03/08/svn-分支管理/" class="article-date">
+  <time datetime="2017-03-08T09:20:15.000Z" itemprop="datePublished">2017-03-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/03/08/svn-分支管理/">svn 分支管理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="http://www.iteye.com/topic/28013" target="_blank" rel="noopener">参考</a></p>
+<h2 id="1-svn-初始目录结构"><a href="#1-svn-初始目录结构" class="headerlink" title="1. svn 初始目录结构"></a>1. svn 初始目录结构</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">D:\pro-repo</span><br><span class="line">├─branches</span><br><span class="line">├─tags</span><br><span class="line">└─trunk</span><br></pre></td></tr></table></figure>
+<p>如果没有对应的结构目录，可以使用以下命令来创建：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn mkdir branches</span><br></pre></td></tr></table></figure></p>
+<h2 id="2-branchs-tags-的建立"><a href="#2-branchs-tags-的建立" class="headerlink" title="2. branchs/tags 的建立"></a>2. branchs/tags 的建立</h2><p>需求一：产品开发已经基本完成，并且通过很严格的测试，这时候我们就想发布给客户使用，发布我们的1.0版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn copy svn://server/trunk svn://server/tags/release-1.0 -m <span class="string">"1.0 released"</span></span><br></pre></td></tr></table></figure>
+<p>需求二: 需要开发一个新的功能<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn copy svn://server/trunk svn://server/branches/fea-01 -m <span class="string">"新开分支开发01新需求"</span></span><br></pre></td></tr></table></figure></p>
+<p>咦，这个和branches有什么区别，好像啥区别也没有？<br>是的，branches和tags是一样的，都是目录，只是我们不会对这个release-1.0的tag做修改了，不再提交了，如果提交那么就是branches </p>
+<p>需求三：有一天，突然在线上发现一个致命的bug,那么所有的branches一定也一样了，该怎么办？<br>首先我们是从线上发现的，那么我第一步先：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn copy svn://server/tags/release-1.0 svn://server/branches/bugfix-01 -m <span class="string">"1.0 线上bug (copy from tags/release-1.0) "</span></span><br></pre></td></tr></table></figure></p>
+<p>然后我们拉去分支<code>bugfix-01</code>代码到本地，开发、测试，如果没有问题的话，合并分支到<code>在生命周期</code>的分支，这里是：<code>branches/fea-01</code>、<code>trunk/</code><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ svn -r 6:7 merge  https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/branches/bugfix-01 trunk <span class="comment"># bug 合并至主干</span></span><br><span class="line">$ svn -r 0:HEAD merge https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/trunk branches/fea-01 <span class="comment"># 主干合并至需求分支</span></span><br><span class="line">$ svn delete  https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/branches/bugfix-01 -m <span class="string">"删除-bug-01"</span></span><br></pre></td></tr></table></figure></p>
+<p>新的bug产生时(上次升级没有打tag，直接取trunk):<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ svn copy https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/trunk https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/branches/bugfix-02 -m <span class="string">"1.0 线上bug (copy from trunk) "</span></span><br><span class="line">$ <span class="built_in">cd</span> trunk/</span><br><span class="line">$ svn mergeinfo https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/branches/bugfix-02  --show-revs eligible <span class="comment"># 查看Branch中那些改动还未合并 </span></span><br><span class="line">$ svn merge https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/branches/bugfix-02 <span class="comment"># bug 合并至主干 （和上面的指定版本功能效果一样，这里省去了指定版本的麻烦）</span></span><br><span class="line">$ svn mergeinfo https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/branches/bugfix-02 <span class="comment"># 查看当前Branch中已经有那些改动已经被合并到Trunk中</span></span><br><span class="line">$ <span class="built_in">cd</span> ../branches/fea-01</span><br><span class="line">$ svn merge https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/trunk <span class="comment"># 主干合并至分支fea-01</span></span><br></pre></td></tr></table></figure></p>
+<p>合并后对 trunk 严格测试没问题的话，就可以发布<code>release-1.1</code>了。</p>
+<h2 id="3-几个问题"><a href="#3-几个问题" class="headerlink" title="3. 几个问题"></a>3. 几个问题</h2><h4 id="1-考虑到部署release时，每次都要打上tag，会略显繁琐，-tags-不一定非得有，也就是上面用trunk作为线上分支"><a href="#1-考虑到部署release时，每次都要打上tag，会略显繁琐，-tags-不一定非得有，也就是上面用trunk作为线上分支" class="headerlink" title="1. 考虑到部署release时，每次都要打上tag，会略显繁琐， tags 不一定非得有，也就是上面用trunk作为线上分支"></a>1. 考虑到部署release时，每次都要打上tag，会略显繁琐， <code>tags</code> 不一定非得有，也就是上面用<code>trunk</code>作为线上分支</h4><h4 id="2-上面有提到在生命周期的分支，这是为了强调branchs下的分支尽可能缩短其生命周期，因为在生命周期的分支都得维护，线上bug、其他分支新功能这些代码所有修改都得合并入在生命周期的分支"><a href="#2-上面有提到在生命周期的分支，这是为了强调branchs下的分支尽可能缩短其生命周期，因为在生命周期的分支都得维护，线上bug、其他分支新功能这些代码所有修改都得合并入在生命周期的分支" class="headerlink" title="2. 上面有提到在生命周期的分支，这是为了强调branchs下的分支尽可能缩短其生命周期，因为在生命周期的分支都得维护，线上bug、其他分支新功能这些代码所有修改都得合并入在生命周期的分支"></a>2. 上面有提到<code>在生命周期</code>的分支，这是为了强调<code>branchs</code>下的分支尽可能缩短其生命周期，因为在生命周期的分支都得维护，线上bug、其他分支新功能这些代码所有修改都得合并入<code>在生命周期</code>的分支</h4><p>在生命周期的分支，一般有：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">trunk/</span><br><span class="line"></span><br><span class="line">branches/fea-01</span><br><span class="line">branches/fea-02</span><br><span class="line">branches/fea-....</span><br><span class="line"></span><br><span class="line">branches/bugfix-01</span><br></pre></td></tr></table></figure></p>
+<p>同时开发的需求<code>fea-n</code>可能有几个，<code>bugfix</code>线上bug通常就作为一个了。</p>
+<h4 id="3-冲突解决"><a href="#3-冲突解决" class="headerlink" title="3. 冲突解决"></a>3. 冲突解决</h4><p>如果一个文件在两个分支上都被修改，那么合并两个分支时将可能发生冲突。</p>
+<p>之所以说可能发生冲突，是因为如果两个分支修改的文件明显不同，<code>merge</code>会自动的帮我们处理好。比如一端对文件第一行修改了内容，一端对文件增加了一行内容这种情况。</p>
+<p>当文件发生冲突时可以有以下方式来处理：</p>
+<h4 id="工具设置"><a href="#工具设置" class="headerlink" title="工具设置"></a>工具设置</h4><p>我们可以使用<code>TortoiseSVN</code>设置下对比工具来方便我们compare和merge，比如<code>BeyondCompare</code></p>
+<p>操作步骤：<code>项目目录-右键</code>  —&gt; <code>TortoiseSVN</code> —&gt; <code>Settings</code> —&gt; <code>Diff Viewer</code><br><img src="/images/svn-branch-mgt/diffViewer-setting.jpg" alt="Diff-tool-set"><br>其中代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;D:\tools\BeyondCompare\Beyond Compare\BCompare.exe&quot; %base %mine /title1=%bname /title2=%yname /leftreadonly</span><br><span class="line">&quot;D:\tools\BeyondCompare\Beyond Compare\BCompare.exe&quot;</span><br></pre></td></tr></table></figure></p>
+<p>合并工具设置：<br><img src="/images/svn-branch-mgt/merge-tool-setting.jpg" alt="merge-tool-set"><br>其中代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;D:\tools\BeyondCompare\Beyond Compare\BCompare.exe&quot;  %mine %theirs %base %merged /title1=%yname /title2=%tname /title3=%bname /title4=%mname</span><br></pre></td></tr></table></figure></p>
+<h4 id="解决冲突"><a href="#解决冲突" class="headerlink" title="解决冲突"></a>解决冲突</h4><p><img src="/images/svn-branch-mgt/edit-conflicts.jpg" alt="edit-conflict"><br><img src="/images/svn-branch-mgt/merging.jpg" alt="merging"><br>在上一步合并完后，就可以标记解决完冲突了：<br><img src="/images/svn-branch-mgt/resolve.jpg" alt="resolve"></p>
+<p><del>#### 3. <code>merge</code>的几种方式及应用场景， 参考<a href="http://chunanyong.iteye.com/blog/697255" target="_blank" rel="noopener">svn分支合并类型</a></del></p>
+<h4 id="3-merge-我使用merge的两种方式"><a href="#3-merge-我使用merge的两种方式" class="headerlink" title="3. merge 我使用merge的两种方式"></a>3. <code>merge</code> 我使用merge的两种方式</h4><ol>
+<li><p>指定分支地址，合并至当前目录:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将 `bug-01`分支 合并到 `trunk`</span></span><br><span class="line">$ <span class="built_in">cd</span> trunk/</span><br><span class="line">$ svn merge https://server/svn/pro/branches/bug-01</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将 `trunk` 合并至 分支 `fea-01`</span></span><br><span class="line">$ <span class="built_in">cd</span> ../branches/fea-01</span><br><span class="line">$ svn merge https://server/svn/pro/trunk</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>指定分支地址和版本，合并至指定分支目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将 bugfix-01 分支 合并至trunk</span></span><br><span class="line">$ svn -r 6:7 merge  https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/branches/bugfix-01 trunk/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 强 trunk 合并至 需求分支</span></span><br><span class="line">$ svn -r 0:HEAD merge https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/trunk branches/fea-01</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h4><ol>
+<li><p><strong>以上的<code>svn copy -m &quot;comment&quot;</code>命令会直接发给服务端执行，也就是说操作即时生效，无需手动commit，所以copy时最好加上<code>-m 注释内容</code></strong></p>
+</li>
+<li><p>一般分支分为两种：需求分支、bug修复分支(暂时撇开tags、trunk)，一般约定其命名规则：<code>fea-xxx</code>、<code>bugfix-xxx</code>，这其实都属于临时性分支，使用完应该删除（为了方便开发，不用每次签出新的bug分支，有时会把把bug作为一个长期性的分支，但要注意与trunk保持同步）。<br>同名分支，重建(同名分支，前bug已经delete)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ svn copy https://orh-vm-pc/svn/test-tzbms/trunk https://orh-vm-pc/svn/test-tzbms/branches/bugfix-live -m &quot;bug长期分支（完成后delete，需要时同名重建）&quot;</span><br><span class="line">... 修改、测试、合并后</span><br><span class="line">$ svn delete https://orh-vm-pc/svn/test-tzbms/branches/bugfix-live -m &quot;bug长期分支（完成后delete，需要时同名重建）&quot;</span><br><span class="line">... 下次有新的bug时</span><br><span class="line">$ svn copy https://orh-vm-pc/svn/test-tzbms/trunk https://orh-vm-pc/svn/test-tzbms/branches/bugfix-live -m &quot;bug长期分支（完成后delete，需要时同名重建）&quot;</span><br><span class="line">... 重复上面的步骤</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>svn merge</code> merge动作是在本地执行的，所以可以放心执行，如果有出现失误，不提交，使用<code>$ svn revert . -R</code>回滚工作区， 再重新<code>merge</code>分支即可。</p>
+</li>
+<li><p>合并前保证<code>目标分支</code>是clean的，不要忘记<code>来源分支</code>都提交了</p>
+</li>
+<li><p>合并完分之后，<strong>切记维护<code>生命周期</code>还未结束的分支</strong>。一般分支的合并都是基于<code>trunk</code>来交互的，这就是说的<strong>经常的与主干保持同步</strong>，比如有以下情况</p>
+<ol>
+<li>新开分支解决了<code>bug</code>, 新的分支<code>bug-02</code>开发测试完，合入<code>trunk</code>。此时别的分支代码应该也是存在bug的，解决同样的bug我们当然<strong>不需要再在其他分支上手动去修复bug</strong>了，而是把<code>trunk</code>上的修改<strong>尽快</strong><code>merge</code>到其他分支，有冲突就在此时解决，不然隔的时间长了，鬼还记得修改了什么。</li>
+<li>新开分支完成了<code>某个功能</code>, 新的分支<code>fea-02</code>开发测试完，合入<code>trunk</code>。此时其他分支应尽快的与<code>trunk</code>同步，将<code>trunk</code>分支<code>merge</code>至其他分支，如果<code>bug</code>分支作为长期分支，也需要同步，否则bug分支应该已经delete掉了。</li>
+</ol>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2017/03/08/svn-分支管理/" data-id="cjjwhr4xl003m8crjiuvahk82" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/版本控制/">版本控制</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-glossary-生词本" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/02/27/glossary-生词本/" class="article-date">
+  <time datetime="2017-02-27T08:29:42.000Z" itemprop="datePublished">2017-02-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/英语/">英语</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/02/27/glossary-生词本/">glossary-生词本</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="2017年10月"><a href="#2017年10月" class="headerlink" title="2017年10月"></a>2017年10月</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">determine   确定；判断</span><br></pre></td></tr></table></figure>
+<h4 id="2017年9月"><a href="#2017年9月" class="headerlink" title="2017年9月"></a>2017年9月</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">biased      有偏见的；有偏的</span><br><span class="line">coarsening  粗化；（使）变粗糙</span><br><span class="line">elimination 消除；淘汰</span><br><span class="line">adaptive    适应的；有适应能力的</span><br><span class="line">spinning    使...旋转；纺纱</span><br><span class="line">arrange     安排</span><br><span class="line">threats     威胁</span><br><span class="line">earnings    收益</span><br><span class="line">emerged     出现</span><br></pre></td></tr></table></figure>
+<h4 id="2017年8月"><a href="#2017年8月" class="headerlink" title="2017年8月"></a>2017年8月</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conventionality 惯例；习俗</span><br><span class="line">barrier     屏障</span><br><span class="line">etcetera    等等;etc</span><br></pre></td></tr></table></figure>
+<h4 id="2017年7月"><a href="#2017年7月" class="headerlink" title="2017年7月"></a>2017年7月</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">simulate    模拟</span><br><span class="line">genuine     真正的</span><br><span class="line">avoid       避免；避开</span><br><span class="line">slight      轻微；略</span><br><span class="line">aboundant   丰富</span><br><span class="line">corresponds 对应</span><br><span class="line">proving     证明</span><br><span class="line">idempotent  幂等</span><br><span class="line">resigned    辞职</span><br><span class="line">painful     痛苦</span><br><span class="line">implicit    含蓄；简化</span><br><span class="line">injustice   不公平；冤屈</span><br><span class="line">witness     目睹；见证</span><br><span class="line">principals  身份</span><br><span class="line">credentials 证书；凭证</span><br></pre></td></tr></table></figure>
+<h4 id="2017年6月"><a href="#2017年6月" class="headerlink" title="2017年6月"></a>2017年6月</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">celebrate   庆祝；歌颂</span><br><span class="line">elixir      炼金药；长生不老药</span><br><span class="line">briefly     简要的；略略</span><br><span class="line">skeptics    怀疑者</span><br><span class="line">strangers   陌生人；外人</span><br><span class="line">exploration 勘探</span><br></pre></td></tr></table></figure>
+<h4 id="2017年5月"><a href="#2017年5月" class="headerlink" title="2017年5月"></a>2017年5月</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">paradigm    范例；模范</span><br><span class="line">shortcuts   快捷键</span><br><span class="line">consensus   共识；合意</span><br><span class="line">majority    多数；成年</span><br><span class="line">vote        投票；投票表决</span><br><span class="line">hipster     潮人；（指衣服）低到臀部的</span><br><span class="line">collaborator  协作者；合作者</span><br><span class="line">elusive     难以捉摸的；不易记住的</span><br><span class="line">sensitive   敏感的；易受影响的；</span><br><span class="line">throttle    节流；减速</span><br></pre></td></tr></table></figure>
+<h4 id="2017年4月"><a href="#2017年4月" class="headerlink" title="2017年4月"></a>2017年4月</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">triangle    三角形；三人一组</span><br><span class="line">supplementary 增补的；追加的</span><br><span class="line">multilingual 使用多语言的</span><br><span class="line">surrogate   代理；代表</span><br><span class="line">brief       短暂的；简明的</span><br><span class="line">desire      渴望；希望</span><br><span class="line">innovation  改革；创新</span><br><span class="line">undergraduate 大学生；本科</span><br><span class="line">volunteer   志愿者；自愿的</span><br><span class="line">sweep       打扫；清除</span><br><span class="line">elapsed     过去；消逝</span><br><span class="line">pursuit     追赶</span><br><span class="line">finery      华丽；服饰</span><br><span class="line">sneakers    运动鞋；球鞋</span><br><span class="line">trouser     裤子</span><br><span class="line">leather     皮革制品；皮的</span><br></pre></td></tr></table></figure>
+<h4 id="2017年3月"><a href="#2017年3月" class="headerlink" title="2017年3月"></a>2017年3月</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">candidate   候选；候选人</span><br><span class="line">snippet     片段；小片</span><br><span class="line">compete     竞争；竞赛</span><br><span class="line">peek        偷看；窥视</span><br><span class="line">trait       特性；少许</span><br><span class="line">assembly    装配；集会</span><br><span class="line">interrupt   打断；阻止</span><br><span class="line">instead     代替；反而</span><br><span class="line">inherently  本质上；固有地</span><br><span class="line">illegal     非法的；违反规则的</span><br><span class="line">segment     环节；部分</span><br><span class="line">pessimistic 悲观的；厌世的</span><br><span class="line">mutex       互斥</span><br><span class="line">acquire     学到；获得</span><br><span class="line">stamp       邮票；戳</span><br><span class="line">volatile    易变的；不稳定的</span><br><span class="line">reentrant   再进去</span><br><span class="line">mutation    变异；变化</span><br><span class="line">additional   额外的；附加的</span><br><span class="line">spread      伸开；展开</span><br><span class="line">combine     使结合；兼有</span><br><span class="line">craft       手艺；诡计</span><br><span class="line">behaviour   行为；举止</span><br></pre></td></tr></table></figure>
+<h4 id="2017年2月"><a href="#2017年2月" class="headerlink" title="2017年2月"></a>2017年2月</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">stage       舞台；阶段</span><br><span class="line">pick        挑选；选中</span><br><span class="line">omit        省略；删掉</span><br><span class="line">severity    严重性</span><br><span class="line">trivial     不重要的；琐屑的</span><br><span class="line">critical    危急；关键</span><br><span class="line">major       重大的；主要</span><br><span class="line">minor       次要；二流的</span><br><span class="line">clarity     清晰度</span><br><span class="line">lack        缺乏；缺少</span><br><span class="line">irrelevant  不相干；落后</span><br><span class="line">shim        垫片</span><br><span class="line">concrete    具体的</span><br><span class="line">paragraph   段落</span><br><span class="line">tidy        整洁的</span><br><span class="line">messy       混乱的</span><br><span class="line">accumulator 累加器</span><br><span class="line">embed       嵌入</span><br><span class="line">capability   能力；性能</span><br></pre></td></tr></table></figure>
+<h4 id="2017年1月"><a href="#2017年1月" class="headerlink" title="2017年1月"></a>2017年1月</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">primitive   原始的；原生的</span><br><span class="line">explicitly  明确的</span><br><span class="line">wildcard    通配符</span><br><span class="line">investment  投资；投入</span><br><span class="line">equity      公平；产权</span><br><span class="line">venture     创业；风险</span><br><span class="line">partner     伙伴；搭档</span><br><span class="line">limited     限定；有限</span><br><span class="line">improve     提高；改善</span><br><span class="line">atomicity   原子性</span><br><span class="line">consistency 一致性</span><br><span class="line">principle   原则；原理</span><br><span class="line">isolatioin  隔离；隔绝</span><br><span class="line">durable     持久的；耐用的</span><br><span class="line">lasting     持久；永久</span><br><span class="line">partition   划分；分割</span><br><span class="line">segregation 隔离</span><br><span class="line">prevent     防止；预防</span><br><span class="line">leak        泄漏；透露</span><br><span class="line">least       最小</span><br><span class="line">nested      嵌套</span><br><span class="line">obtain      获得；得到</span><br><span class="line">various     各种；各个</span><br></pre></td></tr></table></figure>
+<h4 id="2016年"><a href="#2016年" class="headerlink" title="2016年"></a>2016年</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">coercion    强迫；压迫</span><br><span class="line">inherit     继承</span><br><span class="line">introduction 介绍；引言</span><br><span class="line">legacy      遗产</span><br><span class="line">tutorial    教程；个别指导</span><br><span class="line">syntax      语法；句法</span><br><span class="line">recommended 推荐的</span><br><span class="line">below       以下；下面</span><br><span class="line">above       以上；上</span><br><span class="line">integrate   整合</span><br><span class="line">properly    正确的；适当的</span><br><span class="line">following   以下</span><br><span class="line">prepare     准备</span><br><span class="line">hook        钩子</span><br><span class="line">manipulation 操纵；伪造</span><br><span class="line">centric     中心</span><br><span class="line">specific    具体；特定</span><br><span class="line">encounter   遭遇；面临</span><br><span class="line">effects     影响</span><br><span class="line">via         经过；通过</span><br><span class="line">intentionally 故意地</span><br><span class="line">stateless   无状态；无国籍</span><br><span class="line">obfuscate   是模糊；使混乱</span><br><span class="line">also        也</span><br><span class="line">rely        依靠；依赖</span><br><span class="line">incorporate 包含；合并</span><br><span class="line">perhaps     也许（表示不确定）</span><br><span class="line">analytics   分析</span><br><span class="line">domestic    国内的；家庭的</span><br><span class="line">manual      手册；手工</span><br><span class="line">cause       原因；事业</span><br><span class="line">external    外部的</span><br><span class="line">terminated  终止</span><br><span class="line">delimited   分隔；划界</span><br><span class="line">coalesce    联合；合并</span><br><span class="line">exact       精确；确切</span><br><span class="line">enhanced    增强；提高</span><br><span class="line">original    原始的</span><br><span class="line">correct     正确的；更正</span><br><span class="line">expect      预期</span><br><span class="line">deferred    延期；推迟</span><br><span class="line">optimized   优化的</span><br><span class="line">structured  结构化的</span><br><span class="line">handful     少数</span><br><span class="line">visit       访问；参观</span><br><span class="line">compatible  兼容</span><br><span class="line">seveval     一些；几个</span><br><span class="line">scene       场面；现场</span><br><span class="line">launch      发射；发动</span><br><span class="line">detect      发现</span><br><span class="line">latency     潜伏；延迟</span><br><span class="line">responder   响应者；应答器</span><br><span class="line">scaffold    脚手架</span><br><span class="line">draft       草稿；草案</span><br><span class="line">landscape   景观；风景</span><br><span class="line">asset       资产</span><br><span class="line">blame       怪；责备</span><br><span class="line">partial     部分</span><br><span class="line">separate    分离</span><br><span class="line">promote     促进；提升</span><br><span class="line">demote      降级</span><br></pre></td></tr></table></figure>
+<h4 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">for demonstration purpose 为了演示(示范)的目的</span><br><span class="line">think about         想一想；()</span><br><span class="line">aka (also known as) 又名；也称为</span><br><span class="line">CISC (Complex Instruction Set Computing)  复杂指令集；(如x86指令集)</span><br><span class="line">RISC (Reduce Instruction Set Computing)   精简指令集；</span><br><span class="line">in other words      换句话说</span><br><span class="line">no longer           不再</span><br><span class="line">such as             例如</span><br><span class="line">table of contents   目录</span><br><span class="line">getting started     入门；开始</span><br><span class="line">should nerver       不应该</span><br><span class="line">general purpose     一般用途；通用的</span><br><span class="line">comes with          自带；配备</span><br><span class="line">behind the scenes   幕后</span><br></pre></td></tr></table></figure>
+<h4 id="clojure-flavored-javascript"><a href="#clojure-flavored-javascript" class="headerlink" title="clojure-flavored-javascript"></a><a href="https://oyanglul.us/clojure-flavored-javascript/" target="_blank" rel="noopener">clojure-flavored-javascript</a></h4><blockquote>
+<p>Think about how we gonna implement the same thing if not using map </p>
+</blockquote>
+<blockquote>
+<p>Programmer need to think about nearly every step the machine can understand.</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2017/02/27/glossary-生词本/" data-id="cjjwhr4x5002s8crj23e4jcqf" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/英语/">英语</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/计划/">计划</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-UML类图" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/02/04/UML类图/" class="article-date">
+  <time datetime="2017-02-04T03:01:43.000Z" itemprop="datePublished">2017-02-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/02/04/UML类图/">UML类图</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="/images/uml-example/uml.png" alt=""></p>
+<h4 id="1-类，-动物矩形框代表一个类-Class-，类分为三层"><a href="#1-类，-动物矩形框代表一个类-Class-，类分为三层" class="headerlink" title="1. 类， 动物矩形框代表一个类(Class)，类分为三层"></a>1. 类， <code>动物</code>矩形框代表一个类(Class)，类分为三层</h4><ul>
+<li>第一层显示类的名称，如果是抽象类，则用斜体表示</li>
+<li>第二层显示类的特性，通常是字段和属性</li>
+<li>第三层是累的操作，通常是方法和行为，注意前面的符号，<code>+</code>表示<code>public</code>，<code>-</code>表示<code>private</code>，<code>#</code>表示<code>protected</code></li>
+</ul>
+<div style="margin: auto;"><br>    <img src="/images/uml-example/1.png"><br></div>
+
+<h4 id="2-接口，-飞翔表示一个接口"><a href="#2-接口，-飞翔表示一个接口" class="headerlink" title="2. 接口， 飞翔表示一个接口"></a>2. 接口， <code>飞翔</code>表示一个接口</h4><ol>
+<li><p>第一种：</p>
+<ul>
+<li>第一行是接口名称，顶部有<code>&lt;&lt;interface&gt;&gt;</code></li>
+<li>第二行是接口方法</li>
+</ul>
+</li>
+<li><p>另一种接口表示方法：</p>
+<ul>
+<li>棒棒糖表示法，就是唐老鸭实现了‘讲人话’接口</li>
+</ul>
+</li>
+</ol>
+<div style="margin: auto;"><br>    <img src="/images/uml-example/2.png"><br></div>
+
+<h4 id="3-继承"><a href="#3-继承" class="headerlink" title="3. 继承"></a>3. 继承</h4><ul>
+<li><code>空心三角</code> + <code>实线</code>，鸟继承自动物</li>
+</ul>
+<div style="margin: auto;"><br>    <img src="/images/uml-example/3.png"><br></div>
+
+<h4 id="4-实现接口"><a href="#4-实现接口" class="headerlink" title="4. 实现接口"></a>4. 实现接口</h4><ul>
+<li><code>空心三角</code> + <code>虚线</code>， 大雁实线了飞翔接口</li>
+</ul>
+<div style="margin: auto;"><br>    <img src="/images/uml-example/4.png"><br></div>
+
+<h4 id="5-关联关系"><a href="#5-关联关系" class="headerlink" title="5. 关联关系"></a>5. 关联关系</h4><ul>
+<li><code>实线箭头</code>表示关联关系，企鹅要知道气候的变化</li>
+</ul>
+<div style="margin: auto;"><br>    <img src="/images/uml-example/5.png"><br></div>
+
+<h4 id="6-聚合关系（Aggregation）"><a href="#6-聚合关系（Aggregation）" class="headerlink" title="6. 聚合关系（Aggregation）"></a>6. 聚合关系（Aggregation）</h4><ul>
+<li><code>空心菱形</code> + <code>实线箭头</code>，大雁是群居动物，每只大雁都是属于一个雁群，一个雁群可以有多只大雁，所以他们就是聚合(Aggregation)关系。<strong>聚合表示一种弱‘拥有’关系，体现A对象可包含B对象，但B对象不是A对象的一部分。</strong></li>
+</ul>
+<div style="margin: auto;"><br>    <img src="/images/uml-example/6.png"><br>    <img src="/images/uml-example/7.png"><br></div>
+
+<h4 id="7-组合-合成关系（Composition）"><a href="#7-组合-合成关系（Composition）" class="headerlink" title="7. 组合/合成关系（Composition）"></a>7. 组合/合成关系（Composition）</h4><ul>
+<li><code>实心菱形</code> + <code>实线箭头</code>，<strong>组合关系是一种强拥有关系，体现了严格的部分和整体的关系。</strong> 鸟和其翅膀是组合关系，他们是部分和整体的关系，生命周期相同。连线两端的数字称为基数，表明这一端的类可以有几个实例。关联关系、聚合关系也可以有基数。</li>
+</ul>
+<div style="margin: auto;"><br>    <img src="/images/uml-example/8.png"><br></div>
+
+<h4 id="8-依赖关系"><a href="#8-依赖关系" class="headerlink" title="8. 依赖关系"></a>8. 依赖关系</h4><ul>
+<li><code>虚线箭头</code>表示依赖关系，动物有新陈代谢、能繁殖的特征，需要依赖氧气、水等。所以动物依赖氧气和水。</li>
+</ul>
+<div style="margin: auto;"><br>    <img src="/images/uml-example/9.png"><br>    <img src="/images/uml-example/10.png"><br></div>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2017/02/04/UML类图/" data-id="cjjwhr4x1002o8crj7giait0a" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-node-js中的exports与module-exports" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/10/13/node-js中的exports与module-exports/" class="article-date">
+  <time datetime="2016-10-13T09:16:26.000Z" itemprop="datePublished">2016-10-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/13/node-js中的exports与module-exports/">node.js中的exports与module.exports</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Rererence for: <a href="https://cnodejs.org/topic/5231a630101e574521e45ef8" target="_blank" rel="noopener">https://cnodejs.org/topic/5231a630101e574521e45ef8</a></p>
+<h3 id="理解以下"><a href="#理解以下" class="headerlink" title="理解以下"></a>理解以下</h3><ol>
+<li><code>module.exports</code> 初始值为一个空对象<code>{}</code></li>
+<li><code>exports</code> 是指向<code>module.exports</code>的引用</li>
+<li><code>require(xxx)</code>返回的是<code>module.exports</code>而不是<code>exports</code></li>
+</ol>
+<p>如果<code>module.exports</code> 指向新的对象时，<code>exports</code> 断开了与 <code>module.exports</code> 的引用，那么通过 <code>exports = module.exports</code> 让 exports 重新指向 module.exports 即可</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2016/10/13/node-js中的exports与module-exports/" data-id="cjjwhr4xj003i8crjttu962tx" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-PostgreSQL之psql的使用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/01/PostgreSQL之psql的使用/" class="article-date">
+  <time datetime="2016-07-01T02:56:37.000Z" itemprop="datePublished">2016-07-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/PostgreSQL/">PostgreSQL</a>►<a class="article-category-link" href="/categories/PostgreSQL/数据库/">数据库</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/07/01/PostgreSQL之psql的使用/">PostgreSQL之psql的使用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="psql-的使用"><a href="#psql-的使用" class="headerlink" title="psql 的使用"></a>psql 的使用</h3><p>直接键入<code>psql</code>进入到命令行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[postgres@localhost ~]$ psql </span><br><span class="line">psql (9.5.3)</span><br><span class="line">Type &quot;help&quot; for help.</span><br></pre></td></tr></table></figure></p>
+<p><strong>安装PostgreSQL数据库时，会建立一个与初始化数据库时的操作系统用户同名的数据库用户，同时这个用户是数据库超级用户，在这个OS用户下，登录是执行的操作系统认证，可以在pg_hba.conf下配置认证</strong><br>psql命令格式：<br>    <code>psql -h &lt;hostname or ip&gt; -p &lt;端口号&gt; [数据库名称] [用户名称]</code><br>例：<br>    <code>pgsql -h 192.168.2.11 -p 5432 testdb postgres</code></p>
+<p>查看有哪些数据库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[postgres@localhost ~]$ psql -l</span><br><span class="line">#或者在进入了psql后，使用“\”开头调用psql命令</span><br><span class="line">postgres-# \l</span><br></pre></td></tr></table></figure></p>
+<p>连接至某个数据库、查看有哪些表、查看表的结构：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">postgres-# \c db_name</span><br><span class="line">db_name-# \d</span><br><span class="line">db_name-# \d table_name</span><br></pre></td></tr></table></figure></p>
+<p>为用户设置一个密码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">postgres-# \password postgres</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2016/07/01/PostgreSQL之psql的使用/" data-id="cjjwhr4wv002c8crje7lm5wea" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-CentOS6-5-PostgreSQL源码编译安装" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/01/CentOS6-5-PostgreSQL源码编译安装/" class="article-date">
+  <time datetime="2016-07-01T01:36:39.000Z" itemprop="datePublished">2016-07-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>►<a class="article-category-link" href="/categories/Linux/数据库/">数据库</a>►<a class="article-category-link" href="/categories/Linux/数据库/PostgreSQL/">PostgreSQL</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/07/01/CentOS6-5-PostgreSQL源码编译安装/">CentOS6.5.PostgreSQL源码编译安装</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>postgresql官网：<a href="http://www.postgresql.org/" target="_blank" rel="noopener">http://www.postgresql.org/</a><br>下载软件：<a href="https://ftp.postgresql.org/pub/source/v9.5.3/postgresql-9.5.3.tar.bz2" target="_blank" rel="noopener">https://ftp.postgresql.org/pub/source/v9.5.3/postgresql-9.5.3.tar.bz2</a></p>
+<h2 id="安装、环境变量配置"><a href="#安装、环境变量配置" class="headerlink" title="安装、环境变量配置"></a>安装、环境变量配置</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># ./configure --prefix=/usr/local/postgresql-9.5.3 --with-python --with-perl</span></span><br><span class="line">[root@localhost ~]<span class="comment"># make</span></span><br><span class="line">[root@localhost ~]<span class="comment"># make install</span></span><br><span class="line">[root@localhost ~]<span class="comment"># ln -sf /usr/local/postgresql-9.5.3 /usr/local/pgsql</span></span><br><span class="line">[root@localhost ~]<span class="comment"># export PATH=/usr/local/pgsql/bin:$PATH  ## 设置可执行文件的路径</span></span><br><span class="line">[root@localhost ~]<span class="comment"># export LD_LIBRARY_PATH=/usr/local/pgsql/lib  ##设置共享库的路径</span></span><br><span class="line"><span class="comment">## --with-perl 加上这个选项，才能使用perl语法的自定义函数，一般都需要。</span></span><br><span class="line"><span class="comment">## --with-python 同上。</span></span><br><span class="line"><span class="comment">## -s: symbole 软链接，-f: force 如果目标链接已经存在则删除重新建立</span></span><br><span class="line"><span class="comment">## 如果9.5.4的版本发布了，升级只需停掉数据库在这里改下软链接地址就可以了</span></span><br><span class="line"><span class="comment">## 可将上面的语句加入到系统环境或者用户环境变量的配置文件中</span></span><br></pre></td></tr></table></figure>
+<h2 id="常见问题FAQ"><a href="#常见问题FAQ" class="headerlink" title="常见问题FAQ"></a>常见问题FAQ</h2><p>源码安装一般会出现一些依赖包的问题，因为每个系统的已有环境都不太一样，下面我列出了我碰到的几种依赖的问题，可以参考解决：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># yum install -y redline</span></span><br><span class="line">[root@localhost ~]<span class="comment"># yum install -y readline-devel</span></span><br><span class="line">[root@localhost ~]<span class="comment"># yum install -y zlib-devel</span></span><br><span class="line">[root@localhost ~]<span class="comment"># yum install -y perl-devel</span></span><br><span class="line">[root@localhost ~]<span class="comment"># yum install -y perl-ExtUtils-*</span></span><br><span class="line">[root@localhost ~]<span class="comment"># yum install -y python-devel</span></span><br></pre></td></tr></table></figure></p>
+<p>其实思路一般都是这样：</p>
+<ol>
+<li>根据报错信息得到缺少的”软件包名“</li>
+<li>检查下系统是否已经安装了这个“软件包名” <code>rpm -qa|grep &quot;软件包名&quot;</code></li>
+<li>上一步的结果如果是没有，则执行<code>yum install 软件包名</code>安装，如果有则一般代表需要安装他的开发包版本，则执行<code>yum install 软件包名-devel</code><br>当如在未安装前，你可以根据需要安装软件的文档先检查一遍系统的依赖。</li>
+</ol>
+<h2 id="数据库配置、初始"><a href="#数据库配置、初始" class="headerlink" title="数据库配置、初始"></a>数据库配置、初始</h2><h3 id="创建数据库簇"><a href="#创建数据库簇" class="headerlink" title="创建数据库簇"></a>创建数据库簇</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># export PGDATA=/mnt/db/pgsql</span></span><br><span class="line">[root@localhost ~]<span class="comment"># groupadd postgres</span></span><br><span class="line">[root@localhost ~]<span class="comment"># useradd -g postgres postgres</span></span><br><span class="line">[root@localhost ~]<span class="comment"># chown -R postgres:postgres/mnt/db/pgsql</span></span><br><span class="line">[root@localhost ~]<span class="comment">#  su -postgres</span></span><br><span class="line">[postgres@localhost ~]$ initdb</span><br><span class="line"><span class="comment">## 为了系统安全，pgsql不允许使用root来初始化数据库，故新建postgres</span></span><br><span class="line"><span class="comment">## su 与 su - 是有区别的，su只是切换了用户的权限，su - 是切换了权限并且获取了对应用户的环境变量，上面的一些export 变量其实我们都可以防止到postgresql的用户环境变量下，方便使用postgres用户专门操作pgsql数据库</span></span><br></pre></td></tr></table></figure>
+<h3 id="安装contrib下的工具"><a href="#安装contrib下的工具" class="headerlink" title="安装contrib下的工具"></a>安装contrib下的工具</h3><p>contrib 下面的工具比较实用，一般都会安装上。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[postgres@localhost ~]<span class="comment"># exit ##退出postgresql 用户，使用root用户来编译安装</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cd /usr/local/src/postgresql-9.2.4/contrib/</span></span><br><span class="line">[root@localhost ~]<span class="comment"># make</span></span><br><span class="line">[root@localhost ~]<span class="comment"># make install</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="启动和停止数据库"><a href="#启动和停止数据库" class="headerlink" title="启动和停止数据库"></a>启动和停止数据库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># su - postgres## 编译安装完了后，到了日常的系统维护，就养成切换回专门的用户来操作吧</span></span><br><span class="line">[postgres@localhost ~]$ pg_ctl start -D <span class="variable">$PGDATA</span></span><br><span class="line">[postgres@localhost ~]$ pg_ctl stop -D <span class="variable">$PGDATA</span> [-m SHUTDOWN-MODEL]</span><br><span class="line"><span class="comment">## SHUTDOWN-MODEL: smart 等待所有连接终止后关闭数据库； fast：快速关闭数据库，断开客户端连接，让已有事务回滚，相对于oracle的immediate; immediate: 立即关闭数据库，下次启动时进行恢复，相对于oracle 的abort模式； 这里oracle dba注意区别一下。</span></span><br></pre></td></tr></table></figure>
+<h3 id="修改监听IP和端口"><a href="#修改监听IP和端口" class="headerlink" title="修改监听IP和端口"></a>修改监听IP和端口</h3><p>在<strong>数据目录下</strong>编辑 <code>postgresql.conf</code>文件，找到如下内容：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#listen_address = 'localhost'</span></span><br><span class="line"><span class="comment">#port = 5432</span></span><br></pre></td></tr></table></figure></p>
+<p>其中<code>listen_address</code>表示监听的IP地址，默认是在“localhost”处监听，这会让远程主机无法登录这台数据库，可以修改成具体的内网地址，或者直接改成<code>*</code>,表示本地所有地址上监听。</p>
+<p>参数<code>port</code>表示监听的数据库端口号，默认为<code>5432</code>。如果一台机器需要安装几个数据库实例，可以调整这里的端口。</p>
+<p>修改这两个参数，需要重启数据库生效。</p>
+<h3 id="与数据库log相关的参数"><a href="#与数据库log相关的参数" class="headerlink" title="与数据库log相关的参数"></a>与数据库log相关的参数</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 日志的收集一般是打开的</span></span><br><span class="line">logging_collector = on</span><br><span class="line"></span><br><span class="line"><span class="comment"># 日志的目录，一般默认即可</span></span><br><span class="line">log_directory = <span class="string">'pg_log'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 日志的切换和覆盖可以使用以下几种方案</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 每天生成一个新的日志文件</span></span><br><span class="line">log_filename = <span class="string">'postgresql-%Y-%m-%d_%H%M%S.log'</span></span><br><span class="line">log_truncate_on_rotation = off</span><br><span class="line">log_rotation_age = 1d</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 每当写满一定大小(如10M)，则切换一个日志</span></span><br><span class="line">log_filename = <span class="string">'postgresql-%Y-%m-%d_%H%M%S.log'</span></span><br><span class="line">log_truncate_on_rotation = off</span><br><span class="line">log_rotation_age = 0</span><br><span class="line">log_rotation_size = 10M</span><br><span class="line"></span><br><span class="line"><span class="comment"># 保留7天的日志进行循环覆盖</span></span><br><span class="line">log_filename = <span class="string">'postgresql-%a.log'</span></span><br><span class="line">log_truncate_on_rotation = on</span><br><span class="line">log_rotation_age = 7d</span><br><span class="line">log_rotation_size = 0</span><br></pre></td></tr></table></figure>
+<h3 id="内存参数设置"><a href="#内存参数设置" class="headerlink" title="内存参数设置"></a>内存参数设置</h3><p>PostgreSQL可以修改以下两个主要参数:</p>
+<ul>
+<li>shared_buffers: 共享内存的大小，主要用于共享数据块</li>
+<li>work_mem: 单个SQL执行时，排序、hash join 所使用的内存，SQL运行完后，内存就释放了。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2016/07/01/CentOS6-5-PostgreSQL源码编译安装/" data-id="cjjwhr4wq00268crj77lcru89" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-javascript之apply与call方法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/06/29/javascript之apply与call方法/" class="article-date">
+  <time datetime="2016-06-29T08:35:54.000Z" itemprop="datePublished">2016-06-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript语言/">javascript语言</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/29/javascript之apply与call方法/">javascript之apply与call方法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="apply"><a href="#apply" class="headerlink" title="apply"></a>apply</h4><p>作用：调用函数，并用指定对象替换函数的 <code>this</code> 值，同时用指定数组替换函数的参数。 </p>
+<p>语法：<code>apply([thisArg [,argArray]])</code></p>
+<p>参数：</p>
+<ul>
+<li><p>thisArg: 可选，要用作<code>this</code>对象的对象。</p>
+</li>
+<li><p>argArray：可选，传递给函数的<strong>参数数组</strong>。</p>
+</li>
+</ul>
+<p>例：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">callMe</span>(<span class="params">arg1, arg2</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> s = <span class="string">''</span>;</span><br><span class="line"></span><br><span class="line">    s += <span class="string">'this value: '</span> + <span class="keyword">this</span>;</span><br><span class="line">    s += <span class="string">'\n'</span>;</span><br><span class="line">    <span class="keyword">for</span> (i <span class="keyword">in</span> callMe.arguments) &#123;</span><br><span class="line">        s += <span class="string">'arguments: '</span> + callMe.arguments[i];</span><br><span class="line">        s += <span class="string">'\n'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> s;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'Original function: '</span>)</span><br><span class="line"><span class="built_in">console</span>.log(callMe(<span class="number">1</span>, <span class="number">2</span>));</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'Function called with apply:'</span>)</span><br><span class="line"><span class="built_in">console</span>.log(callMe.apply(<span class="string">'otherObj'</span>, [<span class="number">4</span>, <span class="number">5</span>]));</span><br><span class="line"></span><br><span class="line"><span class="comment">// Output: </span></span><br><span class="line"><span class="comment">// Original function: </span></span><br><span class="line"><span class="comment">// this value: [object Window]</span></span><br><span class="line"><span class="comment">// arguments: 1</span></span><br><span class="line"><span class="comment">// arguments: 2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Function called with apply: </span></span><br><span class="line"><span class="comment">// this value: otherObj</span></span><br><span class="line"><span class="comment">// arguments: 4</span></span><br><span class="line"><span class="comment">// arguments: 5</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="call"><a href="#call" class="headerlink" title="call"></a>call</h4><p>作用：调用一个对象的方法，用另一个对象替换当前对象。</p>
+<p>语法：<code>call([thisObj[, arg1[, arg2[,  [, argN]]]]])</code></p>
+<p>参数：</p>
+<ul>
+<li>thisObj: 可选。将作为当前对象使用的对象。</li>
+<li>arg1, arg2, , argN: 可选。将被传递到该方法的参数列表。</li>
+</ul>
+<p>例：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">callMe</span>(<span class="params">arg1, arg2</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> s = <span class="string">''</span>;</span><br><span class="line"></span><br><span class="line">    s += <span class="string">'this value:'</span> + <span class="keyword">this</span>;</span><br><span class="line">    s += <span class="string">'\n'</span>;</span><br><span class="line">    <span class="keyword">for</span> (i <span class="keyword">in</span> callMe.arguments) &#123;</span><br><span class="line">        s += <span class="string">'arguments:'</span> + callMe.arguments[i];</span><br><span class="line">        s += <span class="string">'\n'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> s;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'Original function: \n'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(callMe(<span class="number">1</span>, <span class="number">2</span>));</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'\n'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'Function called with call: \n'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(callMe.call(<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// Output: </span></span><br><span class="line"><span class="comment">// Original function: </span></span><br><span class="line"><span class="comment">// this value: [object Window]</span></span><br><span class="line"><span class="comment">// arguments: 1</span></span><br><span class="line"><span class="comment">// arguments: 2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Function called with call: </span></span><br><span class="line"><span class="comment">// this value: 3</span></span><br><span class="line"><span class="comment">// arguments: 4</span></span><br><span class="line"><span class="comment">// arguments: 5</span></span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2016/06/29/javascript之apply与call方法/" data-id="cjjwhr4xa00328crjjs6cii8t" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript基础/">javascript基础</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-javascript之Bind方法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/06/29/javascript之Bind方法/" class="article-date">
+  <time datetime="2016-06-29T08:30:54.000Z" itemprop="datePublished">2016-06-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript语言/">javascript语言</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/29/javascript之Bind方法/">javascript之Bind方法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>作用：<strong>对于给定函数，创建具有与原始函数相同的主体的绑定函数。在绑定函数中，this 对象将解析为传入的对象。绑定函数具有指定的初始参数。</strong></p>
+<p>语法：<code>function.bind(thisArg[,arg1[,arg2[,argN]]])</code></p>
+<p>例1：注意<code>checkNumericRange</code>后面不要使用<strong>箭头函数</strong>的方式，因为<strong>this</strong>在箭头函数内已经绑定作用域了，同样<code>call()</code>、<code>apply()</code>在执行箭头函数会忽略传入的第一参数，无法对<code>this</code>进行绑定<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> checkNumericRange = <span class="function"><span class="keyword">function</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> value !== <span class="string">'number'</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> value &gt;= <span class="keyword">this</span>.minnum &amp;&amp; value &lt;= <span class="keyword">this</span>.maxnum;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> range = &#123; <span class="attr">minnum</span>: <span class="number">10</span>, <span class="attr">maxnum</span>: <span class="number">20</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> boundCheckNumericRange = checkNumericRange.bind(range);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(boundCheckNumericRange(<span class="number">12</span>)); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(boundCheckNumericRange(<span class="number">21</span>)); <span class="comment">// false</span></span><br></pre></td></tr></table></figure></p>
+<p>例2：下面例子中<code>this</code>与包含原始原始方法的对象不同<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> originalObject = &#123;</span><br><span class="line">    minnum: <span class="number">50</span>,</span><br><span class="line">    maxnum: <span class="number">100</span>,</span><br><span class="line">    checkNumericRange: <span class="function"><span class="keyword">function</span> (<span class="params">value</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'This is me?'</span>, originalObject === <span class="keyword">this</span>); <span class="comment">// originalobject is true, bind method is false</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> value !== <span class="string">'number'</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> value &gt;= <span class="keyword">this</span>.minnum &amp;&amp; value &lt;= <span class="keyword">this</span>.maxnum;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(originalObject.checkNumericRange(<span class="number">10</span>)); <span class="comment">// false (compare with originalobject)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> range = &#123; <span class="attr">minnum</span>: <span class="number">10</span>, <span class="attr">maxnum</span>: <span class="number">20</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> boundObjectWithRange = originalObject.checkNumericRange.bind(range);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(boundObjectWithRange(<span class="number">10</span>)); <span class="comment">// true (expect)</span></span><br></pre></td></tr></table></figure></p>
+<p>例3：下面的例子演示如何使用<code>arg1[arg2, [argN]]</code><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> displayArgs = <span class="function"><span class="keyword">function</span> (<span class="params">val1, val2, val3, val4</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(val1 + <span class="string">' '</span> + val2 + <span class="string">' '</span> + val3 + <span class="string">' '</span> + val4);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> emptyObject = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> displayArgs2 = displayArgs.bind(emptyObject, <span class="number">12</span>, <span class="string">'a'</span>);</span><br><span class="line"></span><br><span class="line">displayArgs2(<span class="string">'b'</span>, <span class="string">'c'</span>); <span class="comment">// Output: 12 a b c</span></span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2016/06/29/javascript之Bind方法/" data-id="cjjwhr4x8002z8crjqmm8h8dv" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript基础/">javascript基础</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/2/">&laquo; 上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">下一页 &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/">HTTP</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/通信/">通信</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/PostgreSQL/">PostgreSQL</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/">PostgreSQL</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/数据库/">数据库</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/">WEB</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/安全/">安全</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript语言/">javascript语言</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/英语/">英语</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计划/">计划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机基础/">计算机基础</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMD/">CMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CommonJS/">CommonJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript基础/">javascript基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/n2n/">n2n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/健身/">健身</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/协议/">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程-锁/">多线程 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/意志/">意志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/授权/">授权</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模块化/">模块化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码阅读/">源码阅读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/版本控制/">版本控制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编码/">编码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/英语/">英语</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计划/">计划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运动/">运动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CMD/" style="font-size: 10px;">CMD</a> <a href="/tags/Centos软件安装/" style="font-size: 15px;">Centos软件安装</a> <a href="/tags/CommonJS/" style="font-size: 10px;">CommonJS</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/PostgreSQL基础/" style="font-size: 15px;">PostgreSQL基础</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/javascript函数/" style="font-size: 15px;">javascript函数</a> <a href="/tags/javascript基础/" style="font-size: 15px;">javascript基础</a> <a href="/tags/n2n/" style="font-size: 10px;">n2n</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/健身/" style="font-size: 10px;">健身</a> <a href="/tags/协议/" style="font-size: 10px;">协议</a> <a href="/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/tags/多线程-锁/" style="font-size: 10px;">多线程 锁</a> <a href="/tags/安全/" style="font-size: 10px;">安全</a> <a href="/tags/意志/" style="font-size: 10px;">意志</a> <a href="/tags/授权/" style="font-size: 10px;">授权</a> <a href="/tags/模块化/" style="font-size: 10px;">模块化</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/源码阅读/" style="font-size: 10px;">源码阅读</a> <a href="/tags/版本控制/" style="font-size: 10px;">版本控制</a> <a href="/tags/编码/" style="font-size: 15px;">编码</a> <a href="/tags/编程/" style="font-size: 10px;">编程</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/运动/" style="font-size: 10px;">运动</a> <a href="/tags/阅读/" style="font-size: 10px;">阅读</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/07/22/大白话简记TCP/">大白话简记TCP</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/22/再理一遍OAuth2.0/">再理一遍OAuth2.0</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/22/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2018/03/01/搭建-ELK-日志中心/">搭建 ELK 日志中心</a>
+          </li>
+        
+          <li>
+            <a href="/2018/02/22/Spring-生命周期/">Spring 生命周期</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 orh<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

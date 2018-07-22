@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>java多线程补充-LockSupport类 | Poxi哥的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在之前的java多线程编程核心技术文章中，主要是记录了书《Java多线程编程核心技术》的一些内容，其中没有介绍到LockSupport类，但是这个类在jdk源码中也经常会碰到，所以特意拿出来再看一番。 既然已经有了ReentrantLock，为什么还需要LockSupport呢？主要区别在于他们面向的对象不同。 我们先简单来回顾下ReentrantLock的使用：12345678910111213">
+<meta name="keywords" content="多线程 锁">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java多线程补充-LockSupport类">
+<meta property="og:url" content="http://blog.ouronghui.com/2017/06/21/java多线程补充-LockSupport类/index.html">
+<meta property="og:site_name" content="Poxi哥的博客">
+<meta property="og:description" content="在之前的java多线程编程核心技术文章中，主要是记录了书《Java多线程编程核心技术》的一些内容，其中没有介绍到LockSupport类，但是这个类在jdk源码中也经常会碰到，所以特意拿出来再看一番。 既然已经有了ReentrantLock，为什么还需要LockSupport呢？主要区别在于他们面向的对象不同。 我们先简单来回顾下ReentrantLock的使用：12345678910111213">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-22T06:09:17.211Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java多线程补充-LockSupport类">
+<meta name="twitter:description" content="在之前的java多线程编程核心技术文章中，主要是记录了书《Java多线程编程核心技术》的一些内容，其中没有介绍到LockSupport类，但是这个类在jdk源码中也经常会碰到，所以特意拿出来再看一番。 既然已经有了ReentrantLock，为什么还需要LockSupport呢？主要区别在于他们面向的对象不同。 我们先简单来回顾下ReentrantLock的使用：12345678910111213">
+  
+    <link rel="alternate" href="/atom.xml" title="Poxi哥的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Poxi哥的博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">种一棵树最好的时间是十年前，其次是现在。</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.ouronghui.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-java多线程补充-LockSupport类" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/06/21/java多线程补充-LockSupport类/" class="article-date">
+  <time datetime="2017-06-21T02:32:32.000Z" itemprop="datePublished">2017-06-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      java多线程补充-LockSupport类
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在之前的<a href="http://blog.ouronghui.com/2017/04/06/java多线程编程核心技术">java多线程编程核心技术</a>文章中，主要是记录了书<code>《Java多线程编程核心技术》</code>的一些内容，其中没有介绍到<code>LockSupport</code>类，但是这个类在<code>jdk</code>源码中也经常会碰到，所以特意拿出来再看一番。</p>
+<h5 id="既然已经有了ReentrantLock，为什么还需要LockSupport呢？"><a href="#既然已经有了ReentrantLock，为什么还需要LockSupport呢？" class="headerlink" title="既然已经有了ReentrantLock，为什么还需要LockSupport呢？"></a>既然已经有了<code>ReentrantLock</code>，为什么还需要<code>LockSupport</code>呢？</h5><p>主要区别在于他们面向的对象不同。</p>
+<p>我们先简单来回顾下<code>ReentrantLock</code>的使用：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">reviewReentrantLock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ReentrantLock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            lock.lock();</span><br><span class="line">            System.out.println(<span class="string">"thread-A doXX"</span>);</span><br><span class="line">            TimeUnit.SECONDS.sleep(<span class="number">3</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            lock.unlock(); <span class="comment">// 记得 finally 中 释放锁</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, <span class="string">"thread-A"</span>).start();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            lock.lock();</span><br><span class="line">            System.out.println(<span class="string">"thread-B doXX"</span>);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, <span class="string">"thread-B"</span>).start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>lock 通常需要在finally中释放</li>
+<li>其它线程取锁将被阻塞</li>
+</ul>
+<p>接下来看下<code>LockSupport</code>要怎么使用，看了下<code>LockSupport</code>的源码有以下特点：</p>
+<ul>
+<li>构造函数是私有的，说明不可手动实例化</li>
+<li>其它的方法都是静态的，说明不用实例化可以直接拿来使用</li>
+</ul>
+<h5 id="尝试1"><a href="#尝试1" class="headerlink" title="尝试1"></a>尝试1</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">useLockSupport</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    LockSupport.park(); <span class="comment">// 等待许可，如果许可可用将立即返回，否则线程将进入休眠状态</span></span><br><span class="line">    System.out.println(<span class="string">"block."</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>运行此方法会发现，控制台的Terminate一直是红色，”block”也不会输出，说明当前线程在park后就被阻塞了</li>
+<li><strong>线程许可默认是被占用的</strong></li>
+</ul>
+<p>可以使用<code>unpark(thread)</code>先取的许可，再执行<code>park</code>,如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">useLockSupport2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Thread thread = Thread.currentThread();</span><br><span class="line">    LockSupport.unpark(thread); <span class="comment">// 为给定的线程提供许可；如果线程在park上被阻塞，那么它将被解除阻塞。否则它的下一次 park 执行将不会被阻塞</span></span><br><span class="line">    LockSupport.park(); <span class="comment">// 等待许可，因为上一步已经提供了，所以会直接往下执行</span></span><br><span class="line">    System.out.println(<span class="string">"block"</span>);  <span class="comment">// 像没事人样，正常输出</span></span><br><span class="line">    LockSupport.park(); <span class="comment">// 等待许可，前面的许可已经被使用了，故此线程将会进入休眠，等待许可</span></span><br><span class="line">    System.out.println(<span class="string">"block 2"</span>);  <span class="comment">// 阻塞，不会被输出</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>“block”会正常输出。</li>
+<li>“block 2”不会输出，线程如果重复调用<code>park</code>，那么线程将会一直阻塞下去，故<strong>LockSupport是不可重入的</strong> ，对比而言<code>ReentrantLock</code>是可重入的，一个线程可以多次获取同一把锁，<code>lock.getHoldCount()</code>方法会得到当前线程持有该锁的个数，也就是<code>lock()</code>方法的次数。总的来说就是：<strong><code>lock.lock()</code>可以重复调用(线程内执行相应的<code>lock.unlock()</code>)，而<code>LockSupport.park()</code>则是单次不重复的，只可等待其他线程<code>LockSupport.unpark(t)</code></strong></li>
+</ul>
+<h5 id="线程等待许可时，被打断时会怎样？"><a href="#线程等待许可时，被打断时会怎样？" class="headerlink" title="线程等待许可时，被打断时会怎样？"></a>线程等待许可时，被打断时会怎样？</h5><p>下面我们看下线程对应中断会怎样响应：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    Thread t = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line">        <span class="keyword">long</span> end = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (end - start &lt;= <span class="number">1000</span>) &#123;</span><br><span class="line">            count++;</span><br><span class="line">            end = System.currentTimeMillis();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.printf(<span class="string">"after 1 second: acount=%s\n"</span>, count);</span><br><span class="line">        </span><br><span class="line">        LockSupport.park(); <span class="comment">// 等待许可</span></span><br><span class="line">        System.out.println(<span class="string">"thread-child over."</span> + Thread.currentThread().isInterrupted());</span><br><span class="line">    &#125;, <span class="string">"thread-child"</span>);</span><br><span class="line">    </span><br><span class="line">    t.start();</span><br><span class="line">    Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">    </span><br><span class="line">    t.interrupt(); <span class="comment">// 中断线程</span></span><br><span class="line">    System.out.println(<span class="string">"main over!"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>控制台输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">after 1 second: acount=85732003</span><br><span class="line">main over!</span><br><span class="line">thread-child over.true</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>并没有抛出异常，程序照常往下执行</li>
+</ul>
+<h4 id="跳回前面的问题小结下-ReentrantLock-与-LockSupport"><a href="#跳回前面的问题小结下-ReentrantLock-与-LockSupport" class="headerlink" title="跳回前面的问题小结下 ReentrantLock 与 LockSupport"></a>跳回前面的问题小结下 ReentrantLock 与 LockSupport</h4><p><code>ReentrantLock</code> 关注线程内部取锁<code>lock()</code>，<code>unlock()</code>的问题，都是<strong>线程内部代码</strong>在掌控锁，自己关注方法内的业务逻辑。<br><code>LockSupport</code> 更倾向线程间的协作，一个线程“LockSupport.park()”等待许可，另外一个线程来“唤醒”等待的线程。</p>
+<p><code>LockSupport</code>像是站在线程间的指挥家，可以指定唤醒哪个线程(<code>LockSupport.unpark(thread)</code>)、什么时候唤醒等。</p>
+<p>更准确的理解可以去查看<code>LockSupport</code>的源码注释。</p>
+<hr>
+<p>主要参考：</p>
+<ul>
+<li><a href="http://blog.csdn.net/aitangyong/article/details/38373137" target="_blank" rel="noopener">LockSupport的park和unpark的基本使用,以及对线程中断的响应性</a></li>
+<li><a href="https://www.zhihu.com/question/26471972/answer/74773092" target="_blank" rel="noopener">Java中Lock和LockSupport的区别到底是什么？</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2017/06/21/java多线程补充-LockSupport类/" data-id="cjjwhr4xe00388crjx2kxgsgk" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程-锁/">多线程 锁</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/07/12/前端与后端的HTTP通信/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          前端与后端的HTTP通信
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/06/21/字符编码/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">字符编码</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/">HTTP</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/通信/">通信</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/PostgreSQL/">PostgreSQL</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/">PostgreSQL</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/数据库/">数据库</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/">WEB</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/安全/">安全</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript语言/">javascript语言</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/英语/">英语</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计划/">计划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机基础/">计算机基础</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMD/">CMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CommonJS/">CommonJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript基础/">javascript基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/n2n/">n2n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/健身/">健身</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/协议/">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程-锁/">多线程 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/意志/">意志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/授权/">授权</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模块化/">模块化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码阅读/">源码阅读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/版本控制/">版本控制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编码/">编码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/英语/">英语</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计划/">计划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运动/">运动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CMD/" style="font-size: 10px;">CMD</a> <a href="/tags/Centos软件安装/" style="font-size: 15px;">Centos软件安装</a> <a href="/tags/CommonJS/" style="font-size: 10px;">CommonJS</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/PostgreSQL基础/" style="font-size: 15px;">PostgreSQL基础</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/javascript函数/" style="font-size: 15px;">javascript函数</a> <a href="/tags/javascript基础/" style="font-size: 15px;">javascript基础</a> <a href="/tags/n2n/" style="font-size: 10px;">n2n</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/健身/" style="font-size: 10px;">健身</a> <a href="/tags/协议/" style="font-size: 10px;">协议</a> <a href="/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/tags/多线程-锁/" style="font-size: 10px;">多线程 锁</a> <a href="/tags/安全/" style="font-size: 10px;">安全</a> <a href="/tags/意志/" style="font-size: 10px;">意志</a> <a href="/tags/授权/" style="font-size: 10px;">授权</a> <a href="/tags/模块化/" style="font-size: 10px;">模块化</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/源码阅读/" style="font-size: 10px;">源码阅读</a> <a href="/tags/版本控制/" style="font-size: 10px;">版本控制</a> <a href="/tags/编码/" style="font-size: 15px;">编码</a> <a href="/tags/编程/" style="font-size: 10px;">编程</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/运动/" style="font-size: 10px;">运动</a> <a href="/tags/阅读/" style="font-size: 10px;">阅读</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/07/22/大白话简记TCP/">大白话简记TCP</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/22/再理一遍OAuth2.0/">再理一遍OAuth2.0</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/22/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2018/03/01/搭建-ELK-日志中心/">搭建 ELK 日志中心</a>
+          </li>
+        
+          <li>
+            <a href="/2018/02/22/Spring-生命周期/">Spring 生命周期</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 orh<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

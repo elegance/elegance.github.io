@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>svn 分支管理 | Poxi哥的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="参考 1. svn 初始目录结构1234D:\pro-repo├─branches├─tags└─trunk 如果没有对应的结构目录，可以使用以下命令来创建：1svn mkdir branches 2. branchs/tags 的建立需求一：产品开发已经基本完成，并且通过很严格的测试，这时候我们就想发布给客户使用，发布我们的1.0版本： 1svn copy svn://server/trunk">
+<meta name="keywords" content="版本控制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="svn 分支管理">
+<meta property="og:url" content="http://blog.ouronghui.com/2017/03/08/svn-分支管理/index.html">
+<meta property="og:site_name" content="Poxi哥的博客">
+<meta property="og:description" content="参考 1. svn 初始目录结构1234D:\pro-repo├─branches├─tags└─trunk 如果没有对应的结构目录，可以使用以下命令来创建：1svn mkdir branches 2. branchs/tags 的建立需求一：产品开发已经基本完成，并且通过很严格的测试，这时候我们就想发布给客户使用，发布我们的1.0版本： 1svn copy svn://server/trunk">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://blog.ouronghui.com/images/svn-branch-mgt/diffViewer-setting.jpg">
+<meta property="og:image" content="http://blog.ouronghui.com/images/svn-branch-mgt/merge-tool-setting.jpg">
+<meta property="og:image" content="http://blog.ouronghui.com/images/svn-branch-mgt/edit-conflicts.jpg">
+<meta property="og:image" content="http://blog.ouronghui.com/images/svn-branch-mgt/merging.jpg">
+<meta property="og:image" content="http://blog.ouronghui.com/images/svn-branch-mgt/resolve.jpg">
+<meta property="og:updated_time" content="2018-07-22T06:09:17.211Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="svn 分支管理">
+<meta name="twitter:description" content="参考 1. svn 初始目录结构1234D:\pro-repo├─branches├─tags└─trunk 如果没有对应的结构目录，可以使用以下命令来创建：1svn mkdir branches 2. branchs/tags 的建立需求一：产品开发已经基本完成，并且通过很严格的测试，这时候我们就想发布给客户使用，发布我们的1.0版本： 1svn copy svn://server/trunk">
+<meta name="twitter:image" content="http://blog.ouronghui.com/images/svn-branch-mgt/diffViewer-setting.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Poxi哥的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Poxi哥的博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">种一棵树最好的时间是十年前，其次是现在。</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.ouronghui.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-svn-分支管理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/03/08/svn-分支管理/" class="article-date">
+  <time datetime="2017-03-08T09:20:15.000Z" itemprop="datePublished">2017-03-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      svn 分支管理
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="http://www.iteye.com/topic/28013" target="_blank" rel="noopener">参考</a></p>
+<h2 id="1-svn-初始目录结构"><a href="#1-svn-初始目录结构" class="headerlink" title="1. svn 初始目录结构"></a>1. svn 初始目录结构</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">D:\pro-repo</span><br><span class="line">├─branches</span><br><span class="line">├─tags</span><br><span class="line">└─trunk</span><br></pre></td></tr></table></figure>
+<p>如果没有对应的结构目录，可以使用以下命令来创建：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn mkdir branches</span><br></pre></td></tr></table></figure></p>
+<h2 id="2-branchs-tags-的建立"><a href="#2-branchs-tags-的建立" class="headerlink" title="2. branchs/tags 的建立"></a>2. branchs/tags 的建立</h2><p>需求一：产品开发已经基本完成，并且通过很严格的测试，这时候我们就想发布给客户使用，发布我们的1.0版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn copy svn://server/trunk svn://server/tags/release-1.0 -m <span class="string">"1.0 released"</span></span><br></pre></td></tr></table></figure>
+<p>需求二: 需要开发一个新的功能<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn copy svn://server/trunk svn://server/branches/fea-01 -m <span class="string">"新开分支开发01新需求"</span></span><br></pre></td></tr></table></figure></p>
+<p>咦，这个和branches有什么区别，好像啥区别也没有？<br>是的，branches和tags是一样的，都是目录，只是我们不会对这个release-1.0的tag做修改了，不再提交了，如果提交那么就是branches </p>
+<p>需求三：有一天，突然在线上发现一个致命的bug,那么所有的branches一定也一样了，该怎么办？<br>首先我们是从线上发现的，那么我第一步先：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn copy svn://server/tags/release-1.0 svn://server/branches/bugfix-01 -m <span class="string">"1.0 线上bug (copy from tags/release-1.0) "</span></span><br></pre></td></tr></table></figure></p>
+<p>然后我们拉去分支<code>bugfix-01</code>代码到本地，开发、测试，如果没有问题的话，合并分支到<code>在生命周期</code>的分支，这里是：<code>branches/fea-01</code>、<code>trunk/</code><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ svn -r 6:7 merge  https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/branches/bugfix-01 trunk <span class="comment"># bug 合并至主干</span></span><br><span class="line">$ svn -r 0:HEAD merge https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/trunk branches/fea-01 <span class="comment"># 主干合并至需求分支</span></span><br><span class="line">$ svn delete  https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/branches/bugfix-01 -m <span class="string">"删除-bug-01"</span></span><br></pre></td></tr></table></figure></p>
+<p>新的bug产生时(上次升级没有打tag，直接取trunk):<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ svn copy https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/trunk https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/branches/bugfix-02 -m <span class="string">"1.0 线上bug (copy from trunk) "</span></span><br><span class="line">$ <span class="built_in">cd</span> trunk/</span><br><span class="line">$ svn mergeinfo https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/branches/bugfix-02  --show-revs eligible <span class="comment"># 查看Branch中那些改动还未合并 </span></span><br><span class="line">$ svn merge https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/branches/bugfix-02 <span class="comment"># bug 合并至主干 （和上面的指定版本功能效果一样，这里省去了指定版本的麻烦）</span></span><br><span class="line">$ svn mergeinfo https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/branches/bugfix-02 <span class="comment"># 查看当前Branch中已经有那些改动已经被合并到Trunk中</span></span><br><span class="line">$ <span class="built_in">cd</span> ../branches/fea-01</span><br><span class="line">$ svn merge https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/trunk <span class="comment"># 主干合并至分支fea-01</span></span><br></pre></td></tr></table></figure></p>
+<p>合并后对 trunk 严格测试没问题的话，就可以发布<code>release-1.1</code>了。</p>
+<h2 id="3-几个问题"><a href="#3-几个问题" class="headerlink" title="3. 几个问题"></a>3. 几个问题</h2><h4 id="1-考虑到部署release时，每次都要打上tag，会略显繁琐，-tags-不一定非得有，也就是上面用trunk作为线上分支"><a href="#1-考虑到部署release时，每次都要打上tag，会略显繁琐，-tags-不一定非得有，也就是上面用trunk作为线上分支" class="headerlink" title="1. 考虑到部署release时，每次都要打上tag，会略显繁琐， tags 不一定非得有，也就是上面用trunk作为线上分支"></a>1. 考虑到部署release时，每次都要打上tag，会略显繁琐， <code>tags</code> 不一定非得有，也就是上面用<code>trunk</code>作为线上分支</h4><h4 id="2-上面有提到在生命周期的分支，这是为了强调branchs下的分支尽可能缩短其生命周期，因为在生命周期的分支都得维护，线上bug、其他分支新功能这些代码所有修改都得合并入在生命周期的分支"><a href="#2-上面有提到在生命周期的分支，这是为了强调branchs下的分支尽可能缩短其生命周期，因为在生命周期的分支都得维护，线上bug、其他分支新功能这些代码所有修改都得合并入在生命周期的分支" class="headerlink" title="2. 上面有提到在生命周期的分支，这是为了强调branchs下的分支尽可能缩短其生命周期，因为在生命周期的分支都得维护，线上bug、其他分支新功能这些代码所有修改都得合并入在生命周期的分支"></a>2. 上面有提到<code>在生命周期</code>的分支，这是为了强调<code>branchs</code>下的分支尽可能缩短其生命周期，因为在生命周期的分支都得维护，线上bug、其他分支新功能这些代码所有修改都得合并入<code>在生命周期</code>的分支</h4><p>在生命周期的分支，一般有：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">trunk/</span><br><span class="line"></span><br><span class="line">branches/fea-01</span><br><span class="line">branches/fea-02</span><br><span class="line">branches/fea-....</span><br><span class="line"></span><br><span class="line">branches/bugfix-01</span><br></pre></td></tr></table></figure></p>
+<p>同时开发的需求<code>fea-n</code>可能有几个，<code>bugfix</code>线上bug通常就作为一个了。</p>
+<h4 id="3-冲突解决"><a href="#3-冲突解决" class="headerlink" title="3. 冲突解决"></a>3. 冲突解决</h4><p>如果一个文件在两个分支上都被修改，那么合并两个分支时将可能发生冲突。</p>
+<p>之所以说可能发生冲突，是因为如果两个分支修改的文件明显不同，<code>merge</code>会自动的帮我们处理好。比如一端对文件第一行修改了内容，一端对文件增加了一行内容这种情况。</p>
+<p>当文件发生冲突时可以有以下方式来处理：</p>
+<h4 id="工具设置"><a href="#工具设置" class="headerlink" title="工具设置"></a>工具设置</h4><p>我们可以使用<code>TortoiseSVN</code>设置下对比工具来方便我们compare和merge，比如<code>BeyondCompare</code></p>
+<p>操作步骤：<code>项目目录-右键</code>  —&gt; <code>TortoiseSVN</code> —&gt; <code>Settings</code> —&gt; <code>Diff Viewer</code><br><img src="/images/svn-branch-mgt/diffViewer-setting.jpg" alt="Diff-tool-set"><br>其中代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;D:\tools\BeyondCompare\Beyond Compare\BCompare.exe&quot; %base %mine /title1=%bname /title2=%yname /leftreadonly</span><br><span class="line">&quot;D:\tools\BeyondCompare\Beyond Compare\BCompare.exe&quot;</span><br></pre></td></tr></table></figure></p>
+<p>合并工具设置：<br><img src="/images/svn-branch-mgt/merge-tool-setting.jpg" alt="merge-tool-set"><br>其中代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;D:\tools\BeyondCompare\Beyond Compare\BCompare.exe&quot;  %mine %theirs %base %merged /title1=%yname /title2=%tname /title3=%bname /title4=%mname</span><br></pre></td></tr></table></figure></p>
+<h4 id="解决冲突"><a href="#解决冲突" class="headerlink" title="解决冲突"></a>解决冲突</h4><p><img src="/images/svn-branch-mgt/edit-conflicts.jpg" alt="edit-conflict"><br><img src="/images/svn-branch-mgt/merging.jpg" alt="merging"><br>在上一步合并完后，就可以标记解决完冲突了：<br><img src="/images/svn-branch-mgt/resolve.jpg" alt="resolve"></p>
+<p><del>#### 3. <code>merge</code>的几种方式及应用场景， 参考<a href="http://chunanyong.iteye.com/blog/697255" target="_blank" rel="noopener">svn分支合并类型</a></del></p>
+<h4 id="3-merge-我使用merge的两种方式"><a href="#3-merge-我使用merge的两种方式" class="headerlink" title="3. merge 我使用merge的两种方式"></a>3. <code>merge</code> 我使用merge的两种方式</h4><ol>
+<li><p>指定分支地址，合并至当前目录:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将 `bug-01`分支 合并到 `trunk`</span></span><br><span class="line">$ <span class="built_in">cd</span> trunk/</span><br><span class="line">$ svn merge https://server/svn/pro/branches/bug-01</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将 `trunk` 合并至 分支 `fea-01`</span></span><br><span class="line">$ <span class="built_in">cd</span> ../branches/fea-01</span><br><span class="line">$ svn merge https://server/svn/pro/trunk</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>指定分支地址和版本，合并至指定分支目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将 bugfix-01 分支 合并至trunk</span></span><br><span class="line">$ svn -r 6:7 merge  https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/branches/bugfix-01 trunk/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 强 trunk 合并至 需求分支</span></span><br><span class="line">$ svn -r 0:HEAD merge https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/trunk branches/fea-01</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h4><ol>
+<li><p><strong>以上的<code>svn copy -m &quot;comment&quot;</code>命令会直接发给服务端执行，也就是说操作即时生效，无需手动commit，所以copy时最好加上<code>-m 注释内容</code></strong></p>
+</li>
+<li><p>一般分支分为两种：需求分支、bug修复分支(暂时撇开tags、trunk)，一般约定其命名规则：<code>fea-xxx</code>、<code>bugfix-xxx</code>，这其实都属于临时性分支，使用完应该删除（为了方便开发，不用每次签出新的bug分支，有时会把把bug作为一个长期性的分支，但要注意与trunk保持同步）。<br>同名分支，重建(同名分支，前bug已经delete)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ svn copy https://orh-vm-pc/svn/test-tzbms/trunk https://orh-vm-pc/svn/test-tzbms/branches/bugfix-live -m &quot;bug长期分支（完成后delete，需要时同名重建）&quot;</span><br><span class="line">... 修改、测试、合并后</span><br><span class="line">$ svn delete https://orh-vm-pc/svn/test-tzbms/branches/bugfix-live -m &quot;bug长期分支（完成后delete，需要时同名重建）&quot;</span><br><span class="line">... 下次有新的bug时</span><br><span class="line">$ svn copy https://orh-vm-pc/svn/test-tzbms/trunk https://orh-vm-pc/svn/test-tzbms/branches/bugfix-live -m &quot;bug长期分支（完成后delete，需要时同名重建）&quot;</span><br><span class="line">... 重复上面的步骤</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>svn merge</code> merge动作是在本地执行的，所以可以放心执行，如果有出现失误，不提交，使用<code>$ svn revert . -R</code>回滚工作区， 再重新<code>merge</code>分支即可。</p>
+</li>
+<li><p>合并前保证<code>目标分支</code>是clean的，不要忘记<code>来源分支</code>都提交了</p>
+</li>
+<li><p>合并完分之后，<strong>切记维护<code>生命周期</code>还未结束的分支</strong>。一般分支的合并都是基于<code>trunk</code>来交互的，这就是说的<strong>经常的与主干保持同步</strong>，比如有以下情况</p>
+<ol>
+<li>新开分支解决了<code>bug</code>, 新的分支<code>bug-02</code>开发测试完，合入<code>trunk</code>。此时别的分支代码应该也是存在bug的，解决同样的bug我们当然<strong>不需要再在其他分支上手动去修复bug</strong>了，而是把<code>trunk</code>上的修改<strong>尽快</strong><code>merge</code>到其他分支，有冲突就在此时解决，不然隔的时间长了，鬼还记得修改了什么。</li>
+<li>新开分支完成了<code>某个功能</code>, 新的分支<code>fea-02</code>开发测试完，合入<code>trunk</code>。此时其他分支应尽快的与<code>trunk</code>同步，将<code>trunk</code>分支<code>merge</code>至其他分支，如果<code>bug</code>分支作为长期分支，也需要同步，否则bug分支应该已经delete掉了。</li>
+</ol>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2017/03/08/svn-分支管理/" data-id="cjjwhr4xl003m8crjiuvahk82" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/版本控制/">版本控制</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/03/10/Read-Later/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Read Later
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/02/27/glossary-生词本/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">glossary-生词本</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/">HTTP</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/通信/">通信</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/PostgreSQL/">PostgreSQL</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/">PostgreSQL</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/数据库/">数据库</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/">WEB</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/安全/">安全</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript语言/">javascript语言</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/英语/">英语</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计划/">计划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机基础/">计算机基础</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMD/">CMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CommonJS/">CommonJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript基础/">javascript基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/n2n/">n2n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/健身/">健身</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/协议/">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程-锁/">多线程 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/意志/">意志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/授权/">授权</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模块化/">模块化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码阅读/">源码阅读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/版本控制/">版本控制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编码/">编码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/英语/">英语</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计划/">计划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运动/">运动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CMD/" style="font-size: 10px;">CMD</a> <a href="/tags/Centos软件安装/" style="font-size: 15px;">Centos软件安装</a> <a href="/tags/CommonJS/" style="font-size: 10px;">CommonJS</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/PostgreSQL基础/" style="font-size: 15px;">PostgreSQL基础</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/javascript函数/" style="font-size: 15px;">javascript函数</a> <a href="/tags/javascript基础/" style="font-size: 15px;">javascript基础</a> <a href="/tags/n2n/" style="font-size: 10px;">n2n</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/健身/" style="font-size: 10px;">健身</a> <a href="/tags/协议/" style="font-size: 10px;">协议</a> <a href="/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/tags/多线程-锁/" style="font-size: 10px;">多线程 锁</a> <a href="/tags/安全/" style="font-size: 10px;">安全</a> <a href="/tags/意志/" style="font-size: 10px;">意志</a> <a href="/tags/授权/" style="font-size: 10px;">授权</a> <a href="/tags/模块化/" style="font-size: 10px;">模块化</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/源码阅读/" style="font-size: 10px;">源码阅读</a> <a href="/tags/版本控制/" style="font-size: 10px;">版本控制</a> <a href="/tags/编码/" style="font-size: 15px;">编码</a> <a href="/tags/编程/" style="font-size: 10px;">编程</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/运动/" style="font-size: 10px;">运动</a> <a href="/tags/阅读/" style="font-size: 10px;">阅读</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/07/22/大白话简记TCP/">大白话简记TCP</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/22/再理一遍OAuth2.0/">再理一遍OAuth2.0</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/22/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2018/03/01/搭建-ELK-日志中心/">搭建 ELK 日志中心</a>
+          </li>
+        
+          <li>
+            <a href="/2018/02/22/Spring-生命周期/">Spring 生命周期</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 orh<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
