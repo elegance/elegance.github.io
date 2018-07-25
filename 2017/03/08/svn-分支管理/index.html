@@ -15,16 +15,16 @@
 <meta property="og:site_name" content="Poxi哥的博客">
 <meta property="og:description" content="参考 1. svn 初始目录结构1234D:\pro-repo├─branches├─tags└─trunk 如果没有对应的结构目录，可以使用以下命令来创建：1svn mkdir branches 2. branchs/tags 的建立需求一：产品开发已经基本完成，并且通过很严格的测试，这时候我们就想发布给客户使用，发布我们的1.0版本： 1svn copy svn://server/trunk">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://blog.ouronghui.com/images/svn-branch-mgt/diffViewer-setting.jpg">
-<meta property="og:image" content="http://blog.ouronghui.com/images/svn-branch-mgt/merge-tool-setting.jpg">
-<meta property="og:image" content="http://blog.ouronghui.com/images/svn-branch-mgt/edit-conflicts.jpg">
-<meta property="og:image" content="http://blog.ouronghui.com/images/svn-branch-mgt/merging.jpg">
-<meta property="og:image" content="http://blog.ouronghui.com/images/svn-branch-mgt/resolve.jpg">
-<meta property="og:updated_time" content="2018-07-22T06:09:17.211Z">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/929194b4gy1ftlvm6ch10j20jf0c03zt.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/929194b4gy1ftlvn97kt0j20jf0c0gmg.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/929194b4gy1ftlvnmj1ohj20gg0c1wf8.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/929194b4gy1ftlvo2po9vj21gc0qojvz.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/929194b4gy1ftlvogcfolj20fq0ep0tp.jpg">
+<meta property="og:updated_time" content="2018-07-25T02:03:24.721Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="svn 分支管理">
 <meta name="twitter:description" content="参考 1. svn 初始目录结构1234D:\pro-repo├─branches├─tags└─trunk 如果没有对应的结构目录，可以使用以下命令来创建：1svn mkdir branches 2. branchs/tags 的建立需求一：产品开发已经基本完成，并且通过很严格的测试，这时候我们就想发布给客户使用，发布我们的1.0版本： 1svn copy svn://server/trunk">
-<meta name="twitter:image" content="http://blog.ouronghui.com/images/svn-branch-mgt/diffViewer-setting.jpg">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/929194b4gy1ftlvm6ch10j20jf0c03zt.jpg">
   
     <link rel="alternate" href="/atom.xml" title="Poxi哥的博客" type="application/atom+xml">
   
@@ -114,9 +114,9 @@
 <p>之所以说可能发生冲突，是因为如果两个分支修改的文件明显不同，<code>merge</code>会自动的帮我们处理好。比如一端对文件第一行修改了内容，一端对文件增加了一行内容这种情况。</p>
 <p>当文件发生冲突时可以有以下方式来处理：</p>
 <h4 id="工具设置"><a href="#工具设置" class="headerlink" title="工具设置"></a>工具设置</h4><p>我们可以使用<code>TortoiseSVN</code>设置下对比工具来方便我们compare和merge，比如<code>BeyondCompare</code></p>
-<p>操作步骤：<code>项目目录-右键</code>  —&gt; <code>TortoiseSVN</code> —&gt; <code>Settings</code> —&gt; <code>Diff Viewer</code><br><img src="/images/svn-branch-mgt/diffViewer-setting.jpg" alt="Diff-tool-set"><br>其中代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;D:\tools\BeyondCompare\Beyond Compare\BCompare.exe&quot; %base %mine /title1=%bname /title2=%yname /leftreadonly</span><br><span class="line">&quot;D:\tools\BeyondCompare\Beyond Compare\BCompare.exe&quot;</span><br></pre></td></tr></table></figure></p>
-<p>合并工具设置：<br><img src="/images/svn-branch-mgt/merge-tool-setting.jpg" alt="merge-tool-set"><br>其中代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;D:\tools\BeyondCompare\Beyond Compare\BCompare.exe&quot;  %mine %theirs %base %merged /title1=%yname /title2=%tname /title3=%bname /title4=%mname</span><br></pre></td></tr></table></figure></p>
-<h4 id="解决冲突"><a href="#解决冲突" class="headerlink" title="解决冲突"></a>解决冲突</h4><p><img src="/images/svn-branch-mgt/edit-conflicts.jpg" alt="edit-conflict"><br><img src="/images/svn-branch-mgt/merging.jpg" alt="merging"><br>在上一步合并完后，就可以标记解决完冲突了：<br><img src="/images/svn-branch-mgt/resolve.jpg" alt="resolve"></p>
+<p>操作步骤：<code>项目目录-右键</code>  —&gt; <code>TortoiseSVN</code> —&gt; <code>Settings</code> —&gt; <code>Diff Viewer</code><br><img src="http://ww1.sinaimg.cn/large/929194b4gy1ftlvm6ch10j20jf0c03zt.jpg" alt="Diff-tool-set"><br>其中代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;D:\tools\BeyondCompare\Beyond Compare\BCompare.exe&quot; %base %mine /title1=%bname /title2=%yname /leftreadonly</span><br><span class="line">&quot;D:\tools\BeyondCompare\Beyond Compare\BCompare.exe&quot;</span><br></pre></td></tr></table></figure></p>
+<p>合并工具设置：<br><img src="http://ww1.sinaimg.cn/large/929194b4gy1ftlvn97kt0j20jf0c0gmg.jpg" alt="merge-tool-set"><br>其中代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;D:\tools\BeyondCompare\Beyond Compare\BCompare.exe&quot;  %mine %theirs %base %merged /title1=%yname /title2=%tname /title3=%bname /title4=%mname</span><br></pre></td></tr></table></figure></p>
+<h4 id="解决冲突"><a href="#解决冲突" class="headerlink" title="解决冲突"></a>解决冲突</h4><p><img src="http://ww1.sinaimg.cn/large/929194b4gy1ftlvnmj1ohj20gg0c1wf8.jpg" alt="edit-conflict"><br><img src="http://ww1.sinaimg.cn/large/929194b4gy1ftlvo2po9vj21gc0qojvz.jpg" alt="merging"><br>在上一步合并完后，就可以标记解决完冲突了：<br><img src="http://ww1.sinaimg.cn/large/929194b4gy1ftlvogcfolj20fq0ep0tp.jpg" alt="resolve"></p>
 <p><del>#### 3. <code>merge</code>的几种方式及应用场景， 参考<a href="http://chunanyong.iteye.com/blog/697255" target="_blank" rel="noopener">svn分支合并类型</a></del></p>
 <h4 id="3-merge-我使用merge的两种方式"><a href="#3-merge-我使用merge的两种方式" class="headerlink" title="3. merge 我使用merge的两种方式"></a>3. <code>merge</code> 我使用merge的两种方式</h4><ol>
 <li><p>指定分支地址，合并至当前目录:</p>
@@ -147,7 +147,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/08/svn-分支管理/" data-id="cjk0h4e87003mrorj8yhocdin" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/08/svn-分支管理/" data-id="cjk0hrp94003mx1rjt5izy1ue" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/版本控制/">版本控制</a></li></ul>
