@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Nginx+Lua 实现灰度发布 | Poxi哥的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一、安装Lua环境及相关库1. LuaJIT123456wget http://luajit.org/download/LuaJIT-2.0.5.tar.gztar -zxvf LuaJIT-2.0.5.tar.gz -C /usr/local/src/cd /usr/local/src/LuaJIT-2.0.5/make install PREFIX=/usr/local/LuaJITexpor">
+<meta name="keywords" content="灰度发布">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx+Lua 实现灰度发布">
+<meta property="og:url" content="http://blog.ouronghui.com/2018/08/05/N#ginx-Lua-实现灰度发布/index.html">
+<meta property="og:site_name" content="Poxi哥的博客">
+<meta property="og:description" content="一、安装Lua环境及相关库1. LuaJIT123456wget http://luajit.org/download/LuaJIT-2.0.5.tar.gztar -zxvf LuaJIT-2.0.5.tar.gz -C /usr/local/src/cd /usr/local/src/LuaJIT-2.0.5/make install PREFIX=/usr/local/LuaJITexpor">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-08-05T07:18:09.491Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nginx+Lua 实现灰度发布">
+<meta name="twitter:description" content="一、安装Lua环境及相关库1. LuaJIT123456wget http://luajit.org/download/LuaJIT-2.0.5.tar.gztar -zxvf LuaJIT-2.0.5.tar.gz -C /usr/local/src/cd /usr/local/src/LuaJIT-2.0.5/make install PREFIX=/usr/local/LuaJITexpor">
+  
+    <link rel="alternate" href="/atom.xml" title="Poxi哥的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Poxi哥的博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">种一棵树最好的时间是十年前，其次是现在。</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.ouronghui.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-N#ginx-Lua-实现灰度发布" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/08/05/N#ginx-Lua-实现灰度发布/" class="article-date">
+  <time datetime="2018-08-05T04:48:00.000Z" itemprop="datePublished">2018-08-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Nginx/">Nginx</a>►<a class="article-category-link" href="/categories/Nginx/Lua/">Lua</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Nginx+Lua 实现灰度发布
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一、安装Lua环境及相关库"><a href="#一、安装Lua环境及相关库" class="headerlink" title="一、安装Lua环境及相关库"></a>一、安装Lua环境及相关库</h2><h3 id="1-LuaJIT"><a href="#1-LuaJIT" class="headerlink" title="1. LuaJIT"></a>1. LuaJIT</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wget http://luajit.org/download/LuaJIT-2.0.5.tar.gz</span><br><span class="line">tar -zxvf LuaJIT-2.0.5.tar.gz -C /usr/<span class="built_in">local</span>/src/</span><br><span class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/src/LuaJIT-2.0.5/</span><br><span class="line">make install PREFIX=/usr/<span class="built_in">local</span>/LuaJIT</span><br><span class="line"><span class="built_in">export</span> LUAJIT_LIB=/usr/<span class="built_in">local</span>/LuaJIT/lib</span><br><span class="line"><span class="built_in">export</span> LUAJIT_INC=/usr/<span class="built_in">local</span>/LuaJIT/include/luajit-2.0</span><br></pre></td></tr></table></figure>
+<h3 id="2-ngx-devel-kit和lua-nginx-module"><a href="#2-ngx-devel-kit和lua-nginx-module" class="headerlink" title="2. ngx_devel_kit和lua-nginx-module"></a>2. ngx_devel_kit和lua-nginx-module</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/simplresty/ngx_devel_kit/archive/v0.3.1rc1.tar.gz</span><br><span class="line">wget https://github.com/openresty/lua-nginx-module/archive/v0.10.13.tar.gz</span><br><span class="line">tar -zxvf v0.3.1rc1.tar.gz -C /usr/<span class="built_in">local</span>/src/</span><br><span class="line">tar -zxvf v0.10.13.tar.gz -C /usr/<span class="built_in">local</span>/src/</span><br></pre></td></tr></table></figure>
+<h3 id="3-编译Nginx"><a href="#3-编译Nginx" class="headerlink" title="3. 编译Nginx"></a>3. 编译Nginx</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wget http://nginx.org/download/nginx-1.15.2.tar.gz</span><br><span class="line">tar -zxvf nginx-1.15.2.tar.gz -C /usr/<span class="built_in">local</span>/src/</span><br><span class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/src/nginx-1.15.2/</span><br><span class="line"><span class="comment"># 以下编译选项，除后两个，其余其实就是yum安装ngnix下nginx -V的默认编译选项</span></span><br><span class="line">./configure --prefix=/etc/nginx --sbin-path=/usr/sbin/nginx --modules-path=/usr/lib64/nginx/modules --conf-path=/etc/nginx/nginx.conf --error-log-path=/var/<span class="built_in">log</span>/nginx/error.log --http-log-path=/var/<span class="built_in">log</span>/nginx/access.log --pid-path=/var/run/nginx.pid --lock-path=/var/run/nginx.lock --http-client-body-temp-path=/var/cache/nginx/client_temp --http-proxy-temp-path=/var/cache/nginx/proxy_temp --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp --http-scgi-temp-path=/var/cache/nginx/scgi_temp --user=nginx --group=nginx --with-compat --with-file-aio --with-threads --with-http_addition_module --with-http_auth_request_module --with-http_dav_module --with-http_flv_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_mp4_module --with-http_random_index_module --with-http_realip_module --with-http_secure_link_module --with-http_slice_module --with-http_ssl_module --with-http_stub_status_module --with-http_sub_module --with-http_v2_module --with-mail --with-mail_ssl_module --with-stream --with-stream_realip_module --with-stream_ssl_module --with-stream_ssl_preread_module --with-cc-opt=<span class="string">'-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -fPIC'</span> --with-ld-opt=<span class="string">'-Wl,-z,relro -Wl,-z,now -pie'</span> --add-module=/usr/<span class="built_in">local</span>/src/ngx_devel_kit-0.3.1rc1 --add-module=/usr/<span class="built_in">local</span>/src/lua-nginx-module-0.10.13</span><br><span class="line">make -j 4 &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<h3 id="4-加载lua库，加入到ld-so-conf文件"><a href="#4-加载lua库，加入到ld-so-conf文件" class="headerlink" title="4. 加载lua库，加入到ld.so.conf文件"></a>4. 加载lua库，加入到ld.so.conf文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;/usr/local/LuaJIT/lib&quot; &gt;&gt; /etc/ld.so.conf</span><br><span class="line">ldconfig</span><br></pre></td></tr></table></figure>
+<h2 id="二、灰度实现"><a href="#二、灰度实现" class="headerlink" title="二、灰度实现"></a>二、灰度实现</h2><h3 id="1-灰度目标"><a href="#1-灰度目标" class="headerlink" title="1. 灰度目标"></a>1. 灰度目标</h3><p>当客户端ip为<code>192.168.56.1</code>时，让其访问新发布的upstream测试实例；其他ip访问时还是老的upstream实例。相当于前者为新发布功能，后者为稳定的生产功能。</p>
+<h3 id="2-灰度准备"><a href="#2-灰度准备" class="headerlink" title="2. 灰度准备"></a>2. 灰度准备</h3><ol>
+<li><p>这里使用 <code>memcache</code> 来存储哪些ip要访问新的，哪些ip访问稳定的老的。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">yum install memcached </span><br><span class="line">memcached -p11211 -u nobody -d</span><br><span class="line"><span class="comment"># 设置 灰度ip</span></span><br><span class="line">telnet 127.0.0.1 11211</span><br><span class="line"><span class="built_in">set</span> 192.168.56.1 0 0 1</span><br><span class="line">1</span><br><span class="line">get 192.168.56.1</span><br><span class="line"><span class="comment"># 安装lua-resty-memcached</span></span><br><span class="line">wget https://github.com/openresty/lua-resty-memcached/archive/v0.14.tar.gz</span><br><span class="line">tar -zxvf v0.14.tar.gz -C /usr/<span class="built_in">local</span>/src/</span><br><span class="line">cp -r /usr/<span class="built_in">local</span>/src/lua-resty-memcached-0.14/lib/resty /usr/<span class="built_in">local</span>/LuaJIT/share/luajit-2.0.5/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>准备两个服务<code>新上线服务</code> 与 <code>稳定生产服务</code>,这里使用两个tomcat来演示(如果你熟悉node 也可以使用node快速实现两个后台服务)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#测试页面</span></span><br><span class="line">vim test.jsp</span><br><span class="line"> 1 &lt;%@ page language=<span class="string">"java"</span> import=<span class="string">"java.util.*"</span> pageEncoding=<span class="string">"utf-8"</span> %&gt;</span><br><span class="line">  2 &lt;!DOCTYPE html&gt;</span><br><span class="line">  3 &lt;html lang=<span class="string">"en"</span>&gt;</span><br><span class="line">  4 &lt;head&gt;</span><br><span class="line">  5 |   &lt;meta charset=<span class="string">"UTF-8"</span>&gt;</span><br><span class="line">  6 |   &lt;title&gt;Test Jsp&lt;/title&gt;</span><br><span class="line">  7 &lt;/head&gt;</span><br><span class="line">  8 &lt;body&gt;</span><br><span class="line">  9 |   &lt;%</span><br><span class="line"> 10 |   |   Random rand = new Random();</span><br><span class="line"> 11 |   |   out.println(<span class="string">"&lt;h1&gt;Test server&lt;/h1&gt;"</span>);</span><br><span class="line"> 12 |   |   out.println(<span class="string">"&lt;h1&gt;Random number:&lt;/h1&gt;"</span>);</span><br><span class="line"> 13 |   |   out.println(rand.nextInt(99) + 100);</span><br><span class="line"> 14 |   %&gt;</span><br><span class="line"> 15 &lt;/body&gt;</span><br><span class="line"> 16 &lt;/html&gt; </span><br><span class="line"><span class="comment"># 两个tomcat: tomcat8080, tomcat9090，前者作为新上线服务，后者作为 稳定的生产服务；将上面的test.jsp页面分别放置到两个tomcat的ROOT下；tomcat9090 删除test.jsp中的11行，以示区别。</span></span><br><span class="line"><span class="comment"># 分别启动两个tomcat</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置Nginx nginx.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">|   location / &#123; </span><br><span class="line">|   |   default_type &apos;text/html&apos;;</span><br><span class="line">|   |   content_by_lua_file /opt/app/lua/dep.lua;</span><br><span class="line">|   &#125;</span><br><span class="line">|   location @server&#123;</span><br><span class="line">|   |   proxy_pass http://127.0.0.1:9090;</span><br><span class="line">|   &#125;</span><br><span class="line">|   location @server_test&#123;</span><br><span class="line">|   |   proxy_pass http://127.0.0.1:8080;</span><br><span class="line">|   &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编写 <code>/opt/app/lua/dep.lua</code></p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> clientIP = ngx.req.get_headers()[<span class="string">"X-Real-IP"</span>]</span><br><span class="line"><span class="keyword">if</span> clientIP == <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">|   clientIP = ngx.req.get_headers()[<span class="string">"x_forwarded_for"</span>]</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">if</span> clientIP == <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">|   clientIP = ngx.var.remote_addr</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">local</span> memcached = <span class="built_in">require</span> <span class="string">"resty.memcached"</span></span><br><span class="line"><span class="keyword">local</span> memc, err = memcached:new()</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> memc <span class="keyword">then</span></span><br><span class="line">|   ngx.say(<span class="string">"failed to instance memc:"</span>, err)</span><br><span class="line">|   <span class="keyword">return</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">local</span> ok, err = memc:connect(<span class="string">"127.0.0.1"</span>, <span class="number">11211</span>)</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> ok <span class="keyword">then</span></span><br><span class="line">|   ngx.say(<span class="string">"failed to connect: "</span>, err)</span><br><span class="line">|   <span class="keyword">return</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">local</span> res, flags, err = memc:get(clientIP)</span><br><span class="line"><span class="comment">--ngx.say("value key: ", res, clientIP)</span></span><br><span class="line"><span class="keyword">if</span> err <span class="keyword">then</span></span><br><span class="line">|   ngx.say(<span class="string">"failed to get clientIP "</span>, err)</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">if</span> res == <span class="string">"1"</span> <span class="keyword">then</span></span><br><span class="line">|   ngx.exec(<span class="string">"@server_test"</span>)</span><br><span class="line">|   <span class="keyword">return</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line">ngx.exec(<span class="string">"@server"</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动Nginx，访问测试</p>
+</li>
+</ol>
+<p>在本机使用 <code>curl http://127.0.0.1/test.jsp</code> 查看效果，返回结果<strong>无 Test server 字样</strong>。</p>
+<p>在<code>192.168.56.1</code> 访问 <code>http://192.168.56.101</code>（此ip为Nginx 服务所在ip） 查看效果，返回结果<strong>有 Test server 字样</strong>。</p>
+<h3 id="三、小结"><a href="#三、小结" class="headerlink" title="三、小结"></a>三、小结</h3><p>以上只是简单的针对某个 <code>ip</code> 做的灰度，完整的灰度，还需要企业后台灵活的管理<code>memcache</code>。</p>
+<p>另外要实现更灵活的灰度，比如根据 Cookie, header 头信息，也可以个根据这种原理来实现。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2018/08/05/N#ginx-Lua-实现灰度发布/" data-id="cjkgimfod002ceerjqjowfa3z" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/灰度发布/">灰度发布</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/07/22/大白话简记TCP/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">大白话简记TCP</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/">HTTP</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/通信/">通信</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/PostgreSQL/">PostgreSQL</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/">Nginx</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/Lua/">Lua</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/">PostgreSQL</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/数据库/">数据库</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/">WEB</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/安全/">安全</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript语言/">javascript语言</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/英语/">英语</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计划/">计划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机基础/">计算机基础</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMD/">CMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CommonJS/">CommonJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript基础/">javascript基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/n2n/">n2n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/健身/">健身</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/协议/">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程-锁/">多线程 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/意志/">意志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/授权/">授权</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模块化/">模块化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码阅读/">源码阅读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/灰度发布/">灰度发布</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/版本控制/">版本控制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编码/">编码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/英语/">英语</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计划/">计划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运动/">运动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CMD/" style="font-size: 10px;">CMD</a> <a href="/tags/Centos软件安装/" style="font-size: 15px;">Centos软件安装</a> <a href="/tags/CommonJS/" style="font-size: 10px;">CommonJS</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/PostgreSQL基础/" style="font-size: 15px;">PostgreSQL基础</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/javascript函数/" style="font-size: 15px;">javascript函数</a> <a href="/tags/javascript基础/" style="font-size: 15px;">javascript基础</a> <a href="/tags/n2n/" style="font-size: 10px;">n2n</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/健身/" style="font-size: 10px;">健身</a> <a href="/tags/协议/" style="font-size: 10px;">协议</a> <a href="/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/tags/多线程-锁/" style="font-size: 10px;">多线程 锁</a> <a href="/tags/安全/" style="font-size: 10px;">安全</a> <a href="/tags/意志/" style="font-size: 10px;">意志</a> <a href="/tags/授权/" style="font-size: 10px;">授权</a> <a href="/tags/模块化/" style="font-size: 10px;">模块化</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/源码阅读/" style="font-size: 10px;">源码阅读</a> <a href="/tags/灰度发布/" style="font-size: 10px;">灰度发布</a> <a href="/tags/版本控制/" style="font-size: 10px;">版本控制</a> <a href="/tags/编码/" style="font-size: 15px;">编码</a> <a href="/tags/编程/" style="font-size: 10px;">编程</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/运动/" style="font-size: 10px;">运动</a> <a href="/tags/阅读/" style="font-size: 10px;">阅读</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/08/05/N#ginx-Lua-实现灰度发布/">Nginx+Lua 实现灰度发布</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/22/大白话简记TCP/">大白话简记TCP</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/22/再理一遍OAuth2.0/">再理一遍OAuth2.0</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/22/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2018/03/01/搭建-ELK-日志中心/">搭建 ELK 日志中心</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 orh<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

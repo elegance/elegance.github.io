@@ -66,6 +66,128 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Thread类join方法中的 wait(0) 能用 sleep(0) 来替代模拟吗" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/03/23/Thread类join方法中的 wait(0) 能用 sleep(0) 来替代模拟吗/" class="article-date">
+  <time datetime="2017-03-23T05:41:15.000Z" itemprop="datePublished">2017-03-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/03/23/Thread类join方法中的 wait(0) 能用 sleep(0) 来替代模拟吗/">Thread类join方法中的 wait(0) 能用 sleep(0) 来替代模拟吗</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="Thread-线程类-join方法实现如下"><a href="#Thread-线程类-join方法实现如下" class="headerlink" title="Thread 线程类 join方法实现如下"></a>Thread 线程类 <code>join</code>方法实现如下</h4><p>都知道<code>join()</code> 经常用于等待前一个线程执行完毕，再执行后面的任务，那<code>join()</code>方法是如何做到这个”等待”的呢？<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">join</span><span class="params">(<span class="keyword">long</span> millis)</span>                                                                                                                        </span></span><br><span class="line"><span class="function"> 2 <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line"> <span class="number">3</span> |   <span class="keyword">long</span> base = System.currentTimeMillis();</span><br><span class="line"> <span class="number">4</span> |   <span class="keyword">long</span> now = <span class="number">0</span>;</span><br><span class="line"> <span class="number">5</span> </span><br><span class="line"> <span class="number">6</span> |   <span class="keyword">if</span> (millis &lt; <span class="number">0</span>) &#123;</span><br><span class="line"> <span class="number">7</span> |   |   <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"timeout value is negative"</span>);</span><br><span class="line"> <span class="number">8</span> |   &#125;</span><br><span class="line"> <span class="number">9</span> </span><br><span class="line"><span class="number">10</span> |   <span class="keyword">if</span> (millis == <span class="number">0</span>) &#123; </span><br><span class="line"><span class="number">11</span> |   |   <span class="keyword">while</span> (isAlive()) &#123;</span><br><span class="line"><span class="number">12</span> |   |   |   wait(<span class="number">0</span>);</span><br><span class="line"><span class="number">13</span> |   |   &#125;</span><br><span class="line"><span class="number">14</span> |   &#125; <span class="keyword">else</span> &#123;</span><br><span class="line"><span class="number">15</span> |   |   <span class="keyword">while</span> (isAlive()) &#123;</span><br><span class="line"><span class="number">16</span> |   |   |   <span class="keyword">long</span> delay = millis - now;</span><br><span class="line"><span class="number">17</span> |   |   |   <span class="keyword">if</span> (delay &lt;= <span class="number">0</span>) &#123;</span><br><span class="line"><span class="number">18</span> |   |   |   |   <span class="keyword">break</span>;</span><br><span class="line"><span class="number">19</span> |   |   |   &#125;</span><br><span class="line"><span class="number">20</span> |   |   |   wait(delay);</span><br><span class="line"><span class="number">21</span> |   |   |   now = System.currentTimeMillis() - base;</span><br><span class="line"><span class="number">22</span> |   |   &#125;</span><br><span class="line"><span class="number">23</span> |   &#125;</span><br><span class="line"><span class="number">24</span> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>分析如下：</p>
+<ol>
+<li>方法无<code>static</code>修饰，说明其为<strong>线程实例</strong>的方法</li>
+<li>方法有<code>syncrhonized</code>修饰，意味着可能需要竞争锁才能进入方法，进入这个方法后将锁住<strong>线程实例</strong>这个对象</li>
+<li>第<code>10</code>行<code>if</code>代码块内的即是<code>join()</code>的实现</li>
+<li>逻辑：<code>判断 线程实例 isAlive()返回的是 true，则 wait(0)， 然后再次进入前面的判断，否则退出</code>，也就是在目标线程执行完毕前，这里会不断循环取状态判断、wait(0)， 这里的<code>不断</code>即起到了<code>当前线程等待目标线程执行完毕的作用了</code></li>
+</ol>
+<p>这里的做法看起来就像这个思路，<code>比如需要等某人做完了一些事，我们再去做另外一件事，那么我们可不断的去问这个人他是不是做完了那些事</code></p>
+<h4 id="那么我们能将join方法中的wait-0-用sleep-0-替代吗？"><a href="#那么我们能将join方法中的wait-0-用sleep-0-替代吗？" class="headerlink" title="那么我们能将join方法中的wait(0)用sleep(0)替代吗？"></a>那么我们能将<code>join</code>方法中的<code>wait(0)</code>用<code>sleep(0)</code>替代吗？</h4><p>实验一下吧：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestSyncMethodLockAlive</span> </span>&#123;                                                                                                                                  </span><br><span class="line"> <span class="number">2</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line"> <span class="number">3</span>         Thread targetThread = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line"> <span class="number">4</span>             System.out.println(<span class="string">"target begin run state="</span> + Thread.currentThread().getState());</span><br><span class="line"> <span class="number">5</span>             sleep(<span class="number">1000</span>); <span class="comment">// 模拟目标线程做某些事情，比如查询数据库</span></span><br><span class="line"> <span class="number">6</span>             System.out.println(<span class="string">"target end  run state="</span> + Thread.currentThread().getState());</span><br><span class="line"> <span class="number">7</span>         &#125;, <span class="string">"target-thread"</span>);</span><br><span class="line"> <span class="number">8</span> </span><br><span class="line"> <span class="number">9</span>         <span class="comment">// 定时输出 目标线程的状态 与 isAlive 值</span></span><br><span class="line"><span class="number">10</span>         <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line"><span class="number">11</span>             <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line"><span class="number">12</span>                 System.out.printf(<span class="string">"### log ### targetThread: state=%s, isAlvie=%s\n"</span>, targetThread.getState(), targetThread.isAlive());</span><br><span class="line"><span class="number">13</span>                 <span class="keyword">if</span> (!targetThread.isAlive() &amp;&amp; !targetThread.getState().equals(Thread.State.NEW)) &#123;</span><br><span class="line"><span class="number">14</span>                     <span class="keyword">break</span>;</span><br><span class="line"><span class="number">15</span>                 &#125;</span><br><span class="line"><span class="number">16</span>                 sleep(<span class="number">500</span>);</span><br><span class="line"><span class="number">17</span>             &#125;</span><br><span class="line"><span class="number">18</span>             System.out.printf(<span class="string">"### log ### targetThread: state=%s, isAlvie=%s\n"</span>, targetThread.getState(), targetThread.isAlive());</span><br><span class="line"><span class="number">19</span>         &#125;).start();</span><br><span class="line"><span class="number">20</span>         targetThread.start();</span><br><span class="line"><span class="number">21</span> </span><br><span class="line"><span class="number">22</span>         <span class="comment">// 模拟 Thread 的 join 方法</span></span><br><span class="line"><span class="number">23</span>         <span class="keyword">synchronized</span> (targetThread) &#123;</span><br><span class="line"><span class="number">24</span>             <span class="keyword">while</span> (targetThread.isAlive()) &#123; <span class="comment">// 取线程状态</span></span><br><span class="line"><span class="number">25</span>                 targetThread.wait(<span class="number">0</span>);</span><br><span class="line"><span class="number">26</span>             &#125;</span><br><span class="line"><span class="number">27</span>             System.out.println(<span class="string">"synchronized anlog join over."</span>);</span><br><span class="line"><span class="number">28</span>         &#125;   </span><br><span class="line"><span class="number">29</span>     &#125;   </span><br><span class="line"><span class="number">30</span>     </span><br><span class="line"><span class="number">31</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sleep</span><span class="params">(<span class="keyword">long</span> millis)</span> </span>&#123;</span><br><span class="line"><span class="number">32</span>         <span class="keyword">try</span> &#123;</span><br><span class="line"><span class="number">33</span>             Thread.sleep(millis);</span><br><span class="line"><span class="number">34</span>         &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line"><span class="number">35</span>             e.printStackTrace();</span><br><span class="line"><span class="number">36</span>         &#125;   </span><br><span class="line"><span class="number">37</span>     &#125;   </span><br><span class="line"><span class="number">38</span> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里我们用<code>23-28</code>行<code>wait(0)</code>的模式模拟了<code>Thread</code>的<code>join</code>方法，运行测试下，没有问题。 下面我们尝试把<code>25</code>行替换为<code>Thread.sleep(0);</code>测试下，发现控制台打印没有停止,输出以下信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">target begin run state=RUNNABLE</span><br><span class="line">### log ### targetThread: state=RUNNABLE, isAlvie=true</span><br><span class="line">### log ### targetThread: state=TIMED_WAITING, isAlvie=true</span><br><span class="line">target end  run state=RUNNABLE</span><br><span class="line">### log ### targetThread: state=BLOCKED, isAlvie=true</span><br><span class="line">### log ### targetThread: state=BLOCKED, isAlvie=true</span><br><span class="line">....</span><br></pre></td></tr></table></figure></p>
+<p>分析下：</p>
+<ol>
+<li><code>taget end run</code> 的输出意味着线程内部的代码已经运行结束了，但是目标线程状态的<code>isAlvie()</code>返回的true，所以我们期盼的<code>27</code>行也不会打印</li>
+<li>为什么线程内部代码执行完了，还是alive的呢？ 我们发现：线程状态由<code>RUNNABLE</code>转为<code>BLOCKED</code>状态，而不是期望值<code>TERMINATED</code></li>
+<li>状态为<code>BLOCKED</code> 意味着线程阻塞，线程等待某个锁 ，死锁了？ 我们一起来分析下堆栈内存</li>
+</ol>
+<h5 id="分析堆栈内存"><a href="#分析堆栈内存" class="headerlink" title="分析堆栈内存"></a>分析堆栈内存</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ jps <span class="comment"># 拿到进程 pid</span></span><br><span class="line">$ jstack -l pid <span class="comment"># 直接查看下 堆栈信息，可以发现："target-thread" BLOCKED ，但是好像没有发现 "deadlock" 的信息，没有发现死锁那为什么还会一直等待呢？</span></span><br><span class="line"><span class="comment"># jconsole.exe 也可以查看</span></span><br><span class="line"><span class="comment"># $ jmap -dump:live,format=b,file=heap.bin pid # 将堆栈信息导出至文件，离线分析下</span></span><br></pre></td></tr></table></figure>
+<p>可以看以下信息(截取了部分)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> 1 &quot;target-thread&quot; #10 prio=5 os_prio=0 tid=0x000000001d5f4000 nid=0x24140 waiting for monitor entry [0x0000000000000000]                                                  </span><br><span class="line"> 2    java.lang.Thread.State: BLOCKED (on object monitor)</span><br><span class="line"> 3 &quot;Finalizer&quot; #3 daemon prio=8 os_prio=1 tid=0x000000001bf06800 nid=0x21a24 in Object.wait() [0x000000001d15f000]</span><br><span class="line"> 4    java.lang.Thread.State: WAITING (on object monitor)</span><br><span class="line"> 5         at java.lang.Object.wait(Native Method)</span><br><span class="line"> 6         - waiting on &lt;0x000000076b406f58&gt; (a java.lang.ref.ReferenceQueue$Lock)</span><br><span class="line"> 7         at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:143)</span><br><span class="line"> 8             - locked &lt;0x000000076b406f58&gt; (a java.lang.ref.ReferenceQueue$Lock)</span><br><span class="line"> 9         at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:164)</span><br><span class="line">10         at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:209)</span><br><span class="line">11 &quot;main&quot; #1 prio=5 os_prio=0 tid=0x0000000002458000 nid=0x244ec runnable [0x000000000293f000]</span><br><span class="line">12    java.lang.Thread.State: RUNNABLE</span><br><span class="line">13         at java.lang.Thread.sleep(Native Method)</span><br><span class="line">14         at commu.TestSyncMethodLockAlive.main(TestSyncMethodLockAlive.java:31)</span><br><span class="line">15         - locked &lt;0x000000076b4b1c40&gt; (a java.lang.Thread)</span><br></pre></td></tr></table></figure></p>
+<p>内容分析</p>
+<ol>
+<li>第<code>1-2</code>行: <code>target-thread</code> waiting for monitor entry ` 意味“在等待进入一个临界区， ”，这里的信息没有期望的”-waiting to lock<0xx>“ 不能看出来到底是被哪个锁阻塞。 (jconsole中都看不到此线程了)</0xx></li>
+<li>第<code>11-15</code>行: <code>main</code>方法运行的主线程<code>，主线程一直处于</code>RUNNABLE<code>状态，并且持有锁</code>- locked <0x764b1c40>`</0x764b1c40></li>
+<li>第<code>3-10</code>行：daemon类型，一般为jvm守护线程，这里的<code>Finalizer</code>线程主要是给执行完<code>run</code>的线程处理一些<code>身后事</code>，比如将线程移除引用队列。可以看出这里等待的锁，不是直接<code>main</code>线程持有的锁，而是线程本身在此前<code>locked</code>的一个锁，只是这里在等待外部调用某个方法来<code>notify</code>唤醒线程，而间接的在外部依赖了<code>main</code>一直持有的锁，而这个外部可能是在<code>native</code>中而无法跟踪了。</li>
+</ol>
+<p>思考弯路：</p>
+<ol>
+<li><code>synchronized</code> 不是一直持有 线程对象的锁么， 为何 “target-thread”线程在等待锁？  —-&gt;   <code>synchronized</code>是main方法持有了锁, “target-thread” 是线程内部需要这个锁</li>
+</ol>
+<p>总结：</p>
+<ol>
+<li>创建的线程运行完<code>run</code>方法后，线程调度器对其还有<code>身后事</code>要处理的，并且间接同步的使用到“线程实例”，并且这个”间接”不好追踪，所以最好不要再线程实例外部来将线程实例作为同步条件来使用。</li>
+<li>线程内做的操作影响线程本身的状态</li>
+<li>将“线程实例”作为锁与“普通对象”作为锁本质一样，将其普通看待不要受到干扰，所以不要把<code>targetThread.wait()</code>方法看的特殊了，理解为<code>lock.wait()</code>就好</li>
+</ol>
+<h4 id="回到之前的问题“我们能将wait-0-用sleep-0-替代吗？”"><a href="#回到之前的问题“我们能将wait-0-用sleep-0-替代吗？”" class="headerlink" title="回到之前的问题“我们能将wait(0)用sleep(0)替代吗？”"></a>回到之前的问题“我们能将<code>wait(0)</code>用<code>sleep(0)</code>替代吗？”</h4><p>其实从控制台打印信息，可以看出<code>isAlive返回的一直为true，因为&quot;身后事&quot;的处理被阻塞，所以线程还是alive的，但是线程状态已经由&quot;RUNNABLE&quot;转变为&quot;BLOCKED&quot;了</code>.</p>
+<p><img src="/images/xbq/idea.gif" alt="">那么我们可以将我们的<code>while (targetThread.isAlive())</code> 的判断条件修改下<code>while (!targetThread.getState().equals(Thread.State.BLOCKED))</code> 修改好了接着测试看下控制台的输出吧：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">### log ### targetThread: state=TIMED_WAITING, isAlvie=true</span><br><span class="line">target end  run state=RUNNABLE</span><br><span class="line">synchronized anlog join over.</span><br></pre></td></tr></table></figure></p>
+<p>bingo! 按我们期盼的顺序输出了 <img src="/images/xbq/big-laugh.gif" alt=""></p>
+<p>高兴的有些早了，多运行几次发现有时候会是这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">synchronized anlog join over.BLOCKED</span><br><span class="line">target begin run state=RUNNABLE</span><br></pre></td></tr></table></figure></p>
+<p>main先结束，target才开始，再次证明多线程问题的偶发性，一不小心就以为万事大吉，其实已经暗藏危机了。其实我们这里的根本原因是<code>忽略了除了NEW/TERMINATED状态，其它的几个线程状态都有可能随意切换</code>。 我们这里单纯认为<code>BLOCKED</code>就是由处理“身后事”造成的，是不严谨的，这里多种其他的情况情况要处理比如:</p>
+<ol>
+<li><code>targetThread.start()</code>是<code>synchronized</code>方法，如果它比main<code>synchronized</code>块后拿到锁，会造成线程<code>BLOCKED</code></li>
+<li><code>run</code>方法内部的<code>System.out.println</code>方法为同步方法也有可能造成线程 <code>BLOCKED</code> [这也是为什么在打包的代码里最好不要出现<code>System.out.println</code>的原因]</li>
+<li><code>run</code>方法内部的<code>Thread.sleep(1000)</code> 是<code>native</code>的，经测试这里暂时<code>不会造成BLOCKED</code>，但是这里是模拟的业务，如果真实业务访问数据库、读写文件等操作其他资源都有可能造成<code>BLOCKED</code></li>
+</ol>
+<p>现有情况的解决方式：</p>
+<ol>
+<li>基于<code>1</code>的问题，可以在<code>targetThread.start()后再 sleep(50)</code></li>
+<li><code>2</code>的问题，将打印信息的方式改为<code>logger</code>方式输出，比如<code>java.util.logging.Logger.getGlobal().info</code>非阻塞来替代</li>
+<li><code>3</code>如果只是基于我们现有的模拟任务，不用修改可以暂时满足。</li>
+</ol>
+<p>结论：<strong>基于上面的测试代码</strong>，可以用<code>sleep(0)</code>代替<code>wait(0)</code>的方式来达到<code>join()</code>的效果。</p>
+<p>我们根据日志结果做了不科学的事情：利用判断 thread.getState() 尝试代替 thread.isAlvie() 。只有状态<code>NEW</code>与<code>TERMINATED</code>时isAlive()为false，其他状态对应的都是true;</p>
+<p><strong>不科学的使用，将给你带来各种意外，需要步步跟踪测试才能做出严谨的判断，除非你只是本着探索的心在学习，否则不建议这样使用</strong></p>
+<h4 id="技能点："><a href="#技能点：" class="headerlink" title="技能点："></a>技能点：</h4><ol>
+<li>线程状态 - <a href="https://github.com/elegance/dev-demo/blob/master/java-demo/thread/ThreadStateTest.java" target="_blank" rel="noopener">帮助理解线程状态的例子</a><ul>
+<li><code>NEW</code> 创建了未 start</li>
+<li><code>RUNNABLE</code> 有可能正在运行(RUNNING)，也有可能在就绪队列中(Ready)，这个取决于 线程调度器</li>
+<li><code>TIMED_WAITING</code> 挂起，等待指定的时间后自动恢复</li>
+<li><code>WATING</code> 挂起，被动恢复，依赖其他线程的操作才会唤醒</li>
+<li><code>BLOCKED</code> 阻塞，被动恢复执行，依赖其他线程释放相关资源的锁</li>
+<li><code>TERMINATED</code> 执行完毕的线程</li>
+</ul>
+</li>
+<li><code>wait()</code>、<code>wait(long)</code><ul>
+<li><code>wait()</code>释放锁，线程进入<code>WAITING</code>状态，无限期等待另一个线程执行某一操作，如在锁对象上执行<code>notify()</code>/<code>notifyAll()</code></li>
+<li><code>wait(long)</code>释放锁，线程进入<code>TIMED_WAITING</code>，等待指定的时间<strong>自动</strong>结束指定</li>
+</ul>
+</li>
+<li><code>sleep(long)</code><ul>
+<li><code>sleep(long)</code> 如果在同步块内，线程将不会释放锁，一直持有，线程进入<code>TIMED_WAITING</code>，等待指定的时间<strong>自动</strong>往下执行</li>
+</ul>
+</li>
+<li>java dump 分析：<ul>
+<li><a href="http://www.blogjava.net/freeman1984/archive/2015/12/14/428645.html" target="_blank" rel="noopener">JAVA Thread Dump 分析综述</a></li>
+<li><a href="http://www.cnblogs.com/zhengyun_ustc/archive/2013/03/18/tda.html" target="_blank" rel="noopener">各种 Java Thread State 第一分析法则</a></li>
+<li><a href="http://www.cnblogs.com/zhengyun_ustc/archive/2013/01/06/dumpanalysis.html" target="_blank" rel="noopener">三个实例演示 Java Thread Dump 日志分析</a></li>
+</ul>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2017/03/23/Thread类join方法中的 wait(0) 能用 sleep(0) 来替代模拟吗/" data-id="cjkgimfoj002oeerjub3jb62p" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/源码阅读/">源码阅读</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-vim-技巧手记" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/03/22/vim-技巧手记/" class="article-date">
@@ -135,7 +257,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/22/vim-技巧手记/" data-id="cjk57ugw1003o84rjxktgryt9" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/22/vim-技巧手记/" data-id="cjkgimfpa003teerjmwp1z8f6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vim/">vim</a></li></ul>
@@ -244,7 +366,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/10/Read-Later/" data-id="cjk57ugvc002d84rjf4kgtp1z" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/10/Read-Later/" data-id="cjkgimfof002heerjcql3d4m2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -326,7 +448,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/08/svn-分支管理/" data-id="cjk57ugw0003m84rj2ffo11g4" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/08/svn-分支管理/" data-id="cjkgimfp6003oeerjo1kte1o7" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/版本控制/">版本控制</a></li></ul>
@@ -386,7 +508,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/02/27/glossary-生词本/" data-id="cjk57ugvk002s84rj4kzew2x5" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/02/27/glossary-生词本/" data-id="cjkgimfoo002ueerj7aca1pex" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/英语/">英语</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/计划/">计划</a></li></ul>
@@ -476,7 +598,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/02/04/UML类图/" data-id="cjk57ugvg002o84rjmb8zncku" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/02/04/UML类图/" data-id="cjkgimfol002peerjjjinpdtk" class="article-share-link">Share</a>
       
       
     </footer>
@@ -519,7 +641,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2016/10/13/node-js中的exports与module-exports/" data-id="cjk57ugvx003i84rj836yv0r1" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2016/10/13/node-js中的exports与module-exports/" data-id="cjkgimfp4003leerjz0jcw4bp" class="article-share-link">Share</a>
       
       
     </footer>
@@ -564,7 +686,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2016/07/01/PostgreSQL之psql的使用/" data-id="cjk57ugvb002c84rjme0hsn58" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2016/07/01/PostgreSQL之psql的使用/" data-id="cjkgimfoe002deerj988veu3z" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li></ul>
@@ -628,7 +750,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2016/07/01/CentOS6-5-PostgreSQL源码编译安装/" data-id="cjk57ugv6002684rj66fk4yff" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2016/07/01/CentOS6-5-PostgreSQL源码编译安装/" data-id="cjkgimfo80026eerjn1xo7ees" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li></ul>
@@ -688,54 +810,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2016/06/29/javascript之apply与call方法/" data-id="cjk57ugvp003284rj83j7zhwf" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript基础/">javascript基础</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-javascript之Bind方法" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/06/29/javascript之Bind方法/" class="article-date">
-  <time datetime="2016-06-29T08:30:54.000Z" itemprop="datePublished">2016-06-29</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/javascript语言/">javascript语言</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/29/javascript之Bind方法/">javascript之Bind方法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>作用：<strong>对于给定函数，创建具有与原始函数相同的主体的绑定函数。在绑定函数中，this 对象将解析为传入的对象。绑定函数具有指定的初始参数。</strong></p>
-<p>语法：<code>function.bind(thisArg[,arg1[,arg2[,argN]]])</code></p>
-<p>例1：注意<code>checkNumericRange</code>后面不要使用<strong>箭头函数</strong>的方式，因为<strong>this</strong>在箭头函数内已经绑定作用域了，同样<code>call()</code>、<code>apply()</code>在执行箭头函数会忽略传入的第一参数，无法对<code>this</code>进行绑定<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> checkNumericRange = <span class="function"><span class="keyword">function</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> value !== <span class="string">'number'</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> value &gt;= <span class="keyword">this</span>.minnum &amp;&amp; value &lt;= <span class="keyword">this</span>.maxnum;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> range = &#123; <span class="attr">minnum</span>: <span class="number">10</span>, <span class="attr">maxnum</span>: <span class="number">20</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> boundCheckNumericRange = checkNumericRange.bind(range);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(boundCheckNumericRange(<span class="number">12</span>)); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(boundCheckNumericRange(<span class="number">21</span>)); <span class="comment">// false</span></span><br></pre></td></tr></table></figure></p>
-<p>例2：下面例子中<code>this</code>与包含原始原始方法的对象不同<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> originalObject = &#123;</span><br><span class="line">    minnum: <span class="number">50</span>,</span><br><span class="line">    maxnum: <span class="number">100</span>,</span><br><span class="line">    checkNumericRange: <span class="function"><span class="keyword">function</span> (<span class="params">value</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'This is me?'</span>, originalObject === <span class="keyword">this</span>); <span class="comment">// originalobject is true, bind method is false</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> value !== <span class="string">'number'</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> value &gt;= <span class="keyword">this</span>.minnum &amp;&amp; value &lt;= <span class="keyword">this</span>.maxnum;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(originalObject.checkNumericRange(<span class="number">10</span>)); <span class="comment">// false (compare with originalobject)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> range = &#123; <span class="attr">minnum</span>: <span class="number">10</span>, <span class="attr">maxnum</span>: <span class="number">20</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> boundObjectWithRange = originalObject.checkNumericRange.bind(range);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(boundObjectWithRange(<span class="number">10</span>)); <span class="comment">// true (expect)</span></span><br></pre></td></tr></table></figure></p>
-<p>例3：下面的例子演示如何使用<code>arg1[arg2, [argN]]</code><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> displayArgs = <span class="function"><span class="keyword">function</span> (<span class="params">val1, val2, val3, val4</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(val1 + <span class="string">' '</span> + val2 + <span class="string">' '</span> + val3 + <span class="string">' '</span> + val4);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> emptyObject = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> displayArgs2 = displayArgs.bind(emptyObject, <span class="number">12</span>, <span class="string">'a'</span>);</span><br><span class="line"></span><br><span class="line">displayArgs2(<span class="string">'b'</span>, <span class="string">'c'</span>); <span class="comment">// Output: 12 a b c</span></span><br></pre></td></tr></table></figure></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2016/06/29/javascript之Bind方法/" data-id="cjk57ugvn002z84rjdfscn2xa" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2016/06/29/javascript之apply与call方法/" data-id="cjkgimfou0034eerj18jmh3yk" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript基础/">javascript基础</a></li></ul>
@@ -762,7 +837,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/">HTTP</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/通信/">通信</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/PostgreSQL/">PostgreSQL</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/">PostgreSQL</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/数据库/">数据库</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/">WEB</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/安全/">安全</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript语言/">javascript语言</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/英语/">英语</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计划/">计划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机基础/">计算机基础</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/">HTTP</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/通信/">通信</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/PostgreSQL/">PostgreSQL</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/">Nginx</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/Lua/">Lua</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/">PostgreSQL</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/数据库/">数据库</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/">WEB</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/安全/">安全</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript语言/">javascript语言</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/英语/">英语</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计划/">计划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机基础/">计算机基础</a></li></ul>
     </div>
   </div>
 
@@ -772,7 +847,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMD/">CMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CommonJS/">CommonJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript基础/">javascript基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/n2n/">n2n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/健身/">健身</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/协议/">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程-锁/">多线程 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/意志/">意志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/授权/">授权</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模块化/">模块化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码阅读/">源码阅读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/版本控制/">版本控制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编码/">编码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/英语/">英语</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计划/">计划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运动/">运动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMD/">CMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CommonJS/">CommonJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript基础/">javascript基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/n2n/">n2n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/健身/">健身</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/协议/">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程-锁/">多线程 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/意志/">意志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/授权/">授权</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模块化/">模块化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码阅读/">源码阅读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/灰度发布/">灰度发布</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/版本控制/">版本控制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编码/">编码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/英语/">英语</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计划/">计划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运动/">运动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
     </div>
   </div>
 
@@ -782,7 +857,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CMD/" style="font-size: 10px;">CMD</a> <a href="/tags/Centos软件安装/" style="font-size: 15px;">Centos软件安装</a> <a href="/tags/CommonJS/" style="font-size: 10px;">CommonJS</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/PostgreSQL基础/" style="font-size: 15px;">PostgreSQL基础</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/javascript函数/" style="font-size: 15px;">javascript函数</a> <a href="/tags/javascript基础/" style="font-size: 15px;">javascript基础</a> <a href="/tags/n2n/" style="font-size: 10px;">n2n</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/健身/" style="font-size: 10px;">健身</a> <a href="/tags/协议/" style="font-size: 10px;">协议</a> <a href="/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/tags/多线程-锁/" style="font-size: 10px;">多线程 锁</a> <a href="/tags/安全/" style="font-size: 10px;">安全</a> <a href="/tags/意志/" style="font-size: 10px;">意志</a> <a href="/tags/授权/" style="font-size: 10px;">授权</a> <a href="/tags/模块化/" style="font-size: 10px;">模块化</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/源码阅读/" style="font-size: 10px;">源码阅读</a> <a href="/tags/版本控制/" style="font-size: 10px;">版本控制</a> <a href="/tags/编码/" style="font-size: 15px;">编码</a> <a href="/tags/编程/" style="font-size: 10px;">编程</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/运动/" style="font-size: 10px;">运动</a> <a href="/tags/阅读/" style="font-size: 10px;">阅读</a>
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CMD/" style="font-size: 10px;">CMD</a> <a href="/tags/Centos软件安装/" style="font-size: 15px;">Centos软件安装</a> <a href="/tags/CommonJS/" style="font-size: 10px;">CommonJS</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/PostgreSQL基础/" style="font-size: 15px;">PostgreSQL基础</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/javascript函数/" style="font-size: 15px;">javascript函数</a> <a href="/tags/javascript基础/" style="font-size: 15px;">javascript基础</a> <a href="/tags/n2n/" style="font-size: 10px;">n2n</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/健身/" style="font-size: 10px;">健身</a> <a href="/tags/协议/" style="font-size: 10px;">协议</a> <a href="/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/tags/多线程-锁/" style="font-size: 10px;">多线程 锁</a> <a href="/tags/安全/" style="font-size: 10px;">安全</a> <a href="/tags/意志/" style="font-size: 10px;">意志</a> <a href="/tags/授权/" style="font-size: 10px;">授权</a> <a href="/tags/模块化/" style="font-size: 10px;">模块化</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/源码阅读/" style="font-size: 10px;">源码阅读</a> <a href="/tags/灰度发布/" style="font-size: 10px;">灰度发布</a> <a href="/tags/版本控制/" style="font-size: 10px;">版本控制</a> <a href="/tags/编码/" style="font-size: 15px;">编码</a> <a href="/tags/编程/" style="font-size: 10px;">编程</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/运动/" style="font-size: 10px;">运动</a> <a href="/tags/阅读/" style="font-size: 10px;">阅读</a>
     </div>
   </div>
 
@@ -791,7 +866,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li></ul>
     </div>
   </div>
 
@@ -802,6 +877,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2018/08/05/N#ginx-Lua-实现灰度发布/">Nginx+Lua 实现灰度发布</a>
+          </li>
         
           <li>
             <a href="/2018/07/22/大白话简记TCP/">大白话简记TCP</a>
@@ -817,10 +896,6 @@
         
           <li>
             <a href="/2018/03/01/搭建-ELK-日志中心/">搭建 ELK 日志中心</a>
-          </li>
-        
-          <li>
-            <a href="/2018/02/22/Spring-生命周期/">Spring 生命周期</a>
           </li>
         
       </ul>
