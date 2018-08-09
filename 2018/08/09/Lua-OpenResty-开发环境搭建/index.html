@@ -5,15 +5,19 @@
   
 
   
-  <title>Tag: 计划 | Poxi哥的博客</title>
+  <title>Lua OpenResty 开发环境搭建 | Poxi哥的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Poxi哥的博客">
-<meta property="og:url" content="http://blog.ouronghui.com/tags/计划/index.html">
+  <meta name="description" content="1. 创建目录/usr/servers，以后我们把所有软件安装在此目录 123mkdir -p /usr/serverscd /usr/servers/ls 2.下载openresty-1.13.6.2.tar.gz并解压 123wget https://openresty.org/download/openresty-1.13.6.2.tar.gztar -zxvf openresty-1.13">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lua OpenResty 开发环境搭建">
+<meta property="og:url" content="http://blog.ouronghui.com/2018/08/09/Lua-OpenResty-开发环境搭建/index.html">
 <meta property="og:site_name" content="Poxi哥的博客">
+<meta property="og:description" content="1. 创建目录/usr/servers，以后我们把所有软件安装在此目录 123mkdir -p /usr/serverscd /usr/servers/ls 2.下载openresty-1.13.6.2.tar.gz并解压 123wget https://openresty.org/download/openresty-1.13.6.2.tar.gztar -zxvf openresty-1.13">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-08-09T02:17:58.854Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Poxi哥的博客">
+<meta name="twitter:title" content="Lua OpenResty 开发环境搭建">
+<meta name="twitter:description" content="1. 创建目录/usr/servers，以后我们把所有软件安装在此目录 123mkdir -p /usr/serverscd /usr/servers/ls 2.下载openresty-1.13.6.2.tar.gz并解压 123wget https://openresty.org/download/openresty-1.13.6.2.tar.gztar -zxvf openresty-1.13">
   
     <link rel="alternate" href="/atom.xml" title="Poxi哥的博客" type="application/atom+xml">
   
@@ -64,40 +68,78 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2017/02/27/glossary-生词本/" class="archive-article-date">
-  <time datetime="2017-02-27T08:29:42.000Z" itemprop="datePublished">2月 27</time>
+        <section id="main"><article id="post-Lua-OpenResty-开发环境搭建" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/08/09/Lua-OpenResty-开发环境搭建/" class="article-date">
+  <time datetime="2018-08-09T02:13:47.000Z" itemprop="datePublished">2018-08-09</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/02/27/glossary-生词本/">glossary-生词本</a>
+    <h1 class="article-title" itemprop="name">
+      Lua OpenResty 开发环境搭建
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-创建目录-usr-servers，以后我们把所有软件安装在此目录"><a href="#1-创建目录-usr-servers，以后我们把所有软件安装在此目录" class="headerlink" title="1. 创建目录/usr/servers，以后我们把所有软件安装在此目录"></a>1. 创建目录/usr/servers，以后我们把所有软件安装在此目录</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /usr/servers</span><br><span class="line">cd /usr/servers/</span><br><span class="line">ls</span><br></pre></td></tr></table></figure>
+<h2 id="2-下载openresty-1-13-6-2-tar-gz并解压"><a href="#2-下载openresty-1-13-6-2-tar-gz并解压" class="headerlink" title="2.下载openresty-1.13.6.2.tar.gz并解压"></a>2.下载openresty-1.13.6.2.tar.gz并解压</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https://openresty.org/download/openresty-1.13.6.2.tar.gz</span><br><span class="line">tar -zxvf openresty-1.13.6.2.tar.gz</span><br><span class="line">ls openresty-1.13.6.2/bundle/</span><br></pre></td></tr></table></figure>
+<h2 id="3-安装LuaJIT"><a href="#3-安装LuaJIT" class="headerlink" title="3. 安装LuaJIT"></a>3. 安装LuaJIT</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd LuaJIT-2.1-20180420/</span><br><span class="line">ls</span><br><span class="line">make clean &amp;&amp; make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<h2 id="4-下载ngx-cache-purge模块，该模块用于清理nginx缓存"><a href="#4-下载ngx-cache-purge模块，该模块用于清理nginx缓存" class="headerlink" title="4. 下载ngx_cache_purge模块，该模块用于清理nginx缓存"></a>4. 下载ngx_cache_purge模块，该模块用于清理nginx缓存</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/servers/openresty-1.13.6.2/bundle/</span><br><span class="line">wget https://github.com/FRiCKLE/ngx_cache_purge/archive/2.3.tar.gz</span><br><span class="line">tar -xvf 2.3.tar.gz</span><br></pre></td></tr></table></figure>
+<h2 id="5-下载nginx-upstream-check-module模块，该模块用于ustream健康检查"><a href="#5-下载nginx-upstream-check-module模块，该模块用于ustream健康检查" class="headerlink" title="5. 下载nginx_upstream_check_module模块，该模块用于ustream健康检查"></a>5. 下载nginx_upstream_check_module模块，该模块用于ustream健康检查</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/servers/ngx_openresty-1.7.7.2/bundle</span><br><span class="line">cd /usr/servers/openresty-1.13.6.2/bundle/</span><br><span class="line">wget https://github.com/yaoweibin/nginx_upstream_check_module/archive/v0.3.0.tar.gz</span><br><span class="line">tar -xvf v0.3.0.tar.gz</span><br></pre></td></tr></table></figure>
+<h2 id="6-安装-openresty"><a href="#6-安装-openresty" class="headerlink" title="6. 安装 openresty"></a>6. 安装 openresty</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/servers/openresty-1.13.6.2/</span><br><span class="line">./configure --prefix=/usr/servers --with-http_realip_module  --with-pcre  --with-luajit --add-module=./bundle/ngx_cache_purge-2.3/ --add-module=./bundle/nginx_upstream_check_module-0.3.0/ -j2</span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<h2 id="7-目录说明"><a href="#7-目录说明" class="headerlink" title="7. 目录说明"></a>7. 目录说明</h2><p> <code>/usr/servers/luajit</code> ：luajit环境，luajit类似于java的jit，即即时编译，lua是一种解释语言，通过luajit可以即时编译lua代码到机器代码，得到很好的性能；<br> <code>/usr/servers/lualib</code>：要使用的lua库，里边提供了一些默认的lua库，如redis，json库等，也可以把一些自己开发的或第三方的放在这；<br> <code>/usr/servers/nginx</code> ：安装的nginx；</p>
+<h2 id="8-启动nginx"><a href="#8-启动nginx" class="headerlink" title="8. 启动nginx"></a>8. 启动nginx</h2><p> <code>/usr/servers/nginx/sbin/nginx</code></p>
+<h2 id="9-配置环境"><a href="#9-配置环境" class="headerlink" title="9. 配置环境"></a>9. 配置环境</h2><ol>
+<li>编辑nginx.conf配置文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /usr/servers/nginx/conf/nginx.conf</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="2">
+<li>在http部分添加如下配置<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#lua模块路径，多个之间”;”分隔，其中”;;”表示默认搜索路径，默认到/usr/servers/nginx下找</span><br><span class="line">lua_package_path &quot;/usr/servers/lualib/?.lua;;&quot;; #lua 模块</span><br><span class="line">lua_package_cpath &quot;/usr/servers/lualib/?.so;;&quot;; #c模块</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="3">
+<li>为了方便开发我们在/usr/servers/nginx/conf目录下创建一个lua.conf<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#lua.conf</span><br><span class="line">server &#123;</span><br><span class="line">  listen 80;</span><br><span class="line">  server_name _;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="4">
+<li>在nginx.conf中的http部分添加include lua.conf包含此文件片段<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">include lua.conf;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="5">
+<li>测试是否正常<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/nginx/sbin/nginx -t</span><br></pre></td></tr></table></figure></li>
+</ol>
 
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2018/08/09/Lua-OpenResty-开发环境搭建/" data-id="cjklxnz8z00002orjnzjq1tm8" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/08/05/Nginx-Lua-实现灰度发布/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Nginx+Lua 实现灰度发布</div>
+    </a>
+  
+</nav>
+
+  
+</article>
 
 </section>
         
