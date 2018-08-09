@@ -93,7 +93,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="1-创建目录-usr-servers，以后我们把所有软件安装在此目录"><a href="#1-创建目录-usr-servers，以后我们把所有软件安装在此目录" class="headerlink" title="1. 创建目录/usr/servers，以后我们把所有软件安装在此目录"></a>1. 创建目录/usr/servers，以后我们把所有软件安装在此目录</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /usr/servers</span><br><span class="line">cd /usr/servers/</span><br><span class="line">ls</span><br></pre></td></tr></table></figure>
-<h2 id="2-下载openresty-1-13-6-2-tar-gz并解压"><a href="#2-下载openresty-1-13-6-2-tar-gz并解压" class="headerlink" title="2.下载openresty-1.13.6.2.tar.gz并解压"></a>2.下载openresty-1.13.6.2.tar.gz并解压</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https://openresty.org/download/openresty-1.13.6.2.tar.gz</span><br><span class="line">tar -zxvf openresty-1.13.6.2.tar.gz</span><br><span class="line">ls openresty-1.13.6.2/bundle/</span><br></pre></td></tr></table></figure>
+<h2 id="2-下载openresty-1-13-6-2-tar-gz并解压"><a href="#2-下载openresty-1-13-6-2-tar-gz并解压" class="headerlink" title="2.下载openresty-1.13.6.2.tar.gz并解压"></a>2.下载openresty-1.13.6.2.tar.gz并解压</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https://openresty.org/download/openresty-1.13.6.2.tar.gz</span><br><span class="line">tar -zxvf openresty-1.13.6.2.tar.gz</span><br><span class="line">cd openresty-1.13.6.2/bundle/</span><br></pre></td></tr></table></figure>
 <h2 id="3-安装LuaJIT"><a href="#3-安装LuaJIT" class="headerlink" title="3. 安装LuaJIT"></a>3. 安装LuaJIT</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd LuaJIT-2.1-20180420/</span><br><span class="line">ls</span><br><span class="line">make clean &amp;&amp; make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
 <h2 id="4-下载ngx-cache-purge模块，该模块用于清理nginx缓存"><a href="#4-下载ngx-cache-purge模块，该模块用于清理nginx缓存" class="headerlink" title="4. 下载ngx_cache_purge模块，该模块用于清理nginx缓存"></a>4. 下载ngx_cache_purge模块，该模块用于清理nginx缓存</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/servers/openresty-1.13.6.2/bundle/</span><br><span class="line">wget https://github.com/FRiCKLE/ngx_cache_purge/archive/2.3.tar.gz</span><br><span class="line">tar -xvf 2.3.tar.gz</span><br></pre></td></tr></table></figure>
 <h2 id="5-下载nginx-upstream-check-module模块，该模块用于ustream健康检查"><a href="#5-下载nginx-upstream-check-module模块，该模块用于ustream健康检查" class="headerlink" title="5. 下载nginx_upstream_check_module模块，该模块用于ustream健康检查"></a>5. 下载nginx_upstream_check_module模块，该模块用于ustream健康检查</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/servers/ngx_openresty-1.7.7.2/bundle</span><br><span class="line">cd /usr/servers/openresty-1.13.6.2/bundle/</span><br><span class="line">wget https://github.com/yaoweibin/nginx_upstream_check_module/archive/v0.3.0.tar.gz</span><br><span class="line">tar -xvf v0.3.0.tar.gz</span><br></pre></td></tr></table></figure>
@@ -123,7 +123,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/08/09/Lua-OpenResty-开发环境搭建/" data-id="cjklxhkjn0000pjrjthjvccvo" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/08/09/Lua-OpenResty-开发环境搭建/" data-id="cjkmnyadb002c4krjpg4pkly1" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Nginx/">Nginx</a></li></ul>
@@ -190,7 +190,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/08/05/Nginx-Lua-实现灰度发布/" data-id="cjkgd9vzn0000ntrjwv1tbwvw" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/08/05/Nginx-Lua-实现灰度发布/" data-id="cjkmnyadc002d4krj3x0xo2x8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/灰度发布/">灰度发布</a></li></ul>
@@ -286,7 +286,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/07/22/大白话简记TCP/" data-id="cjk0gup9n004ea3rjucoktczb" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/07/22/大白话简记TCP/" data-id="cjkmnyaez004l4krjebzyo8br" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/协议/">协议</a></li></ul>
@@ -441,7 +441,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/07/22/再理一遍OAuth2.0/" data-id="cjk0gup9j0045a3rjos4l517z" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/07/22/再理一遍OAuth2.0/" data-id="cjkmnyaei00494krjn4gev02t" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全/">安全</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/授权/">授权</a></li></ul>
@@ -488,7 +488,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/07/22/hello-world/" data-id="cjk0gup8v002va3rjy29rh0t8" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/07/22/hello-world/" data-id="cjkmnyadq00314krjjweo0otp" class="article-share-link">Share</a>
       
       
     </footer>
@@ -524,7 +524,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/03/01/搭建-ELK-日志中心/" data-id="cjk0gup9s004ma3rj7ng6nsdz" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/03/01/搭建-ELK-日志中心/" data-id="cjkmnyaf6004y4krjcag02pak" class="article-share-link">Share</a>
       
       
     </footer>
@@ -561,7 +561,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/02/22/Spring-生命周期/" data-id="cjk0gup8n002ha3rjolgrd1e1" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/02/22/Spring-生命周期/" data-id="cjkmnyadh002o4krjugxsj4fv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -621,7 +621,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/01/04/n2n点对点通信/" data-id="cjk0gup95003fa3rjpktzby1q" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/01/04/n2n点对点通信/" data-id="cjkmnyae2003j4krjz7k0sng9" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/n2n/">n2n</a></li></ul>
@@ -703,7 +703,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/10/25/关于那道Integer-1000-1000-返回false，100-100-返回-true的题目/" data-id="cjk0gup9h0041a3rjq1aoebzk" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/10/25/关于那道Integer-1000-1000-返回false，100-100-返回-true的题目/" data-id="cjkmnyaeg00464krjrixd9vsc" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/源码/">源码</a></li></ul>
@@ -890,7 +890,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/10/17/再读数据结构/" data-id="cjk0gup9k0047a3rjzfupe9qe" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/10/17/再读数据结构/" data-id="cjkmnyaew004d4krju8qodn2b" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程/">编程</a></li></ul>

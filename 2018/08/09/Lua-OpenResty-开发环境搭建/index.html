@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Poxi哥的博客">
 <meta property="og:description" content="1. 创建目录/usr/servers，以后我们把所有软件安装在此目录 123mkdir -p /usr/serverscd /usr/servers/ls 2.下载openresty-1.13.6.2.tar.gz并解压 123wget https://openresty.org/download/openresty-1.13.6.2.tar.gztar -zxvf openresty-1.13">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-08-09T02:20:01.243Z">
+<meta property="og:updated_time" content="2018-08-09T14:33:58.536Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Lua OpenResty 开发环境搭建">
 <meta name="twitter:description" content="1. 创建目录/usr/servers，以后我们把所有软件安装在此目录 123mkdir -p /usr/serverscd /usr/servers/ls 2.下载openresty-1.13.6.2.tar.gz并解压 123wget https://openresty.org/download/openresty-1.13.6.2.tar.gztar -zxvf openresty-1.13">
@@ -96,7 +96,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="1-创建目录-usr-servers，以后我们把所有软件安装在此目录"><a href="#1-创建目录-usr-servers，以后我们把所有软件安装在此目录" class="headerlink" title="1. 创建目录/usr/servers，以后我们把所有软件安装在此目录"></a>1. 创建目录/usr/servers，以后我们把所有软件安装在此目录</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /usr/servers</span><br><span class="line">cd /usr/servers/</span><br><span class="line">ls</span><br></pre></td></tr></table></figure>
-<h2 id="2-下载openresty-1-13-6-2-tar-gz并解压"><a href="#2-下载openresty-1-13-6-2-tar-gz并解压" class="headerlink" title="2.下载openresty-1.13.6.2.tar.gz并解压"></a>2.下载openresty-1.13.6.2.tar.gz并解压</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https://openresty.org/download/openresty-1.13.6.2.tar.gz</span><br><span class="line">tar -zxvf openresty-1.13.6.2.tar.gz</span><br><span class="line">ls openresty-1.13.6.2/bundle/</span><br></pre></td></tr></table></figure>
+<h2 id="2-下载openresty-1-13-6-2-tar-gz并解压"><a href="#2-下载openresty-1-13-6-2-tar-gz并解压" class="headerlink" title="2.下载openresty-1.13.6.2.tar.gz并解压"></a>2.下载openresty-1.13.6.2.tar.gz并解压</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https://openresty.org/download/openresty-1.13.6.2.tar.gz</span><br><span class="line">tar -zxvf openresty-1.13.6.2.tar.gz</span><br><span class="line">cd openresty-1.13.6.2/bundle/</span><br></pre></td></tr></table></figure>
 <h2 id="3-安装LuaJIT"><a href="#3-安装LuaJIT" class="headerlink" title="3. 安装LuaJIT"></a>3. 安装LuaJIT</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd LuaJIT-2.1-20180420/</span><br><span class="line">ls</span><br><span class="line">make clean &amp;&amp; make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
 <h2 id="4-下载ngx-cache-purge模块，该模块用于清理nginx缓存"><a href="#4-下载ngx-cache-purge模块，该模块用于清理nginx缓存" class="headerlink" title="4. 下载ngx_cache_purge模块，该模块用于清理nginx缓存"></a>4. 下载ngx_cache_purge模块，该模块用于清理nginx缓存</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/servers/openresty-1.13.6.2/bundle/</span><br><span class="line">wget https://github.com/FRiCKLE/ngx_cache_purge/archive/2.3.tar.gz</span><br><span class="line">tar -xvf 2.3.tar.gz</span><br></pre></td></tr></table></figure>
 <h2 id="5-下载nginx-upstream-check-module模块，该模块用于ustream健康检查"><a href="#5-下载nginx-upstream-check-module模块，该模块用于ustream健康检查" class="headerlink" title="5. 下载nginx_upstream_check_module模块，该模块用于ustream健康检查"></a>5. 下载nginx_upstream_check_module模块，该模块用于ustream健康检查</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/servers/ngx_openresty-1.7.7.2/bundle</span><br><span class="line">cd /usr/servers/openresty-1.13.6.2/bundle/</span><br><span class="line">wget https://github.com/yaoweibin/nginx_upstream_check_module/archive/v0.3.0.tar.gz</span><br><span class="line">tar -xvf v0.3.0.tar.gz</span><br></pre></td></tr></table></figure>
@@ -126,7 +126,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/08/09/Lua-OpenResty-开发环境搭建/" data-id="cjklxhkjn0000pjrjthjvccvo" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/08/09/Lua-OpenResty-开发环境搭建/" data-id="cjkmnyadb002c4krjpg4pkly1" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Nginx/">Nginx</a></li></ul>
