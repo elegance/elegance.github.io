@@ -66,6 +66,55 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Linux操作常用命令" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/12/Linux操作常用命令/" class="article-date">
+  <time datetime="2017-04-12T02:33:08.000Z" itemprop="datePublished">2017-04-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/12/Linux操作常用命令/">Linux操作常用命令</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>记录一些常用的技巧，隔一段时间不用又给淡忘了。</p>
+<h3 id="打包压缩、解压"><a href="#打包压缩、解压" class="headerlink" title="打包压缩、解压"></a>打包压缩、解压</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// .tar.bz2 包</span><br><span class="line"><span class="meta">#</span><span class="bash"> tar -jcv -f /root/<span class="built_in">test</span>/etc.tar.bz2 /etc/</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> tar -jxv -f  /root/<span class="built_in">test</span>/etc.tar.bz2  -C /tmp/</span></span><br><span class="line"></span><br><span class="line">// .tar.gz 包</span><br><span class="line"><span class="meta">#</span><span class="bash"> tar -zcv -f /root/<span class="built_in">test</span>/etc.tar.gz /etc/</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> tar -zxv -f  /root/<span class="built_in">test</span>/etc.tar.gz  -C /tmp/</span></span><br></pre></td></tr></table></figure>
+<h3 id="建立链接"><a href="#建立链接" class="headerlink" title="建立链接"></a>建立链接</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ln -sf /usr/local/postgresql-9.2.4 /usr/local/pgsql</span></span><br><span class="line"><span class="comment">## -s: symbole 软链接，-f: force 如果目标链接已经存在则删除重新建立</span></span><br><span class="line"><span class="comment">## 如果9.2.5的版本发布了，升级只需停掉数据库在这里改下软链接地址就可以了</span></span><br></pre></td></tr></table></figure>
+<h3 id="当前目录-各文件夹-大小-linux"><a href="#当前目录-各文件夹-大小-linux" class="headerlink" title="当前目录 各文件夹 大小 linux"></a>当前目录 各文件夹 大小 linux</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># find $1 -maxdepth 1 | xargs du -sh</span></span><br></pre></td></tr></table></figure>
+<h3 id="强制停止应用的两种方式"><a href="#强制停止应用的两种方式" class="headerlink" title="强制停止应用的两种方式"></a>强制停止应用的两种方式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ps -ef|grep java|grep 'tomcat-web-api'|awk '&#123;print $2&#125;'|xargs kill -9</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ps -ef|grep java|grep 'tomcat-web-api'|awk '&#123;system("kill -9 " $2)&#125;'</span></span><br></pre></td></tr></table></figure>
+<h3 id="某次服务器中毒，删除与病毒文件同样大小字节的文件"><a href="#某次服务器中毒，删除与病毒文件同样大小字节的文件" class="headerlink" title="某次服务器中毒，删除与病毒文件同样大小字节的文件"></a>某次服务器中毒，删除与病毒文件同样大小字节的文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># find / -size 1223123c | xargs rm -rf</span></span><br></pre></td></tr></table></figure>
+<h3 id="find类-其他"><a href="#find类-其他" class="headerlink" title="find类 其他"></a>find类 其他</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 正则匹配删除</span><br><span class="line"><span class="comment"># find ./ -maxdepth 1|grep "2016-12-1[2-7]"|xargs rm -rf</span></span><br><span class="line"></span><br><span class="line">// 反向匹配，找出名字不含 <span class="string">"tar"</span> 的文件/文件夹</span><br><span class="line"><span class="comment"># find ./ -maxdepth 1|grep "tar" -v</span></span><br></pre></td></tr></table></figure>
+<h3 id="根据进程获取进程号，打印进程的运行信息"><a href="#根据进程获取进程号，打印进程的运行信息" class="headerlink" title="根据进程获取进程号，打印进程的运行信息"></a>根据进程获取进程号，打印进程的运行信息</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># pgrep mysql | xargs -I &#123;&#125; ls -l /proc/&#123;&#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="crontab-同步时间，"><a href="#crontab-同步时间，" class="headerlink" title="crontab 同步时间，"></a>crontab 同步时间，</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// crontab 分、时、日、月、周</span><br><span class="line">// 10分钟同步一次</span><br><span class="line"><span class="comment"># */10 * * * * /usr/sbin/ntpdate time.windows.com &amp;&amp; hwclock -w</span></span><br></pre></td></tr></table></figure>
+<h3 id="输出磁盘的读写情况"><a href="#输出磁盘的读写情况" class="headerlink" title="输出磁盘的读写情况"></a>输出磁盘的读写情况</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># iostat -k 2</span></span><br></pre></td></tr></table></figure>
+<h3 id="新增磁盘"><a href="#新增磁盘" class="headerlink" title="新增磁盘"></a>新增磁盘</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// fdisk: 操作磁盘分区表</span><br><span class="line">// mkfs：对磁盘分区进行文件系统格式化</span><br><span class="line"></span><br><span class="line">// 列出磁盘装置，找到我们要操作的装置名称，便于对其进行分区</span><br><span class="line"><span class="comment"># fdisk -l </span></span><br><span class="line"></span><br><span class="line">// 开始对磁盘进行分区处理，注意不要加上数字</span><br><span class="line"><span class="comment"># fdisk /dev/xvdb  </span></span><br><span class="line"></span><br><span class="line">// 对分区进行格式化</span><br><span class="line"><span class="comment"># mkfs -t ext4 -c /dev/xvdb1</span></span><br><span class="line"></span><br><span class="line">// 建立磁盘挂载目录</span><br><span class="line"><span class="comment"># mkdir /data</span></span><br><span class="line"></span><br><span class="line">// 手动挂载</span><br><span class="line"><span class="comment"># mount /dev/xvdb1 /data/</span></span><br><span class="line"></span><br><span class="line">// 开机自动挂载</span><br><span class="line"><span class="comment"># echo "/dev/xvdb1 /data/ ext4 defaults 0 0" &gt;&gt; /etc/fstab</span></span><br></pre></td></tr></table></figure>
+<h3 id="看你在Linux下最常用的命令是哪些？"><a href="#看你在Linux下最常用的命令是哪些？" class="headerlink" title="看你在Linux下最常用的命令是哪些？"></a>看你在Linux下最常用的命令是哪些？</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">history</span> | awk <span class="string">'&#123;CMD[$2]++;count++;&#125; END &#123; for (a in CMD )print CMD[ a ]" " CMD[ a ]/count*100 "% " a &#125;'</span> | grep -v <span class="string">"./"</span> | column -c3 -s <span class="string">" "</span> -t |sort -nr | nl | head -n10</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2017/04/12/Linux操作常用命令/" data-id="cjlhd6fj8002zpnrj2snavs2o" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-java多线程编程核心技术" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/04/06/java多线程编程核心技术/" class="article-date">
@@ -527,7 +576,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/04/06/java多线程编程核心技术/" data-id="cjlg90bxs0074akrjlcum9dmd" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/04/06/java多线程编程核心技术/" data-id="cjlhd6fln0072pnrjcf3ks24p" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li></ul>
@@ -649,7 +698,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/23/Thread类join方法中的 wait(0) 能用 sleep(0) 来替代模拟吗/" data-id="cjlg90bvj003jakrj1bxkwrp4" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/23/Thread类join方法中的 wait(0) 能用 sleep(0) 来替代模拟吗/" data-id="cjlhd6fjj003fpnrj64qbbl90" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/源码阅读/">源码阅读</a></li></ul>
@@ -730,7 +779,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/22/vim-技巧手记/" data-id="cjlg90bwf004lakrjizoh748u" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/22/vim-技巧手记/" data-id="cjlhd6fkj004lpnrjdycwtkm3" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vim/">vim</a></li></ul>
@@ -839,7 +888,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/10/Read-Later/" data-id="cjlg90bvg003cakrjexl16upb" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/10/Read-Later/" data-id="cjlhd6fje0037pnrjnow1arjo" class="article-share-link">Share</a>
       
       
     </footer>
@@ -921,7 +970,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/08/svn-分支管理/" data-id="cjlg90bwe004iakrje2s7xhxo" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/08/svn-分支管理/" data-id="cjlhd6fkh004hpnrjij5p9ty0" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/版本控制/">版本控制</a></li></ul>
@@ -981,7 +1030,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/02/27/glossary-生词本/" data-id="cjlg90bvq003pakrj70c3kimn" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/02/27/glossary-生词本/" data-id="cjlhd6fjn003opnrjq39isqe9" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/英语/">英语</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/计划/">计划</a></li></ul>
@@ -1071,7 +1120,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/02/04/UML类图/" data-id="cjlg90bvl003lakrj8982ujdl" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/02/04/UML类图/" data-id="cjlhd6fjk003hpnrjkwvygogl" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1114,7 +1163,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2016/10/13/node-js中的exports与module-exports/" data-id="cjlg90bwc004eakrjkna4soxu" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2016/10/13/node-js中的exports与module-exports/" data-id="cjlhd6fkg004epnrjmal7wf9y" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1159,74 +1208,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2016/07/01/PostgreSQL之psql的使用/" data-id="cjlg90bve003aakrjgrglhnvf" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2016/07/01/PostgreSQL之psql的使用/" data-id="cjlhd6fjc0035pnrjzhew85a1" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-CentOS6-5-PostgreSQL源码编译安装" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/07/01/CentOS6-5-PostgreSQL源码编译安装/" class="article-date">
-  <time datetime="2016-07-01T01:36:39.000Z" itemprop="datePublished">2016-07-01</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>►<a class="article-category-link" href="/categories/Linux/数据库/">数据库</a>►<a class="article-category-link" href="/categories/Linux/数据库/PostgreSQL/">PostgreSQL</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/07/01/CentOS6-5-PostgreSQL源码编译安装/">CentOS6.5.PostgreSQL源码编译安装</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>postgresql官网：<a href="http://www.postgresql.org/" target="_blank" rel="noopener">http://www.postgresql.org/</a><br>下载软件：<a href="https://ftp.postgresql.org/pub/source/v9.5.3/postgresql-9.5.3.tar.bz2" target="_blank" rel="noopener">https://ftp.postgresql.org/pub/source/v9.5.3/postgresql-9.5.3.tar.bz2</a></p>
-<h2 id="安装、环境变量配置"><a href="#安装、环境变量配置" class="headerlink" title="安装、环境变量配置"></a>安装、环境变量配置</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># ./configure --prefix=/usr/local/postgresql-9.5.3 --with-python --with-perl</span></span><br><span class="line">[root@localhost ~]<span class="comment"># make</span></span><br><span class="line">[root@localhost ~]<span class="comment"># make install</span></span><br><span class="line">[root@localhost ~]<span class="comment"># ln -sf /usr/local/postgresql-9.5.3 /usr/local/pgsql</span></span><br><span class="line">[root@localhost ~]<span class="comment"># export PATH=/usr/local/pgsql/bin:$PATH  ## 设置可执行文件的路径</span></span><br><span class="line">[root@localhost ~]<span class="comment"># export LD_LIBRARY_PATH=/usr/local/pgsql/lib  ##设置共享库的路径</span></span><br><span class="line"><span class="comment">## --with-perl 加上这个选项，才能使用perl语法的自定义函数，一般都需要。</span></span><br><span class="line"><span class="comment">## --with-python 同上。</span></span><br><span class="line"><span class="comment">## -s: symbole 软链接，-f: force 如果目标链接已经存在则删除重新建立</span></span><br><span class="line"><span class="comment">## 如果9.5.4的版本发布了，升级只需停掉数据库在这里改下软链接地址就可以了</span></span><br><span class="line"><span class="comment">## 可将上面的语句加入到系统环境或者用户环境变量的配置文件中</span></span><br></pre></td></tr></table></figure>
-<h2 id="常见问题FAQ"><a href="#常见问题FAQ" class="headerlink" title="常见问题FAQ"></a>常见问题FAQ</h2><p>源码安装一般会出现一些依赖包的问题，因为每个系统的已有环境都不太一样，下面我列出了我碰到的几种依赖的问题，可以参考解决：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># yum install -y redline</span></span><br><span class="line">[root@localhost ~]<span class="comment"># yum install -y readline-devel</span></span><br><span class="line">[root@localhost ~]<span class="comment"># yum install -y zlib-devel</span></span><br><span class="line">[root@localhost ~]<span class="comment"># yum install -y perl-devel</span></span><br><span class="line">[root@localhost ~]<span class="comment"># yum install -y perl-ExtUtils-*</span></span><br><span class="line">[root@localhost ~]<span class="comment"># yum install -y python-devel</span></span><br></pre></td></tr></table></figure></p>
-<p>其实思路一般都是这样：</p>
-<ol>
-<li>根据报错信息得到缺少的”软件包名“</li>
-<li>检查下系统是否已经安装了这个“软件包名” <code>rpm -qa|grep &quot;软件包名&quot;</code></li>
-<li>上一步的结果如果是没有，则执行<code>yum install 软件包名</code>安装，如果有则一般代表需要安装他的开发包版本，则执行<code>yum install 软件包名-devel</code><br>当如在未安装前，你可以根据需要安装软件的文档先检查一遍系统的依赖。</li>
-</ol>
-<h2 id="数据库配置、初始"><a href="#数据库配置、初始" class="headerlink" title="数据库配置、初始"></a>数据库配置、初始</h2><h3 id="创建数据库簇"><a href="#创建数据库簇" class="headerlink" title="创建数据库簇"></a>创建数据库簇</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># export PGDATA=/mnt/db/pgsql</span></span><br><span class="line">[root@localhost ~]<span class="comment"># groupadd postgres</span></span><br><span class="line">[root@localhost ~]<span class="comment"># useradd -g postgres postgres</span></span><br><span class="line">[root@localhost ~]<span class="comment"># chown -R postgres:postgres/mnt/db/pgsql</span></span><br><span class="line">[root@localhost ~]<span class="comment">#  su -postgres</span></span><br><span class="line">[postgres@localhost ~]$ initdb</span><br><span class="line"><span class="comment">## 为了系统安全，pgsql不允许使用root来初始化数据库，故新建postgres</span></span><br><span class="line"><span class="comment">## su 与 su - 是有区别的，su只是切换了用户的权限，su - 是切换了权限并且获取了对应用户的环境变量，上面的一些export 变量其实我们都可以防止到postgresql的用户环境变量下，方便使用postgres用户专门操作pgsql数据库</span></span><br></pre></td></tr></table></figure>
-<h3 id="安装contrib下的工具"><a href="#安装contrib下的工具" class="headerlink" title="安装contrib下的工具"></a>安装contrib下的工具</h3><p>contrib 下面的工具比较实用，一般都会安装上。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[postgres@localhost ~]<span class="comment"># exit ##退出postgresql 用户，使用root用户来编译安装</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cd /usr/local/src/postgresql-9.2.4/contrib/</span></span><br><span class="line">[root@localhost ~]<span class="comment"># make</span></span><br><span class="line">[root@localhost ~]<span class="comment"># make install</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="启动和停止数据库"><a href="#启动和停止数据库" class="headerlink" title="启动和停止数据库"></a>启动和停止数据库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># su - postgres## 编译安装完了后，到了日常的系统维护，就养成切换回专门的用户来操作吧</span></span><br><span class="line">[postgres@localhost ~]$ pg_ctl start -D <span class="variable">$PGDATA</span></span><br><span class="line">[postgres@localhost ~]$ pg_ctl stop -D <span class="variable">$PGDATA</span> [-m SHUTDOWN-MODEL]</span><br><span class="line"><span class="comment">## SHUTDOWN-MODEL: smart 等待所有连接终止后关闭数据库； fast：快速关闭数据库，断开客户端连接，让已有事务回滚，相对于oracle的immediate; immediate: 立即关闭数据库，下次启动时进行恢复，相对于oracle 的abort模式； 这里oracle dba注意区别一下。</span></span><br></pre></td></tr></table></figure>
-<h3 id="修改监听IP和端口"><a href="#修改监听IP和端口" class="headerlink" title="修改监听IP和端口"></a>修改监听IP和端口</h3><p>在<strong>数据目录下</strong>编辑 <code>postgresql.conf</code>文件，找到如下内容：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#listen_address = 'localhost'</span></span><br><span class="line"><span class="comment">#port = 5432</span></span><br></pre></td></tr></table></figure></p>
-<p>其中<code>listen_address</code>表示监听的IP地址，默认是在“localhost”处监听，这会让远程主机无法登录这台数据库，可以修改成具体的内网地址，或者直接改成<code>*</code>,表示本地所有地址上监听。</p>
-<p>参数<code>port</code>表示监听的数据库端口号，默认为<code>5432</code>。如果一台机器需要安装几个数据库实例，可以调整这里的端口。</p>
-<p>修改这两个参数，需要重启数据库生效。</p>
-<h3 id="与数据库log相关的参数"><a href="#与数据库log相关的参数" class="headerlink" title="与数据库log相关的参数"></a>与数据库log相关的参数</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 日志的收集一般是打开的</span></span><br><span class="line">logging_collector = on</span><br><span class="line"></span><br><span class="line"><span class="comment"># 日志的目录，一般默认即可</span></span><br><span class="line">log_directory = <span class="string">'pg_log'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 日志的切换和覆盖可以使用以下几种方案</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 每天生成一个新的日志文件</span></span><br><span class="line">log_filename = <span class="string">'postgresql-%Y-%m-%d_%H%M%S.log'</span></span><br><span class="line">log_truncate_on_rotation = off</span><br><span class="line">log_rotation_age = 1d</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 每当写满一定大小(如10M)，则切换一个日志</span></span><br><span class="line">log_filename = <span class="string">'postgresql-%Y-%m-%d_%H%M%S.log'</span></span><br><span class="line">log_truncate_on_rotation = off</span><br><span class="line">log_rotation_age = 0</span><br><span class="line">log_rotation_size = 10M</span><br><span class="line"></span><br><span class="line"><span class="comment"># 保留7天的日志进行循环覆盖</span></span><br><span class="line">log_filename = <span class="string">'postgresql-%a.log'</span></span><br><span class="line">log_truncate_on_rotation = on</span><br><span class="line">log_rotation_age = 7d</span><br><span class="line">log_rotation_size = 0</span><br></pre></td></tr></table></figure>
-<h3 id="内存参数设置"><a href="#内存参数设置" class="headerlink" title="内存参数设置"></a>内存参数设置</h3><p>PostgreSQL可以修改以下两个主要参数:</p>
-<ul>
-<li>shared_buffers: 共享内存的大小，主要用于共享数据块</li>
-<li>work_mem: 单个SQL执行时，排序、hash join 所使用的内存，SQL运行完后，内存就释放了。</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2016/07/01/CentOS6-5-PostgreSQL源码编译安装/" data-id="cjlg90bv70032akrjfrtymhnn" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li></ul>
 
     </footer>
   </div>
@@ -1260,7 +1245,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMD/">CMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CommonJS/">CommonJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/">Nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript基础/">javascript基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/n2n/">n2n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/健身/">健身</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/协议/">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程-锁/">多线程 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/意志/">意志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/授权/">授权</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模块化/">模块化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码阅读/">源码阅读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/灰度发布/">灰度发布</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/版本控制/">版本控制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编码/">编码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/英语/">英语</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计划/">计划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运动/">运动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMD/">CMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CommonJS/">CommonJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/">Nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript基础/">javascript基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/n2n/">n2n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/健身/">健身</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/协议/">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程-锁/">多线程 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/意志/">意志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/授权/">授权</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/服务/">服务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模块化/">模块化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码阅读/">源码阅读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/灰度发布/">灰度发布</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/版本控制/">版本控制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编码/">编码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/英语/">英语</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计划/">计划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运动/">运动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/进程/">进程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
     </div>
   </div>
 
@@ -1270,7 +1255,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CMD/" style="font-size: 10px;">CMD</a> <a href="/tags/Centos软件安装/" style="font-size: 15px;">Centos软件安装</a> <a href="/tags/CommonJS/" style="font-size: 10px;">CommonJS</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Nginx/" style="font-size: 10px;">Nginx</a> <a href="/tags/PostgreSQL基础/" style="font-size: 15px;">PostgreSQL基础</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/javascript函数/" style="font-size: 15px;">javascript函数</a> <a href="/tags/javascript基础/" style="font-size: 15px;">javascript基础</a> <a href="/tags/n2n/" style="font-size: 10px;">n2n</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/健身/" style="font-size: 10px;">健身</a> <a href="/tags/协议/" style="font-size: 10px;">协议</a> <a href="/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/tags/多线程-锁/" style="font-size: 10px;">多线程 锁</a> <a href="/tags/安全/" style="font-size: 10px;">安全</a> <a href="/tags/意志/" style="font-size: 10px;">意志</a> <a href="/tags/授权/" style="font-size: 10px;">授权</a> <a href="/tags/模块化/" style="font-size: 10px;">模块化</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/源码阅读/" style="font-size: 10px;">源码阅读</a> <a href="/tags/灰度发布/" style="font-size: 10px;">灰度发布</a> <a href="/tags/版本控制/" style="font-size: 10px;">版本控制</a> <a href="/tags/编码/" style="font-size: 15px;">编码</a> <a href="/tags/编程/" style="font-size: 10px;">编程</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/运动/" style="font-size: 10px;">运动</a> <a href="/tags/阅读/" style="font-size: 10px;">阅读</a>
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CMD/" style="font-size: 10px;">CMD</a> <a href="/tags/Centos软件安装/" style="font-size: 15px;">Centos软件安装</a> <a href="/tags/CommonJS/" style="font-size: 10px;">CommonJS</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Nginx/" style="font-size: 10px;">Nginx</a> <a href="/tags/PostgreSQL基础/" style="font-size: 15px;">PostgreSQL基础</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/javascript函数/" style="font-size: 15px;">javascript函数</a> <a href="/tags/javascript基础/" style="font-size: 15px;">javascript基础</a> <a href="/tags/n2n/" style="font-size: 10px;">n2n</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/健身/" style="font-size: 10px;">健身</a> <a href="/tags/协议/" style="font-size: 10px;">协议</a> <a href="/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/tags/多线程-锁/" style="font-size: 10px;">多线程 锁</a> <a href="/tags/安全/" style="font-size: 10px;">安全</a> <a href="/tags/意志/" style="font-size: 10px;">意志</a> <a href="/tags/授权/" style="font-size: 10px;">授权</a> <a href="/tags/服务/" style="font-size: 10px;">服务</a> <a href="/tags/模块化/" style="font-size: 10px;">模块化</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/源码阅读/" style="font-size: 10px;">源码阅读</a> <a href="/tags/灰度发布/" style="font-size: 10px;">灰度发布</a> <a href="/tags/版本控制/" style="font-size: 10px;">版本控制</a> <a href="/tags/编码/" style="font-size: 15px;">编码</a> <a href="/tags/编程/" style="font-size: 10px;">编程</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/运动/" style="font-size: 10px;">运动</a> <a href="/tags/进程/" style="font-size: 10px;">进程</a> <a href="/tags/阅读/" style="font-size: 10px;">阅读</a>
     </div>
   </div>
 
@@ -1292,6 +1277,10 @@
       <ul>
         
           <li>
+            <a href="/2018/08/22/Supervisor的使用/">Supervisor的使用</a>
+          </li>
+        
+          <li>
             <a href="/2018/08/09/Lua-OpenResty-开发环境搭建/">Lua OpenResty 开发环境搭建</a>
           </li>
         
@@ -1305,10 +1294,6 @@
         
           <li>
             <a href="/2018/07/22/再理一遍OAuth2.0/">再理一遍OAuth2.0</a>
-          </li>
-        
-          <li>
-            <a href="/2018/07/22/hello-world/">Hello World</a>
           </li>
         
       </ul>
