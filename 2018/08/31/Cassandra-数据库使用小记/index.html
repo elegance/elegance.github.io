@@ -5,15 +5,20 @@
   
 
   
-  <title>Category: Nginx | Poxi哥的博客</title>
+  <title>Cassandra 数据库使用小记 | Poxi哥的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Poxi哥的博客">
-<meta property="og:url" content="http://blog.ouronghui.com/categories/Nginx/index.html">
+  <meta name="description" content="Cassandra 数据库使用小记一、安装与配置12345678910111213141516171819202122232425262728293031323334353637383940# cassadrawget http://mirrors.shu.edu.cn/apache/cassandra/3.11.3/apache-cassandra-3.11.3-bin.tar.gztar -z">
+<meta name="keywords" content="cassandra">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cassandra 数据库使用小记">
+<meta property="og:url" content="http://blog.ouronghui.com/2018/08/31/Cassandra-数据库使用小记/index.html">
 <meta property="og:site_name" content="Poxi哥的博客">
+<meta property="og:description" content="Cassandra 数据库使用小记一、安装与配置12345678910111213141516171819202122232425262728293031323334353637383940# cassadrawget http://mirrors.shu.edu.cn/apache/cassandra/3.11.3/apache-cassandra-3.11.3-bin.tar.gztar -z">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-09-03T09:02:52.532Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Poxi哥的博客">
+<meta name="twitter:title" content="Cassandra 数据库使用小记">
+<meta name="twitter:description" content="Cassandra 数据库使用小记一、安装与配置12345678910111213141516171819202122232425262728293031323334353637383940# cassadrawget http://mirrors.shu.edu.cn/apache/cassandra/3.11.3/apache-cassandra-3.11.3-bin.tar.gztar -z">
   
     <link rel="alternate" href="/atom.xml" title="Poxi哥的博客" type="application/atom+xml">
   
@@ -64,59 +69,167 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2018/08/09/Lua-OpenResty-开发环境搭建/" class="archive-article-date">
-  <time datetime="2018-08-09T02:13:00.000Z" itemprop="datePublished">8月 9</time>
+        <section id="main"><article id="post-Cassandra-数据库使用小记" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/08/31/Cassandra-数据库使用小记/" class="article-date">
+  <time datetime="2018-08-31T03:17:00.000Z" itemprop="datePublished">2018-08-31</time>
 </a>
-      
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/数据库/">数据库</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/08/09/Lua-OpenResty-开发环境搭建/">Lua OpenResty 开发环境搭建</a>
+    <h1 class="article-title" itemprop="name">
+      Cassandra 数据库使用小记
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2018/08/05/Nginx-Lua-实现灰度发布/" class="archive-article-date">
-  <time datetime="2018-08-05T04:48:00.000Z" itemprop="datePublished">8月 5</time>
-</a>
+    <div class="article-entry" itemprop="articleBody">
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/08/05/Nginx-Lua-实现灰度发布/">Nginx+Lua 实现灰度发布</a>
-    </h1>
-  
+        <h1 id="Cassandra-数据库使用小记"><a href="#Cassandra-数据库使用小记" class="headerlink" title="Cassandra 数据库使用小记"></a>Cassandra 数据库使用小记</h1><h2 id="一、安装与配置"><a href="#一、安装与配置" class="headerlink" title="一、安装与配置"></a>一、安装与配置</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cassadra</span></span><br><span class="line">wget http://mirrors.shu.edu.cn/apache/cassandra/3.11.3/apache-cassandra-3.11.3-bin.tar.gz</span><br><span class="line">tar -zxvf apache-cassandra-3.11.3-bin.tar.gz -C /usr/local/</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 建立软链，方便升级</span></span><br><span class="line">cd /usr/local/</span><br><span class="line">ln -s apache-cassandra-3.11.3 cassandra	</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 添加到环境变量</span></span><br><span class="line">cat &lt;&lt; EOF &gt;&gt; /etc/profile</span><br><span class="line">export PATH=/usr/local/cassandra/bin:\$PATH</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">source /etc/profile</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改配置，方便内网连接</span></span><br><span class="line">vim /usr/local/cassandra/conf/cassandra.yaml</span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> cluster_name: <span class="string">'Kong-dev-cluster'</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">          - seeds: <span class="string">"172.18.1.16"</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> listen_address: 172.18.1.16</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> rpc_address: 172.18.1.16</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 建立 cassandra 用户（cassandra建议非root用户运行）</span></span><br><span class="line">groupadd cassandra</span><br><span class="line">useradd -g cassandra cassandra</span><br><span class="line">chown -R cassandra:cassandra /usr/local/cassandra/</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动 （默认非 daemon 模式，可配置人 supervisor）</span></span><br><span class="line">cassandra -f</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> or 配置 supervisor</span></span><br><span class="line">cat &lt;&lt; EOF &gt; /usr/local/deploy/supervisord/conf/cassandra.conf</span><br><span class="line">[program:cassandra]</span><br><span class="line">user=cassandra</span><br><span class="line">command=cassandra -f</span><br><span class="line">autostart=false</span><br><span class="line">autorestart=unexpected</span><br><span class="line">stdout_logfile=/usr/local/deploy/log/cassandra.log</span><br><span class="line">stderr_logfile=/usr/local/deploy/log/cassandra.err</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<h2 id="二、命令行使用"><a href="#二、命令行使用" class="headerlink" title="二、命令行使用"></a>二、命令行使用</h2><p>技巧：<code>cqlsh</code> 提供的命令行是具有智能提示的，输入命令的部分字母，按<code>Tab</code>建可以出发，再<code>CREATE KEYSPACE</code> 这条命令中可以深切的感受到方便。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cqlsh 172.18.10.217</span><br><span class="line">cqlsh&gt; show version;</span><br><span class="line">cqlsh&gt; show host;</span><br><span class="line">cqlsh&gt; desc cluster;</span><br><span class="line">cqlsh&gt; desc keyspaces;</span><br><span class="line">cqlsh&gt; CREATE KEYSPACE test_keyspace WITH replication = &#123;'class': 'SimpleStrategy', 'replication_factor': 1&#125;;</span><br><span class="line"><span class="comment">--（实际输入：C&lt;Tab&gt; k&lt;Tab&gt; test_keyspace w&lt;Tab&gt; s&lt;Tab&gt; &lt;Tab&gt; 1&#125;;）</span></span><br><span class="line">cqlsh&gt; desc keyspace test_keyspace;</span><br><span class="line">cqlsh&gt; use test_keyspace;</span><br><span class="line">cqlsh:test_keyspace&gt; desc tables;</span><br><span class="line">cqlsh:test_keyspace&gt; create table abc ( id int primary key, name varchar, age int );</span><br><span class="line">cqlsh:test_keyspace&gt; desc table abc;</span><br><span class="line">cqlsh:test_keyspace&gt; DROP TABLE abc ; -- abc 只输入 a， &lt;Tab&gt; 也可以自动补全哦</span><br><span class="line">cqlsh:test_keyspace&gt; drop KEYSPACE test_keyspace ;</span><br></pre></td></tr></table></figure>
+<p>更多命令请参考 <a href="https://cassandra.apache.org/doc/latest/tools/cqlsh.html" target="_blank" rel="noopener">官方文档</a></p>
+<h2 id="三、数据类型-附"><a href="#三、数据类型-附" class="headerlink" title="三、数据类型(附)"></a>三、数据类型(附)</h2><table>
+<thead>
+<tr>
+<th>CQL类型</th>
+<th>对应Java类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ascii</td>
+<td>String</td>
+<td>ascii字符串</td>
+</tr>
+<tr>
+<td>bigint</td>
+<td>long</td>
+<td>64位整数</td>
+</tr>
+<tr>
+<td>blob</td>
+<td>ByteBuffer/byte[]</td>
+<td>二进制数组</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>boolean</td>
+<td>布尔</td>
+</tr>
+<tr>
+<td>counter</td>
+<td>long</td>
+<td>计数器，支持原子性的增减，不支持直接赋值</td>
+</tr>
+<tr>
+<td>decimal</td>
+<td>BigDecimal</td>
+<td>高精度小数</td>
+</tr>
+<tr>
+<td>double</td>
+<td>double</td>
+<td>64位浮点数</td>
+</tr>
+<tr>
+<td>float</td>
+<td>float</td>
+<td>32位浮点数</td>
+</tr>
+<tr>
+<td>inet</td>
+<td>InetAddress</td>
+<td>ipv4或ipv6协议的ip地址</td>
+</tr>
+<tr>
+<td>int</td>
+<td>int</td>
+<td>32位整数</td>
+</tr>
+<tr>
+<td>list</td>
+<td>List</td>
+<td>有序的列表</td>
+</tr>
+<tr>
+<td>map</td>
+<td>Map</td>
+<td>键值对</td>
+</tr>
+<tr>
+<td>set</td>
+<td>Set</td>
+<td>集合</td>
+</tr>
+<tr>
+<td>text</td>
+<td>String</td>
+<td><a href="http://zh.wikipedia.org/w/index.php?title=Utf-8&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">utf-8编码的字符串</a></td>
+</tr>
+<tr>
+<td>timestamp</td>
+<td>Date</td>
+<td>日期</td>
+</tr>
+<tr>
+<td>uuid</td>
+<td>UUID</td>
+<td><a href="http://zh.wikipedia.org/wiki/UUID" target="_blank" rel="noopener">UUID类型</a></td>
+</tr>
+<tr>
+<td>timeuuid</td>
+<td>UUID</td>
+<td>时间相关的UUID</td>
+</tr>
+<tr>
+<td>varchar</td>
+<td>string</td>
+<td>text的别名</td>
+</tr>
+<tr>
+<td>varint</td>
+<td>BigInteger</td>
+<td>高精度整型</td>
+</tr>
+</tbody>
+</table>
 
-    </header>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2018/08/31/Cassandra-数据库使用小记/" data-id="cjlm24mwc002wsxrj53jex1m0" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+
+    </footer>
   </div>
-</article>
+  
+    
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2018/08/22/Supervisor的使用/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Supervisor的使用</div>
+    </a>
   
+</nav>
 
+  
+</article>
 
 </section>
         

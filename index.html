@@ -66,6 +66,158 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Cassandra-数据库使用小记" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/08/31/Cassandra-数据库使用小记/" class="article-date">
+  <time datetime="2018-08-31T03:17:00.000Z" itemprop="datePublished">2018-08-31</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/数据库/">数据库</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/08/31/Cassandra-数据库使用小记/">Cassandra 数据库使用小记</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Cassandra-数据库使用小记"><a href="#Cassandra-数据库使用小记" class="headerlink" title="Cassandra 数据库使用小记"></a>Cassandra 数据库使用小记</h1><h2 id="一、安装与配置"><a href="#一、安装与配置" class="headerlink" title="一、安装与配置"></a>一、安装与配置</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cassadra</span></span><br><span class="line">wget http://mirrors.shu.edu.cn/apache/cassandra/3.11.3/apache-cassandra-3.11.3-bin.tar.gz</span><br><span class="line">tar -zxvf apache-cassandra-3.11.3-bin.tar.gz -C /usr/local/</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 建立软链，方便升级</span></span><br><span class="line">cd /usr/local/</span><br><span class="line">ln -s apache-cassandra-3.11.3 cassandra	</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 添加到环境变量</span></span><br><span class="line">cat &lt;&lt; EOF &gt;&gt; /etc/profile</span><br><span class="line">export PATH=/usr/local/cassandra/bin:\$PATH</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">source /etc/profile</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改配置，方便内网连接</span></span><br><span class="line">vim /usr/local/cassandra/conf/cassandra.yaml</span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> cluster_name: <span class="string">'Kong-dev-cluster'</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">          - seeds: <span class="string">"172.18.1.16"</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> listen_address: 172.18.1.16</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> rpc_address: 172.18.1.16</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 建立 cassandra 用户（cassandra建议非root用户运行）</span></span><br><span class="line">groupadd cassandra</span><br><span class="line">useradd -g cassandra cassandra</span><br><span class="line">chown -R cassandra:cassandra /usr/local/cassandra/</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动 （默认非 daemon 模式，可配置人 supervisor）</span></span><br><span class="line">cassandra -f</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> or 配置 supervisor</span></span><br><span class="line">cat &lt;&lt; EOF &gt; /usr/local/deploy/supervisord/conf/cassandra.conf</span><br><span class="line">[program:cassandra]</span><br><span class="line">user=cassandra</span><br><span class="line">command=cassandra -f</span><br><span class="line">autostart=false</span><br><span class="line">autorestart=unexpected</span><br><span class="line">stdout_logfile=/usr/local/deploy/log/cassandra.log</span><br><span class="line">stderr_logfile=/usr/local/deploy/log/cassandra.err</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<h2 id="二、命令行使用"><a href="#二、命令行使用" class="headerlink" title="二、命令行使用"></a>二、命令行使用</h2><p>技巧：<code>cqlsh</code> 提供的命令行是具有智能提示的，输入命令的部分字母，按<code>Tab</code>建可以出发，再<code>CREATE KEYSPACE</code> 这条命令中可以深切的感受到方便。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cqlsh 172.18.10.217</span><br><span class="line">cqlsh&gt; show version;</span><br><span class="line">cqlsh&gt; show host;</span><br><span class="line">cqlsh&gt; desc cluster;</span><br><span class="line">cqlsh&gt; desc keyspaces;</span><br><span class="line">cqlsh&gt; CREATE KEYSPACE test_keyspace WITH replication = &#123;'class': 'SimpleStrategy', 'replication_factor': 1&#125;;</span><br><span class="line"><span class="comment">--（实际输入：C&lt;Tab&gt; k&lt;Tab&gt; test_keyspace w&lt;Tab&gt; s&lt;Tab&gt; &lt;Tab&gt; 1&#125;;）</span></span><br><span class="line">cqlsh&gt; desc keyspace test_keyspace;</span><br><span class="line">cqlsh&gt; use test_keyspace;</span><br><span class="line">cqlsh:test_keyspace&gt; desc tables;</span><br><span class="line">cqlsh:test_keyspace&gt; create table abc ( id int primary key, name varchar, age int );</span><br><span class="line">cqlsh:test_keyspace&gt; desc table abc;</span><br><span class="line">cqlsh:test_keyspace&gt; DROP TABLE abc ; -- abc 只输入 a， &lt;Tab&gt; 也可以自动补全哦</span><br><span class="line">cqlsh:test_keyspace&gt; drop KEYSPACE test_keyspace ;</span><br></pre></td></tr></table></figure>
+<p>更多命令请参考 <a href="https://cassandra.apache.org/doc/latest/tools/cqlsh.html" target="_blank" rel="noopener">官方文档</a></p>
+<h2 id="三、数据类型-附"><a href="#三、数据类型-附" class="headerlink" title="三、数据类型(附)"></a>三、数据类型(附)</h2><table>
+<thead>
+<tr>
+<th>CQL类型</th>
+<th>对应Java类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ascii</td>
+<td>String</td>
+<td>ascii字符串</td>
+</tr>
+<tr>
+<td>bigint</td>
+<td>long</td>
+<td>64位整数</td>
+</tr>
+<tr>
+<td>blob</td>
+<td>ByteBuffer/byte[]</td>
+<td>二进制数组</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>boolean</td>
+<td>布尔</td>
+</tr>
+<tr>
+<td>counter</td>
+<td>long</td>
+<td>计数器，支持原子性的增减，不支持直接赋值</td>
+</tr>
+<tr>
+<td>decimal</td>
+<td>BigDecimal</td>
+<td>高精度小数</td>
+</tr>
+<tr>
+<td>double</td>
+<td>double</td>
+<td>64位浮点数</td>
+</tr>
+<tr>
+<td>float</td>
+<td>float</td>
+<td>32位浮点数</td>
+</tr>
+<tr>
+<td>inet</td>
+<td>InetAddress</td>
+<td>ipv4或ipv6协议的ip地址</td>
+</tr>
+<tr>
+<td>int</td>
+<td>int</td>
+<td>32位整数</td>
+</tr>
+<tr>
+<td>list</td>
+<td>List</td>
+<td>有序的列表</td>
+</tr>
+<tr>
+<td>map</td>
+<td>Map</td>
+<td>键值对</td>
+</tr>
+<tr>
+<td>set</td>
+<td>Set</td>
+<td>集合</td>
+</tr>
+<tr>
+<td>text</td>
+<td>String</td>
+<td><a href="http://zh.wikipedia.org/w/index.php?title=Utf-8&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">utf-8编码的字符串</a></td>
+</tr>
+<tr>
+<td>timestamp</td>
+<td>Date</td>
+<td>日期</td>
+</tr>
+<tr>
+<td>uuid</td>
+<td>UUID</td>
+<td><a href="http://zh.wikipedia.org/wiki/UUID" target="_blank" rel="noopener">UUID类型</a></td>
+</tr>
+<tr>
+<td>timeuuid</td>
+<td>UUID</td>
+<td>时间相关的UUID</td>
+</tr>
+<tr>
+<td>varchar</td>
+<td>string</td>
+<td>text的别名</td>
+</tr>
+<tr>
+<td>varint</td>
+<td>BigInteger</td>
+<td>高精度整型</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2018/08/31/Cassandra-数据库使用小记/" data-id="cjlm24mwc002wsxrj53jex1m0" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Supervisor的使用" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/08/22/Supervisor的使用/" class="article-date">
@@ -100,6 +252,10 @@
 <p>内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[program:express-service]</span><br><span class="line">command=node /home/vagrant/test-service/app.js</span><br><span class="line">autostart=false</span><br><span class="line">autorestart=false</span><br><span class="line">stdout_logfile=/usr/local/deploy/log/express-service.out</span><br><span class="line">stderr_logfile=/usr/local/deploy/log/express-service.err</span><br></pre></td></tr></table></figure></p>
 <p>如果报错，可以使用<strong> <code>supervisorctl tail express-service stdout</code></strong> 来查看具体报错。</p>
 <p>另外配置文件可使用：<code>%(directory)</code> 的格式来引用变量。</p>
+<h4 id="常见问题："><a href="#常见问题：" class="headerlink" title="常见问题："></a>常见问题：</h4><ol>
+<li>直接访问<code>http://127.0.0.1:9001/</code> 可以查看 <code>Tail -f</code>的日志，通过Nginx代理后则不行；Nginx需要增加以下配置，参考<a href="https://serverfault.com/questions/568317/supervisord-inet-http-server-behind-nginx/836855#836855?newreg=7574ede0fbb34cd9af55679f542abb96" target="_blank" rel="noopener">Supervisord inet_http_server behind nginx</a>：<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">  <span class="attribute">listen</span> <span class="number">9000</span>;</span><br><span class="line">  <span class="attribute">listen</span> [::]:<span class="number">9000</span>;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">server_name</span> server.gmetri.com;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">location</span> / &#123;</span><br><span class="line">    <span class="attribute">proxy_pass</span> http://127.0.0.1:9001;</span><br><span class="line">    <span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line">    <span class="attribute">proxy_buffering</span>     <span class="literal">off</span>;</span><br><span class="line">    <span class="attribute">proxy_max_temp_file_size</span> <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">proxy_redirect</span>     default;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>   Host             <span class="variable">$host</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>   X-Real-IP        <span class="variable">$remote_addr</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>   X-Forwarded-For  <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>   Connection       <span class="string">""</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
 <h4 id="supervisord-管理"><a href="#supervisord-管理" class="headerlink" title="supervisord 管理"></a>supervisord 管理</h4><p>启动：<code>supervisord</code> (默认会读<code>/etc/supervisord.conf</code>)或者 指定主配置<code>supervisord -c /etc/supervisord.conf</code> </p>
 <ul>
 <li>supervisorctl 不跟其他，进入 supervisorctl console, status 可以查看所有任务的状态，uptime等，新增任务需要 update</li>
@@ -114,7 +270,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/08/22/Supervisor的使用/" data-id="cjlhtlklo003hb6rjk275mif8" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/08/22/Supervisor的使用/" data-id="cjlm24mwp003gsxrj438q4ckv" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/服务/">服务</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/进程/">进程</a></li></ul>
@@ -183,7 +339,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/08/09/Lua-OpenResty-开发环境搭建/" data-id="cjlhtlklg0035b6rj3cig8n8m" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/08/09/Lua-OpenResty-开发环境搭建/" data-id="cjlm24mwg0031sxrjdueaom7o" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Nginx/">Nginx</a></li></ul>
@@ -250,7 +406,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/08/05/Nginx-Lua-实现灰度发布/" data-id="cjlhtlkli0036b6rjhwkgal88" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/08/05/Nginx-Lua-实现灰度发布/" data-id="cjlm24mwj0035sxrj2nx64719" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/灰度发布/">灰度发布</a></li></ul>
@@ -346,7 +502,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/07/22/大白话简记TCP/" data-id="cjlhtlkna005gb6rj0preclj2" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/07/22/大白话简记TCP/" data-id="cjlm24my6005esxrj4biujdz7" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/协议/">协议</a></li></ul>
@@ -501,7 +657,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/07/22/再理一遍OAuth2.0/" data-id="cjlhtlkn60055b6rjrn04pbde" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/07/22/再理一遍OAuth2.0/" data-id="cjlm24mxt0052sxrjjsb3m5ia" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全/">安全</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/授权/">授权</a></li></ul>
@@ -548,7 +704,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/07/22/hello-world/" data-id="cjlhtlkm7003yb6rjj6nmkez5" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/07/22/hello-world/" data-id="cjlm24mx1003wsxrjbyg6vian" class="article-share-link">Share</a>
       
       
     </footer>
@@ -584,7 +740,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/03/01/搭建-ELK-日志中心/" data-id="cjlhtlkng005sb6rjo2ewy5tz" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/03/01/搭建-ELK-日志中心/" data-id="cjlm24myd005qsxrj6gi63r8j" class="article-share-link">Share</a>
       
       
     </footer>
@@ -621,7 +777,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/02/22/Spring-生命周期/" data-id="cjlhtlkln003gb6rjupzwxij6" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/02/22/Spring-生命周期/" data-id="cjlm24mwo003csxrjand20ke0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -681,92 +837,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/01/04/n2n点对点通信/" data-id="cjlhtlkmp004fb6rjxzxho4rx" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/01/04/n2n点对点通信/" data-id="cjlm24mxc004esxrj8mscbvck" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/n2n/">n2n</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-关于那道Integer-1000-1000-返回false，100-100-返回-true的题目" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/10/25/关于那道Integer-1000-1000-返回false，100-100-返回-true的题目/" class="article-date">
-  <time datetime="2017-10-25T03:10:56.000Z" itemprop="datePublished">2017-10-25</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/java/">java</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/25/关于那道Integer-1000-1000-返回false，100-100-返回-true的题目/">关于那道Integer: 1000 == 1000 返回false，100 == 100 返回 true的题目</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>前段时间看到了那篇<a href="http://mp.weixin.qq.com/s?__biz=MzUxOTMyMzE2Mg==&amp;mid=2247492934&amp;idx=1&amp;sn=81e40f81110d4239bd1bdfe28d51bc09&amp;source=41&amp;ascene=2&amp;devicetype=android-23&amp;version=26051035&amp;nettype=WIFI&amp;abtest_cookie=AgABAAgADAADAJ6GHgAKiB4AJIgeAAAA&amp;wx_header=1" target="_blank" rel="noopener">为什么1000 == 1000返回为False，而100 == 100会返回为True?</a></p>
-<h4 id="一、现象：主要代码如下，请先猜测-1、2的结果输出"><a href="#一、现象：主要代码如下，请先猜测-1、2的结果输出" class="headerlink" title="一、现象：主要代码如下，请先猜测 1、2的结果输出"></a>一、现象：主要代码如下，请先猜测 1、2的结果输出</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Integer a = 1000, b = 1000; </span><br><span class="line">System.out.println(a == b);//1</span><br><span class="line">Integer c = 100, d = 100; </span><br><span class="line">System.out.println(c == d);//2</span><br></pre></td></tr></table></figure>
-<p><strong>一般</strong>你会拿到结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">false</span><br><span class="line">true</span><br></pre></td></tr></table></figure></p>
-<p>这里我强调了是在<strong>一般情况下</strong>，原文中并没有写到是一般，我们不更改代码，第一个<code>a == b</code>结果也可能返回<code>true</code>，修改<code>jvm</code>参数配置就可以达到这种效果，文章的最后我提供了测试代码。</p>
-<p>其实出现不同的原因是在这里：</p>
-<ul>
-<li><code>Integer a = 100</code> ==&gt; 创建了<code>Integer</code>对象 <code>Integer.valueOf(i)</code>，方法经过判断会是下面两种情况的一种：<ol>
-<li><code>IntegerCache.cache[n]</code> </li>
-<li><code>new Integer(i)</code></li>
-</ol>
-</li>
-</ul>
-<p>会有两种情况：一种会新建对象，一种返回一个缓存的对象</p>
-<p><code>==</code> 用来比较值的，对象的值是否相等请使用 <code>obj.equals(o)</code>，这里两个<code>Integer</code>对象使用<code>==</code>来比较本身就是一种<strong>“不正当使用”</strong>，对象<code>==</code>取的是对象内存地址。</p>
-<p>下面我们看下这个<code>IntegerCache.cache</code>的缓存区间：</p>
-<ul>
-<li><code>cache[]</code>: <code>final int low = -128</code> ， <code>final int high</code>: <code>sun.misc.VM.getSavedProperty(&quot;java.lang.Integer.IntegerCache.high&quot;);</code> or <code>127</code></li>
-</ul>
-<h4 id="二、为什么默认是-128-127-呢？"><a href="#二、为什么默认是-128-127-呢？" class="headerlink" title="二、为什么默认是[-128...127]呢？"></a>二、为什么默认是<code>[-128...127]</code>呢？</h4><p>个人认为可能主要有以下两个原因：</p>
-<ul>
-<li>日常生活经常使用到的数字，比如年龄，成绩，物品个数等等</li>
-<li>“科学边界” 一个字节，即 <code>2^8</code>，256个数字，带上符号就是 [-128…127]</li>
-</ul>
-<h4 id="三、总结强调下"><a href="#三、总结强调下" class="headerlink" title="三、总结强调下"></a>三、总结强调下</h4><p>使用科学的方法来判断相等：</p>
-<ul>
-<li>值类型相等比较没得选 用 <code>==</code></li>
-<li>对象相等比较使用<code>.equals</code></li>
-</ul>
-<p>另外，如果你的程序比较特殊，有大量的 <code>&lt; 128</code> 或 <code>&gt; 127</code> 的数字存在，你可以尝试考虑调节下参数<code>java.lang.Integer.IntegerCache.high</code>，当然这是一种锱铢必较的手段，会带来一些交付上的问题，就是每个环境可能都要加上此配置，这里只是一种优化上的思路假设。</p>
-<h4 id="四、附加-测试"><a href="#四、附加-测试" class="headerlink" title="四、附加-测试"></a>四、附加-测试</h4><p><strong>测试 场景：1 千万的 Integer数组，将每个设值为[0, 1000]的随机整数，对比初始时间、各代空间占比</strong><br>总的对比结果如下（前者代表默认，后者代表–XX:AutoBoxCacheMax=1000）：</p>
-<ol>
-<li>申请1千万数组空间时间无差异，都是在 10ms 左右</li>
-<li>遍历设值初始值，前者会隐式的使用 new，耗时 3000ms左右，后者会隐式命中 cache，耗时 300ms, 相差10倍</li>
-<li>各空间使用对比<ul>
-<li>前者 eden 空间 使用比后者 eden 空间 大出 1倍</li>
-<li>前者 old 空间使用了 126M，后者没有使用 old空间</li>
-</ul>
-</li>
-</ol>
-<p>源码请看<a href="https://github.com/elegance/dev-demo/blob/master/java-demo/src/main/java/org/orh/basic/IntegerCacheTest.java" target="_blank" rel="noopener">这里</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/10/25/关于那道Integer-1000-1000-返回false，100-100-返回-true的题目/" data-id="cjlhtlkn50051b6rjqrgfwi0p" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/源码/">源码</a></li></ul>
 
     </footer>
   </div>
@@ -790,7 +864,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/">HTTP</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/通信/">通信</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/PostgreSQL/">PostgreSQL</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/">Nginx</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/Lua/">Lua</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/Openresty/">Openresty</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/">PostgreSQL</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/数据库/">数据库</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/">WEB</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/安全/">安全</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript语言/">javascript语言</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/英语/">英语</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计划/">计划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机基础/">计算机基础</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/">HTTP</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/通信/">通信</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/PostgreSQL/">PostgreSQL</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/">Nginx</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/Lua/">Lua</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/Openresty/">Openresty</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/">PostgreSQL</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/数据库/">数据库</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/">WEB</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/安全/">安全</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript语言/">javascript语言</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据库/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/英语/">英语</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计划/">计划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机基础/">计算机基础</a></li></ul>
     </div>
   </div>
 
@@ -800,7 +874,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMD/">CMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CommonJS/">CommonJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/">Nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript基础/">javascript基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/n2n/">n2n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/健身/">健身</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/协议/">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程-锁/">多线程 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/意志/">意志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/授权/">授权</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/服务/">服务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模块化/">模块化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码阅读/">源码阅读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/灰度发布/">灰度发布</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/版本控制/">版本控制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编码/">编码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/英语/">英语</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计划/">计划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运动/">运动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/进程/">进程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMD/">CMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CommonJS/">CommonJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/">Nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript基础/">javascript基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/n2n/">n2n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/健身/">健身</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/协议/">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程-锁/">多线程 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/意志/">意志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/授权/">授权</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/服务/">服务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模块化/">模块化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码阅读/">源码阅读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/灰度发布/">灰度发布</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/版本控制/">版本控制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编码/">编码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/英语/">英语</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计划/">计划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运动/">运动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/进程/">进程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
     </div>
   </div>
 
@@ -810,7 +884,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CMD/" style="font-size: 10px;">CMD</a> <a href="/tags/Centos软件安装/" style="font-size: 15px;">Centos软件安装</a> <a href="/tags/CommonJS/" style="font-size: 10px;">CommonJS</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Nginx/" style="font-size: 10px;">Nginx</a> <a href="/tags/PostgreSQL基础/" style="font-size: 15px;">PostgreSQL基础</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/javascript函数/" style="font-size: 15px;">javascript函数</a> <a href="/tags/javascript基础/" style="font-size: 15px;">javascript基础</a> <a href="/tags/n2n/" style="font-size: 10px;">n2n</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/健身/" style="font-size: 10px;">健身</a> <a href="/tags/协议/" style="font-size: 10px;">协议</a> <a href="/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/tags/多线程-锁/" style="font-size: 10px;">多线程 锁</a> <a href="/tags/安全/" style="font-size: 10px;">安全</a> <a href="/tags/意志/" style="font-size: 10px;">意志</a> <a href="/tags/授权/" style="font-size: 10px;">授权</a> <a href="/tags/服务/" style="font-size: 10px;">服务</a> <a href="/tags/模块化/" style="font-size: 10px;">模块化</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/源码阅读/" style="font-size: 10px;">源码阅读</a> <a href="/tags/灰度发布/" style="font-size: 10px;">灰度发布</a> <a href="/tags/版本控制/" style="font-size: 10px;">版本控制</a> <a href="/tags/编码/" style="font-size: 15px;">编码</a> <a href="/tags/编程/" style="font-size: 10px;">编程</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/运动/" style="font-size: 10px;">运动</a> <a href="/tags/进程/" style="font-size: 10px;">进程</a> <a href="/tags/阅读/" style="font-size: 10px;">阅读</a>
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CMD/" style="font-size: 10px;">CMD</a> <a href="/tags/Centos软件安装/" style="font-size: 15px;">Centos软件安装</a> <a href="/tags/CommonJS/" style="font-size: 10px;">CommonJS</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Nginx/" style="font-size: 10px;">Nginx</a> <a href="/tags/PostgreSQL基础/" style="font-size: 15px;">PostgreSQL基础</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/cassandra/" style="font-size: 10px;">cassandra</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/javascript函数/" style="font-size: 15px;">javascript函数</a> <a href="/tags/javascript基础/" style="font-size: 15px;">javascript基础</a> <a href="/tags/n2n/" style="font-size: 10px;">n2n</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/健身/" style="font-size: 10px;">健身</a> <a href="/tags/协议/" style="font-size: 10px;">协议</a> <a href="/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/tags/多线程-锁/" style="font-size: 10px;">多线程 锁</a> <a href="/tags/安全/" style="font-size: 10px;">安全</a> <a href="/tags/意志/" style="font-size: 10px;">意志</a> <a href="/tags/授权/" style="font-size: 10px;">授权</a> <a href="/tags/服务/" style="font-size: 10px;">服务</a> <a href="/tags/模块化/" style="font-size: 10px;">模块化</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/源码阅读/" style="font-size: 10px;">源码阅读</a> <a href="/tags/灰度发布/" style="font-size: 10px;">灰度发布</a> <a href="/tags/版本控制/" style="font-size: 10px;">版本控制</a> <a href="/tags/编码/" style="font-size: 15px;">编码</a> <a href="/tags/编程/" style="font-size: 10px;">编程</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/运动/" style="font-size: 10px;">运动</a> <a href="/tags/进程/" style="font-size: 10px;">进程</a> <a href="/tags/阅读/" style="font-size: 10px;">阅读</a>
     </div>
   </div>
 
@@ -832,6 +906,10 @@
       <ul>
         
           <li>
+            <a href="/2018/08/31/Cassandra-数据库使用小记/">Cassandra 数据库使用小记</a>
+          </li>
+        
+          <li>
             <a href="/2018/08/22/Supervisor的使用/">Supervisor的使用</a>
           </li>
         
@@ -845,10 +923,6 @@
         
           <li>
             <a href="/2018/07/22/大白话简记TCP/">大白话简记TCP</a>
-          </li>
-        
-          <li>
-            <a href="/2018/07/22/再理一遍OAuth2.0/">再理一遍OAuth2.0</a>
           </li>
         
       </ul>
