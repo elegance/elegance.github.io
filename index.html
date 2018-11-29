@@ -206,10 +206,95 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/08/31/Cassandra-数据库使用小记/" data-id="cjoqlefg90031vyrjjms9ualv" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/08/31/Cassandra-数据库使用小记/" data-id="cjp27yx96002uh8rjvjagu5qn" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-wrk-压力测试" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/08/30/wrk-压力测试/" class="article-date">
+  <time datetime="2018-08-30T06:39:00.000Z" itemprop="datePublished">2018-08-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/测试/">测试</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/08/30/wrk-压力测试/">wrk 压力测试</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="wrk-压力测试"><a href="#wrk-压力测试" class="headerlink" title="wrk 压力测试"></a>wrk 压力测试</h1><h2 id="一、安装"><a href="#一、安装" class="headerlink" title="一、安装"></a>一、安装</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git clone --depth=1 https://github.com/wg/wrk </span><br><span class="line">cd wrk  </span><br><span class="line">make </span><br><span class="line">ln -sf /root/tools/wrk/wrk /usr/local/bin/wrk</span><br></pre></td></tr></table></figure>
+<p>查看下版本以及命令帮助信息：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> wrk -v</span></span><br><span class="line">wrk 4.1.0 [epoll] Copyright (C) 2012 Will Glozer</span><br><span class="line">Usage: wrk &lt;options&gt; &lt;url&gt;                            </span><br><span class="line">  Options:                                            </span><br><span class="line">    -c, --connections &lt;N&gt;  Connections to keep open   </span><br><span class="line">    -d, --duration    &lt;T&gt;  Duration of test           </span><br><span class="line">    -t, --threads     &lt;N&gt;  Number of threads to use   </span><br><span class="line">                                                      </span><br><span class="line">    -s, --script      &lt;S&gt;  Load Lua script file       </span><br><span class="line">    -H, --header      &lt;H&gt;  Add header to request      </span><br><span class="line">        --latency          Print latency statistics # 加上此选项可输出响应时间的分布情况  </span><br><span class="line">        --timeout     &lt;T&gt;  Socket/request timeout   # wrk 默认超时时间是1秒，用此参数设置超时时间</span><br><span class="line">    -v, --version          Print version details      </span><br><span class="line">                                                      </span><br><span class="line">  Numeric arguments may include a SI unit (1k, 1M, 1G)</span><br><span class="line">  Time arguments may include a time unit (2s, 2m, 2h)</span><br></pre></td></tr></table></figure>
+<h2 id="二、使用"><a href="#二、使用" class="headerlink" title="二、使用"></a>二、使用</h2><h4 id="1-先来一个简单的测试"><a href="#1-先来一个简单的测试" class="headerlink" title="1. 先来一个简单的测试"></a>1. 先来一个简单的测试</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wrk -t12 -c100 -d30s http://www.baidu.com</span><br></pre></td></tr></table></figure>
+<p>30秒钟结束以后可以看到如下输出: </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Running 30s test @ http://www.baidu.com</span><br><span class="line">  12 threads and 100 connections</span><br><span class="line">  Thread Stats   Avg      Stdev     Max   +/- Stdev</span><br><span class="line">    Latency    99.58ms  155.96ms   1.66s    90.27% # 可以理解为响应时间, 平均值, 标准偏差, 最大值, 正负一个标准差占比</span><br><span class="line">    Req/Sec   203.95    150.79     1.55k    76.91% # 每个线程每秒钟的完成的请求数, 均值...</span><br><span class="line">  70847 requests in 30.02s, 1.01GB read            # 30秒钟总共完成请求数和读取数据量. </span><br><span class="line">  Socket errors: connect 0, read 499, write 0, timeout 4 # 错误统计, 499个读错误, 4个超时</span><br><span class="line">Requests/sec:   2359.99    # 总共平均每秒钟完成 2359 个请求</span><br><span class="line">Transfer/sec:     34.40MB  # 每秒钟读取 34.4M 数据</span><br></pre></td></tr></table></figure>
+<p>wrk 默认超时时间是1秒，可以使用<code>T</code>参数设置，如设置超时为10s：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wrk -t12 -c100 -T10s -d30s http://www.baidu.com</span><br></pre></td></tr></table></figure>
+<p>输出响应时间分布：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wrk -t12 -c100 -T10s -d30s --latency http://www.baidu.com</span><br></pre></td></tr></table></figure>
+<h4 id="2-结合Lua脚本测试"><a href="#2-结合Lua脚本测试" class="headerlink" title="2. 结合Lua脚本测试"></a>2. 结合Lua脚本测试</h4><p>HTTP请求通常不会这么简单，通常还有POST, Header, body 等，可以结合Lua脚本来测试。</p>
+<p>建立一个 <code>post.lua</code>文件：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wrk.method = <span class="string">"POST"</span></span><br><span class="line">wrk.body = <span class="string">"foo=bar&amp;baz=quux"</span></span><br><span class="line">wrk.headers[<span class="string">"Content-Type"</span>] = <span class="string">"application/x-www-form-urlencode"</span></span><br></pre></td></tr></table></figure>
+<p>然后执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wrk -t12 -c100 -d10s -T30s --script=post.lua --latency http://www.baidu.com</span><br></pre></td></tr></table></figure>
+<p>查看 <code>wrk.lua</code> 的源码，<code>https://github.com/wg/wrk/blob/master/src/wrk.lua</code>, 可以看出有以下属性：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> wrk = &#123;</span><br><span class="line">   scheme  = <span class="string">"http"</span>,</span><br><span class="line">   host    = <span class="string">"localhost"</span>,</span><br><span class="line">   port    = <span class="literal">nil</span>,</span><br><span class="line">   method  = <span class="string">"GET"</span>,</span><br><span class="line">   <span class="built_in">path</span>    = <span class="string">"/"</span>,</span><br><span class="line">   headers = &#123;&#125;,</span><br><span class="line">   body    = <span class="literal">nil</span>,</span><br><span class="line">   thread  = <span class="literal">nil</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>wrk 可以在lua脚本里添加下面的Hook函数，你可以想象成生命周期，每个生命周期做的事情都不一样, 但是生命周期是有时间顺序的。我们常用一般是 request 和 delay 周期. 另外还提供了以下几个hook函数：</p>
+<ul>
+<li><p><code>setup</code> 线程初始后支持会调用一次</p>
+</li>
+<li><p><code>init</code> 每次请求发送之前被调用。可以接受 wrk 命令行的额外参数</p>
+</li>
+<li><p><code>delay</code> 这个函数返回一个数值，在这次请求执行完以后延迟多长时间执行下一个请求，可以对应 thinking time 的场景</p>
+</li>
+<li><p><code>request</code> 通过这个函数可以每次请求之前修改本次请求体和Header，我们可以在这里写一些要压力测试的逻辑。</p>
+</li>
+<li><p><code>response</code> 每次请求返回以后被调用，可以根据响应内容做特殊处理，比如遇到特殊响应停止执行测试，或输出到控制台等等。</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">response</span><span class="params">(status, headers, body)</span></span>  </span><br><span class="line">   <span class="keyword">if</span> <span class="built_in">status</span> ~= <span class="number">200</span> <span class="keyword">then</span>  </span><br><span class="line">      <span class="built_in">print</span>(body)  </span><br><span class="line">      wrk.thread:stop()  </span><br><span class="line">   <span class="keyword">end</span>  </span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>done</code> 在所有请求执行完以后调用, 一般用于自定义统计结果. </p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">done = <span class="function"><span class="keyword">function</span><span class="params">(summary, latency, requests)</span></span>  </span><br><span class="line">   <span class="built_in">io</span>.<span class="built_in">write</span>(<span class="string">"------------------------------\n"</span>)  </span><br><span class="line">   <span class="keyword">for</span> _, p <span class="keyword">in</span> <span class="built_in">pairs</span>(&#123; <span class="number">50</span>, <span class="number">90</span>, <span class="number">99</span>, <span class="number">99.999</span> &#125;) <span class="keyword">do</span>  </span><br><span class="line">      n = latency:percentile(p)  </span><br><span class="line">      <span class="built_in">io</span>.<span class="built_in">write</span>(<span class="built_in">string</span>.<span class="built_in">format</span>(<span class="string">"%g%%,%d\n"</span>, p, n))  </span><br><span class="line">   <span class="keyword">end</span>  </span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>wrk 源码中给出的完整示例 ，<a href="https://github.com/wg/wrk/blob/master/scripts/setup.lua" target="_blank" rel="noopener">源码 </a> (这个目录下其他 脚本也可以参考)</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> counter = <span class="number">1</span>  </span><br><span class="line"><span class="keyword">local</span> threads = &#123;&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">setup</span><span class="params">(thread)</span></span>  </span><br><span class="line">   thread:set(<span class="string">"id"</span>, counter)  </span><br><span class="line">   <span class="built_in">table</span>.<span class="built_in">insert</span>(threads, thread)  </span><br><span class="line">   counter = counter + <span class="number">1</span>  </span><br><span class="line"><span class="keyword">end</span>  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">init</span><span class="params">(args)</span></span>  </span><br><span class="line">   requests  = <span class="number">0</span>  </span><br><span class="line">   responses = <span class="number">0</span>  </span><br><span class="line">  </span><br><span class="line">   <span class="keyword">local</span> msg = <span class="string">"thread %d created"</span>  </span><br><span class="line">   <span class="built_in">print</span>(msg:<span class="built_in">format</span>(id))  </span><br><span class="line"><span class="keyword">end</span>  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">request</span><span class="params">()</span></span>  </span><br><span class="line">   requests = requests + <span class="number">1</span>  </span><br><span class="line">   <span class="keyword">return</span> wrk.request()  </span><br><span class="line"><span class="keyword">end</span>  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">response</span><span class="params">(status, headers, body)</span></span>  </span><br><span class="line">   responses = responses + <span class="number">1</span>  </span><br><span class="line"><span class="keyword">end</span>  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">done</span><span class="params">(summary, latency, requests)</span></span>  </span><br><span class="line">   <span class="keyword">for</span> index, thread <span class="keyword">in</span> <span class="built_in">ipairs</span>(threads) <span class="keyword">do</span>  </span><br><span class="line">      <span class="keyword">local</span> id        = thread:get(<span class="string">"id"</span>)  </span><br><span class="line">      <span class="keyword">local</span> requests  = thread:get(<span class="string">"requests"</span>)  </span><br><span class="line">      <span class="keyword">local</span> responses = thread:get(<span class="string">"responses"</span>)  </span><br><span class="line">      <span class="keyword">local</span> msg = <span class="string">"thread %d made %d requests and got %d responses"</span>  </span><br><span class="line">      <span class="built_in">print</span>(msg:<span class="built_in">format</span>(id, requests, responses))  </span><br><span class="line">   <span class="keyword">end</span>  </span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>以通过 lua 实现访问多个 url. </p>
+<p>例如这个复杂的 lua 脚本, 随机读取 paths.txt 文件中的 url 列表, 然后访问: </p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">counter = <span class="number">1</span>  </span><br><span class="line">  </span><br><span class="line"><span class="built_in">math</span>.<span class="built_in">randomseed</span>(<span class="built_in">os</span>.<span class="built_in">time</span>())  </span><br><span class="line"><span class="built_in">math</span>.<span class="built_in">random</span>(); <span class="built_in">math</span>.<span class="built_in">random</span>(); <span class="built_in">math</span>.<span class="built_in">random</span>()  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">file_exists</span><span class="params">(file)</span></span>  </span><br><span class="line">  <span class="keyword">local</span> f = <span class="built_in">io</span>.<span class="built_in">open</span>(file, <span class="string">"rb"</span>)  </span><br><span class="line">  <span class="keyword">if</span> f <span class="keyword">then</span> f:<span class="built_in">close</span>() <span class="keyword">end</span>  </span><br><span class="line">  <span class="keyword">return</span> f ~= <span class="literal">nil</span>  </span><br><span class="line"><span class="keyword">end</span>  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shuffle</span><span class="params">(paths)</span></span>  </span><br><span class="line">  <span class="keyword">local</span> j, k  </span><br><span class="line">  <span class="keyword">local</span> n = #paths  </span><br><span class="line">  <span class="keyword">for</span> i = <span class="number">1</span>, n <span class="keyword">do</span>  </span><br><span class="line">    j, k = <span class="built_in">math</span>.<span class="built_in">random</span>(n), <span class="built_in">math</span>.<span class="built_in">random</span>(n)  </span><br><span class="line">    paths[j], paths[k] = paths[k], paths[j]  </span><br><span class="line">  <span class="keyword">end</span>  </span><br><span class="line">  <span class="keyword">return</span> paths  </span><br><span class="line"><span class="keyword">end</span>  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">non_empty_lines_from</span><span class="params">(file)</span></span>  </span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">not</span> file_exists(file) <span class="keyword">then</span> <span class="keyword">return</span> &#123;&#125; <span class="keyword">end</span>  </span><br><span class="line">  <span class="built_in">lines</span> = &#123;&#125;  </span><br><span class="line">  <span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">io</span>.<span class="built_in">lines</span>(file) <span class="keyword">do</span>  </span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> (line == <span class="string">''</span>) <span class="keyword">then</span>  </span><br><span class="line">      <span class="built_in">lines</span>[#<span class="built_in">lines</span> + <span class="number">1</span>] = line  </span><br><span class="line">    <span class="keyword">end</span>  </span><br><span class="line">  <span class="keyword">end</span>  </span><br><span class="line">  <span class="keyword">return</span> shuffle(<span class="built_in">lines</span>)  </span><br><span class="line"><span class="keyword">end</span>  </span><br><span class="line">  </span><br><span class="line">paths = non_empty_lines_from(<span class="string">"paths.txt"</span>)  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">if</span> #paths &lt;= <span class="number">0</span> <span class="keyword">then</span>  </span><br><span class="line">  <span class="built_in">print</span>(<span class="string">"multiplepaths: No paths found. You have to create a file paths.txt with one path per line"</span>)  </span><br><span class="line">  <span class="built_in">os</span>.<span class="built_in">exit</span>()  </span><br><span class="line"><span class="keyword">end</span>  </span><br><span class="line">  </span><br><span class="line"><span class="built_in">print</span>(<span class="string">"multiplepaths: Found "</span> .. #paths .. <span class="string">" paths"</span>)  </span><br><span class="line">  </span><br><span class="line">request = <span class="function"><span class="keyword">function</span><span class="params">()</span></span>  </span><br><span class="line">    <span class="built_in">path</span> = paths[counter]  </span><br><span class="line">    counter = counter + <span class="number">1</span>  </span><br><span class="line">    <span class="keyword">if</span> counter &gt; #paths <span class="keyword">then</span>  </span><br><span class="line">      counter = <span class="number">1</span>  </span><br><span class="line">    <span class="keyword">end</span>  </span><br><span class="line">    <span class="keyword">return</span> wrk.<span class="built_in">format</span>(<span class="literal">nil</span>, <span class="built_in">path</span>)  </span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>关于 cookie </p>
+<p>有些时候我们需要模拟一些通过 cookie 传递数据的场景. wrk 并没有特殊支持, 可以通过 <code>wrk.headers[&quot;Cookie&quot;]=&quot;xxxxx&quot;</code>实现. </p>
+<p>下面是在网上找的一个取 Response的cookie作为后续请求的cookie :</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getCookie</span><span class="params">(cookies, name)</span></span>  </span><br><span class="line">  <span class="keyword">local</span> start = <span class="built_in">string</span>.<span class="built_in">find</span>(cookies, name .. <span class="string">"="</span>)  </span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> start == <span class="literal">nil</span> <span class="keyword">then</span>  </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span>  </span><br><span class="line">  <span class="keyword">end</span>  </span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">string</span>.<span class="built_in">sub</span>(cookies, start + #name + <span class="number">1</span>, <span class="built_in">string</span>.<span class="built_in">find</span>(cookies, <span class="string">";"</span>, start) - <span class="number">1</span>)  </span><br><span class="line"><span class="keyword">end</span>  </span><br><span class="line">  </span><br><span class="line">response = <span class="function"><span class="keyword">function</span><span class="params">(status, headers, body)</span></span>  </span><br><span class="line">  <span class="keyword">local</span> token = getCookie(headers[<span class="string">"Set-Cookie"</span>], <span class="string">"token"</span>)  </span><br><span class="line">    </span><br><span class="line">  <span class="keyword">if</span> token ~= <span class="literal">nil</span> <span class="keyword">then</span>  </span><br><span class="line">    wrk.headers[<span class="string">"Cookie"</span>] = <span class="string">"token="</span> .. token  </span><br><span class="line">  <span class="keyword">end</span>  </span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2018/08/30/wrk-压力测试/" data-id="cjp27yxb2004oh8rj9veuzstt" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/lua/">lua</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/压力测试/">压力测试</a></li></ul>
 
     </footer>
   </div>
@@ -270,7 +355,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/08/22/Supervisor的使用/" data-id="cjoqlefgl003pvyrjm9m1207x" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/08/22/Supervisor的使用/" data-id="cjp27yx9i003ih8rj86om3f5o" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/服务/">服务</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/进程/">进程</a></li></ul>
@@ -339,7 +424,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/08/09/Lua-OpenResty-开发环境搭建/" data-id="cjoqlefgd0038vyrjawex2onl" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/08/09/Lua-OpenResty-开发环境搭建/" data-id="cjp27yx9a0031h8rj7nrlbkeo" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Nginx/">Nginx</a></li></ul>
@@ -406,7 +491,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/08/05/Nginx-Lua-实现灰度发布/" data-id="cjoqlefgf003cvyrjdzzu0wwl" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/08/05/Nginx-Lua-实现灰度发布/" data-id="cjp27yx9b0035h8rj4o9r3jh2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/灰度发布/">灰度发布</a></li></ul>
@@ -502,7 +587,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/07/22/大白话简记TCP/" data-id="cjoqlefi3005lvyrj5cv57s8n" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/07/22/大白话简记TCP/" data-id="cjp27yxbm005ih8rja169wrns" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/">TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/协议/">协议</a></li></ul>
@@ -657,7 +742,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/07/22/再理一遍OAuth2.0/" data-id="cjoqlefht005avyrjq94ojzda" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/07/22/再理一遍OAuth2.0/" data-id="cjp27yxba0058h8rjww1ruch1" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全/">安全</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/授权/">授权</a></li></ul>
@@ -704,7 +789,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/07/22/hello-world/" data-id="cjoqlefgu0043vyrjv8i1t4hs" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/07/22/hello-world/" data-id="cjp27yxa9003wh8rjaatfw6ey" class="article-share-link">Share</a>
       
       
     </footer>
@@ -740,7 +825,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/03/01/搭建-ELK-日志中心/" data-id="cjoqlefia005zvyrjaoc0yefz" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/03/01/搭建-ELK-日志中心/" data-id="cjp27yxbu005xh8rj8gmcefmd" class="article-share-link">Share</a>
       
       
     </footer>
@@ -777,71 +862,9 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/02/22/Spring-生命周期/" data-id="cjoqlefgj003lvyrjbovx8ars" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2018/02/22/Spring-生命周期/" data-id="cjp27yx9g003eh8rj0gd05rs8" class="article-share-link">Share</a>
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-n2n点对点通信" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/01/04/n2n点对点通信/" class="article-date">
-  <time datetime="2018-01-04T03:23:12.000Z" itemprop="datePublished">2018-01-04</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/04/n2n点对点通信/">n2n点对点通信</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="N2N介绍"><a href="#N2N介绍" class="headerlink" title="N2N介绍"></a>N2N介绍</h4><p>通过N2N即可组成局域网，在外面可以访问家里的路由器、机器。</p>
-<ul>
-<li>Supernode 中心节点，并不参与两台主机间直接通信, 只是起到媒人的作用。</li>
-<li>Edge 节点都会建立tun/tap虚拟网卡，用作n2n网络的入口，Edge节点就可以互通了。</li>
-</ul>
-<h4 id="V1-与-V2"><a href="#V1-与-V2" class="headerlink" title="V1 与 V2"></a>V1 与 V2</h4><p>n2n有V1和V2两个版本， 两个版本不兼容，据说V1的性能还略高于V2,V2是增加了一些安全相关的提升。</p>
-<p>所以我这里都是<strong>基于V1版本</strong>搭建的。</p>
-<h4 id="Linux-Supernode-的安装"><a href="#Linux-Supernode-的安装" class="headerlink" title="Linux Supernode 的安装"></a>Linux Supernode 的安装</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/meyerd/n2n</span><br><span class="line">$ <span class="built_in">cd</span> n2n/n2n_v1</span><br><span class="line">$ make</span><br><span class="line">$ make install 2&gt;&amp;1 | tee  make.log</span><br></pre></td></tr></table></figure>
-<p>启动：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ nohup supernode -l 86 -v -f &gt; supernode.log &amp;</span><br></pre></td></tr></table></figure>
-<p>#### </p>
-<h4 id="Ubuntu-Edge-的安装"><a href="#Ubuntu-Edge-的安装" class="headerlink" title="Ubuntu Edge 的安装"></a>Ubuntu Edge 的安装</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/meyerd/n2n</span><br><span class="line">$ <span class="built_in">cd</span> n2n/n2n_v1</span><br><span class="line">$ make</span><br><span class="line">$ sudo make install</span><br><span class="line">$ sudo su</span><br><span class="line">$ apt install uml-utilities</span><br><span class="line">$ tunctl -t tun0</span><br><span class="line">$ sudo edge -d n2n0 -c orh -k 123 -m c2:27:ad:05:b3:a5 -a 10.8.1.7 -l 104.128.82.194:86 -r -f</span><br></pre></td></tr></table></figure>
-<h4 id="Openwrt-Edge的安装"><a href="#Openwrt-Edge的安装" class="headerlink" title="Openwrt  Edge的安装"></a>Openwrt  Edge的安装</h4><p>这里我是在虚拟机中安装的<code>Openwrt</code>可以先下载虚拟机文件，虚拟机</p>
-<p><code>http://downloads.openwrt.org/attitude_adjustment/12.09/x86/generic/openwrt-x86-generic-combined-ext4.vdi</code></p>
-<p>安装与配置：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ opkg update</span><br><span class="line">$ opkg install n2n</span><br><span class="line">$ </span><br><span class="line">$ vim /etc/config/n2n</span><br><span class="line">$ option ipaddr           <span class="string">'10.2.5.1'</span></span><br><span class="line">$ option supernode        <span class="string">'104.128.82.194'</span></span><br><span class="line">$ option port             <span class="string">'86'</span></span><br><span class="line">$ <span class="comment"># 为自己的N2N网络组织机构取个名字</span></span><br><span class="line">$ option community        <span class="string">'orh'</span></span><br><span class="line">$ <span class="comment"># 其他设备要使用相同的组织机构名和密码才能加入</span></span><br><span class="line">$ option key              <span class="string">'123'</span></span><br><span class="line">$ option route            <span class="string">'1'</span></span><br></pre></td></tr></table></figure>
-<p>启用，启动、停止：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/n2n <span class="built_in">enable</span></span><br><span class="line">/etc/init.d/n2n start</span><br><span class="line">/etc/init.d/n2n stop</span><br></pre></td></tr></table></figure>
-<p>参考文章：</p>
-<ul>
-<li><a href="http://gohom.win/2016/09/03/n2n-p2pnet/" target="_blank" rel="noopener">P2P网络-n2n穿墙</a></li>
-<li><a href="https://wiki.openwrt.org/zh-cn/doc/techref/opkg" target="_blank" rel="noopener">OPKG包管理</a></li>
-<li><a href="http://openwrt.jaru.eu.org/chaos_calmer/ar71xx/packages/" target="_blank" rel="noopener">Openwrt离线包</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2018/01/04/n2n点对点通信/" data-id="cjoqlefh9004lvyrju5kkrkta" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/n2n/">n2n</a></li></ul>
-
     </footer>
   </div>
   
@@ -864,7 +887,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/">HTTP</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/通信/">通信</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/PostgreSQL/">PostgreSQL</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/">Nginx</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/Lua/">Lua</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/Openresty/">Openresty</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/">PostgreSQL</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/数据库/">数据库</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/">WEB</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/安全/">安全</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript语言/">javascript语言</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据库/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/英语/">英语</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计划/">计划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机基础/">计算机基础</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/">HTTP</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/通信/">通信</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/PostgreSQL/">PostgreSQL</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/">Nginx</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/Lua/">Lua</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/Openresty/">Openresty</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/">PostgreSQL</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/数据库/">数据库</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/">WEB</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/安全/">安全</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript语言/">javascript语言</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据库/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/测试/">测试</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/英语/">英语</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计划/">计划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机基础/">计算机基础</a></li></ul>
     </div>
   </div>
 
@@ -874,7 +897,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMD/">CMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CommonJS/">CommonJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/">Nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript基础/">javascript基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/n2n/">n2n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/健身/">健身</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/协议/">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程-锁/">多线程 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/意志/">意志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/授权/">授权</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/服务/">服务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模块化/">模块化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码阅读/">源码阅读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/灰度发布/">灰度发布</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/版本控制/">版本控制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编码/">编码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/英语/">英语</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计划/">计划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运动/">运动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/进程/">进程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMD/">CMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CommonJS/">CommonJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/">Nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript基础/">javascript基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lua/">lua</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/n2n/">n2n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/健身/">健身</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/协议/">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/压力测试/">压力测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程-锁/">多线程 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/意志/">意志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/授权/">授权</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/服务/">服务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模块化/">模块化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码阅读/">源码阅读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/灰度发布/">灰度发布</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/版本控制/">版本控制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编码/">编码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/英语/">英语</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计划/">计划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运动/">运动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/进程/">进程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
     </div>
   </div>
 
@@ -884,7 +907,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CMD/" style="font-size: 10px;">CMD</a> <a href="/tags/Centos软件安装/" style="font-size: 15px;">Centos软件安装</a> <a href="/tags/CommonJS/" style="font-size: 10px;">CommonJS</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Nginx/" style="font-size: 10px;">Nginx</a> <a href="/tags/PostgreSQL基础/" style="font-size: 15px;">PostgreSQL基础</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/cassandra/" style="font-size: 10px;">cassandra</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/javascript函数/" style="font-size: 15px;">javascript函数</a> <a href="/tags/javascript基础/" style="font-size: 15px;">javascript基础</a> <a href="/tags/n2n/" style="font-size: 10px;">n2n</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/健身/" style="font-size: 10px;">健身</a> <a href="/tags/协议/" style="font-size: 10px;">协议</a> <a href="/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/tags/多线程-锁/" style="font-size: 10px;">多线程 锁</a> <a href="/tags/安全/" style="font-size: 10px;">安全</a> <a href="/tags/意志/" style="font-size: 10px;">意志</a> <a href="/tags/授权/" style="font-size: 10px;">授权</a> <a href="/tags/服务/" style="font-size: 10px;">服务</a> <a href="/tags/模块化/" style="font-size: 10px;">模块化</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/源码阅读/" style="font-size: 10px;">源码阅读</a> <a href="/tags/灰度发布/" style="font-size: 10px;">灰度发布</a> <a href="/tags/版本控制/" style="font-size: 10px;">版本控制</a> <a href="/tags/编码/" style="font-size: 15px;">编码</a> <a href="/tags/编程/" style="font-size: 10px;">编程</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/运动/" style="font-size: 10px;">运动</a> <a href="/tags/进程/" style="font-size: 10px;">进程</a> <a href="/tags/阅读/" style="font-size: 10px;">阅读</a>
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CMD/" style="font-size: 10px;">CMD</a> <a href="/tags/Centos软件安装/" style="font-size: 15px;">Centos软件安装</a> <a href="/tags/CommonJS/" style="font-size: 10px;">CommonJS</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Nginx/" style="font-size: 10px;">Nginx</a> <a href="/tags/PostgreSQL基础/" style="font-size: 15px;">PostgreSQL基础</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/cassandra/" style="font-size: 10px;">cassandra</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/javascript函数/" style="font-size: 15px;">javascript函数</a> <a href="/tags/javascript基础/" style="font-size: 15px;">javascript基础</a> <a href="/tags/lua/" style="font-size: 10px;">lua</a> <a href="/tags/n2n/" style="font-size: 10px;">n2n</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/健身/" style="font-size: 10px;">健身</a> <a href="/tags/协议/" style="font-size: 10px;">协议</a> <a href="/tags/压力测试/" style="font-size: 10px;">压力测试</a> <a href="/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/tags/多线程-锁/" style="font-size: 10px;">多线程 锁</a> <a href="/tags/安全/" style="font-size: 10px;">安全</a> <a href="/tags/意志/" style="font-size: 10px;">意志</a> <a href="/tags/授权/" style="font-size: 10px;">授权</a> <a href="/tags/服务/" style="font-size: 10px;">服务</a> <a href="/tags/模块化/" style="font-size: 10px;">模块化</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/源码阅读/" style="font-size: 10px;">源码阅读</a> <a href="/tags/灰度发布/" style="font-size: 10px;">灰度发布</a> <a href="/tags/版本控制/" style="font-size: 10px;">版本控制</a> <a href="/tags/编码/" style="font-size: 15px;">编码</a> <a href="/tags/编程/" style="font-size: 10px;">编程</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/运动/" style="font-size: 10px;">运动</a> <a href="/tags/进程/" style="font-size: 10px;">进程</a> <a href="/tags/阅读/" style="font-size: 10px;">阅读</a>
     </div>
   </div>
 
@@ -910,6 +933,10 @@
           </li>
         
           <li>
+            <a href="/2018/08/30/wrk-压力测试/">wrk 压力测试</a>
+          </li>
+        
+          <li>
             <a href="/2018/08/22/Supervisor的使用/">Supervisor的使用</a>
           </li>
         
@@ -919,10 +946,6 @@
         
           <li>
             <a href="/2018/08/05/Nginx-Lua-实现灰度发布/">Nginx+Lua 实现灰度发布</a>
-          </li>
-        
-          <li>
-            <a href="/2018/07/22/大白话简记TCP/">大白话简记TCP</a>
           </li>
         
       </ul>

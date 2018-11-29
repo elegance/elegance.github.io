@@ -66,6 +66,83 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-事务及隔离级别" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/08/事务及隔离级别/" class="article-date">
+  <time datetime="2017-05-08T08:12:08.000Z" itemprop="datePublished">2017-05-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/08/事务及隔离级别/">事务及隔离级别</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="事务四大特性"><a href="#事务四大特性" class="headerlink" title="事务四大特性"></a>事务四大特性</h4><p>据库具有 <strong>ACID</strong>四个特性，分别指：</p>
+<h5 id="Atomicity-原子性"><a href="#Atomicity-原子性" class="headerlink" title="Atomicity - 原子性"></a>Atomicity - 原子性</h5><p>原子操作不可分割，内部要么全部成功，要么全部失败。</p>
+<h5 id="Consistency-一致性"><a href="#Consistency-一致性" class="headerlink" title="Consistency - 一致性"></a>Consistency - 一致性</h5><p>系统从一个一致状态转换到另一个一致状态。事务的一致性决定了一个系统设计和实现的复杂度。事务可以不同程度的一致性，下面会详细提到。</p>
+<h5 id="Isolation-隔离性"><a href="#Isolation-隔离性" class="headerlink" title="Isolation - 隔离性"></a>Isolation - 隔离性</h5><p>事务不被其他事务干扰，相互隔离。 每个事务都感觉不到其他事务在执行，下面为详细提到事务的隔离的级别。</p>
+<h5 id="Durability-持久性"><a href="#Durability-持久性" class="headerlink" title="Durability - 持久性"></a>Durability - 持久性</h5><p>事务一旦提交，那么数据的改变就是永久性的。</p>
+<h4 id="事务一致性"><a href="#事务一致性" class="headerlink" title="事务一致性"></a>事务一致性</h4><p>此处主要参考: <a href="http://blog.csdn.net/chosen0ne/article/details/10036775" target="_blank" rel="noopener">理解事务——原子性、一致性、隔离性和持久性</a></p>
+<ul>
+<li><strong>强一致性</strong>：读操作可以立即读到提交的更新操作。</li>
+<li><strong>弱一致性</strong>: 提交的更新操作，不一定立即会被操作读取到，此种情况会存在一个不一致窗口，指的是读操作可以读到最新值的一段时间。</li>
+<li><strong>最终一致性</strong>: 是弱一致性的特例。事务更新一份数据，最终一致性保证在没有其他事务更新同样值的话，最终所有的事务都会读到之前事务更新的最新值。如果没有错误发生，不一致窗口的大小依赖于：通信延迟，系统负载等。</li>
+<li><strong>单调一致性</strong>: 如果一个进程已经读到一个值，那么后续不会读到更早的值。</li>
+<li><strong>会话一致性</strong>: 保证客户端和服务器交互的会话过程中，读操作可以读到更新操作后的最新值。</li>
+</ul>
+<h4 id="事务隔离性"><a href="#事务隔离性" class="headerlink" title="事务隔离性"></a>事务隔离性</h4><p>如果不考虑隔离性，在事务并发操作时，可能出现的问题有：</p>
+<ul>
+<li><strong>脏读</strong>：<strong>一个事务读取了另一个事务未提交的数据</strong><blockquote>
+<p>例如：公司发工资了，领导把5000元打到singo的账号上，但是该事务并未提交，而singo正好去查看账户，发现工资已经到账，是5000元整，非常高 兴。可是不幸的是，领导发现发给singo的工资金额不对，是2000元，于是迅速回滚了事务，修改金额后，将事务提交，最后singo实际的工资只有 2000元，singo空欢喜一场。</p>
+</blockquote>
+</li>
+<li><strong>不可重复读</strong>：<strong>一个事务内，单份数据多次读取结果不同</strong>，这是由于<strong>读取间隔，被别的事务修改并提交了</strong> （事务内重复读取会有问题，不重复读则没问题，则理解为<code>不可重复读</code>问题）<blockquote>
+<p>例如：singo拿着工资卡去消费，系统读取到卡里确实有2000元，而此时她的老婆也正好在网上转账，把singo工资卡的2000元转到另一账户，并在 singo之前提交了事务，当singo扣款时，系统检查到singo的工资卡已经没有钱，扣款失败，singo十分纳闷，明明卡里有钱，为 何……</p>
+</blockquote>
+</li>
+<li><strong>幻读</strong>：<strong>一个事务内，多次读取数据的结果集合不同</strong>，幻读是由于<strong>读取间隔，被别的事务插入了数据</strong><blockquote>
+<p>例如：singo的老婆工作在银行部门，她时常通过银行内部系统查看singo的信用卡消费记录。有一天，她正在查询到singo当月信用卡的总消费金额 （select sum(amount) from transaction where month = 本月）为80元，而singo此时正好在外面胡吃海塞后在收银台买单，消费1000元，即新增了一条1000元的消费记录（insert transaction … ），并提交了事务，随后singo的老婆将singo当月信用卡消费的明细打印到A4纸上，却发现消费总额为1080元，singo的老婆很诧异，以为出 现了幻觉，幻读就这样产生了</p>
+</blockquote>
+</li>
+</ul>
+<p>针对上面的问题，一般定义有以下几种事务隔离级别：</p>
+<ul>
+<li><strong>READ UNCOMMITED</strong> (可以读取到未提交的数据)一个事务可以读到另一个事务未提交的结果，以上的<code>脏读</code>、<code>不可重复读</code>、<code>幻读</code>问题都可能会发生。</li>
+<li><strong>READ COMMITED</strong>  (可以读取到已提交的数据)只有在事务提交后，其更新结果才会被其他事务看见。<strong>可以解决上面的脏读问题</strong></li>
+<li><strong>Repeated Read</strong> (重复读取)在同一个事务中，对于同一份数据的读取结果总是相同的，无论其他事务对这份数据是否进行操作，以及整个事务是否提交。<strong>可以解决脏读、不可重复读问题</strong></li>
+<li><strong>Serializable</strong> (串行化) 隔离级别最高，牺牲了系统的并发性。<strong>可以解决并发事务的所有问题</strong></li>
+</ul>
+<p>大多数数据库的默认级别就是<code>Read committed</code>，如<code>Oracle</code>、<code>SQL Server</code>; </p>
+<p>注：<code>MySQL</code> 的默认隔离级别是<code>REPEATABLE-READ</code>，查看命令<code>select @@tx_isolation;</code></p>
+<p>例子参考：</p>
+<p><a href="http://singo107.iteye.com/blog/1175084" target="_blank" rel="noopener">数据库事务隔离级别</a></p>
+<p><a href="http://www.cnblogs.com/fjdingsd/p/5273008.html" target="_blank" rel="noopener">数据库事务的四大特性以及事务的隔离级别</a></p>
+<p><a href="http://blog.csdn.net/chosen0ne/article/details/10036775" target="_blank" rel="noopener">理解事务——原子性、一致性、隔离性和持久性</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2017/05/08/事务及隔离级别/" data-id="cjp27yxb70050h8rj6rruj0i9" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-书单" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/04/14/书单/" class="article-date">
@@ -143,7 +220,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/04/14/书单/" data-id="cjoqlefhh0050vyrj6g1up9db" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/04/14/书单/" data-id="cjp27yxb5004wh8rjcped9cgd" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
@@ -192,7 +269,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/04/12/Linux操作常用命令/" data-id="cjoqlefgc0037vyrjrh2xvbb0" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/04/12/Linux操作常用命令/" data-id="cjp27yx990030h8rjotdy758k" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
@@ -665,7 +742,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/04/06/java多线程编程核心技术/" data-id="cjoqlefix007avyrjb19t9hi0" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/04/06/java多线程编程核心技术/" data-id="cjp27yxc90079h8rju1ybh8yx" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li></ul>
@@ -787,7 +864,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/23/Thread类join方法中的 wait(0) 能用 sleep(0) 来替代模拟吗/" data-id="cjoqlefgm003qvyrjsv8wrpx8" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/23/Thread类join方法中的 wait(0) 能用 sleep(0) 来替代模拟吗/" data-id="cjp27yx9w003jh8rjdmvepju4" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/源码阅读/">源码阅读</a></li></ul>
@@ -868,7 +945,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/22/vim-技巧手记/" data-id="cjoqlefhd004tvyrjm4uoqu3u" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/22/vim-技巧手记/" data-id="cjp27yxb1004mh8rj1d6mj456" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vim/">vim</a></li></ul>
@@ -977,7 +1054,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/10/Read-Later/" data-id="cjoqlefgi003jvyrjinxkc93e" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/10/Read-Later/" data-id="cjp27yx9e003ch8rja5r6fd4e" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1059,7 +1136,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/08/svn-分支管理/" data-id="cjoqlefhc004rvyrjm24bpxgj" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/08/svn-分支管理/" data-id="cjp27yxb0004kh8rjux8t3bml" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/版本控制/">版本控制</a></li></ul>
@@ -1119,7 +1196,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/02/27/glossary-生词本/" data-id="cjoqlefgs003zvyrjxn5ef0lm" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/02/27/glossary-生词本/" data-id="cjp27yxa7003sh8rjt49les1w" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/英语/">英语</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/计划/">计划</a></li></ul>
@@ -1209,50 +1286,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/02/04/UML类图/" data-id="cjoqlefgp003tvyrjxaa8mxbd" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-node-js中的exports与module-exports" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/10/13/node-js中的exports与module-exports/" class="article-date">
-  <time datetime="2016-10-13T09:16:26.000Z" itemprop="datePublished">2016-10-13</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/13/node-js中的exports与module-exports/">node.js中的exports与module.exports</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Rererence for: <a href="https://cnodejs.org/topic/5231a630101e574521e45ef8" target="_blank" rel="noopener">https://cnodejs.org/topic/5231a630101e574521e45ef8</a></p>
-<h3 id="理解以下"><a href="#理解以下" class="headerlink" title="理解以下"></a>理解以下</h3><ol>
-<li><code>module.exports</code> 初始值为一个空对象<code>{}</code></li>
-<li><code>exports</code> 是指向<code>module.exports</code>的引用</li>
-<li><code>require(xxx)</code>返回的是<code>module.exports</code>而不是<code>exports</code></li>
-</ol>
-<p>如果<code>module.exports</code> 指向新的对象时，<code>exports</code> 断开了与 <code>module.exports</code> 的引用，那么通过 <code>exports = module.exports</code> 让 exports 重新指向 module.exports 即可</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2016/10/13/node-js中的exports与module-exports/" data-id="cjoqlefha004nvyrjlnjlaigt" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/02/04/UML类图/" data-id="cjp27yx9y003mh8rjmoic3kkb" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1277,7 +1311,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/">HTTP</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/通信/">通信</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/PostgreSQL/">PostgreSQL</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/">Nginx</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/Lua/">Lua</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/Openresty/">Openresty</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/">PostgreSQL</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/数据库/">数据库</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/">WEB</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/安全/">安全</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript语言/">javascript语言</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据库/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/英语/">英语</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计划/">计划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机基础/">计算机基础</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/">HTTP</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/HTTP/通信/">通信</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/数据库/PostgreSQL/">PostgreSQL</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/">Nginx</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/Lua/">Lua</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/Openresty/">Openresty</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/">PostgreSQL</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/PostgreSQL/数据库/">数据库</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/">WEB</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/WEB/安全/">安全</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript语言/">javascript语言</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据库/">数据库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/测试/">测试</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/英语/">英语</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计划/">计划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机基础/">计算机基础</a></li></ul>
     </div>
   </div>
 
@@ -1287,7 +1321,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMD/">CMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CommonJS/">CommonJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/">Nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript基础/">javascript基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/n2n/">n2n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/健身/">健身</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/协议/">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程-锁/">多线程 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/意志/">意志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/授权/">授权</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/服务/">服务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模块化/">模块化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码阅读/">源码阅读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/灰度发布/">灰度发布</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/版本控制/">版本控制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编码/">编码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/英语/">英语</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计划/">计划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运动/">运动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/进程/">进程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMD/">CMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CommonJS/">CommonJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/">Nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript基础/">javascript基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lua/">lua</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/n2n/">n2n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/健身/">健身</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/协议/">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/压力测试/">压力测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程-锁/">多线程 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/意志/">意志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/授权/">授权</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/服务/">服务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模块化/">模块化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码阅读/">源码阅读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/灰度发布/">灰度发布</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/版本控制/">版本控制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编码/">编码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/英语/">英语</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计划/">计划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运动/">运动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/进程/">进程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
     </div>
   </div>
 
@@ -1297,7 +1331,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CMD/" style="font-size: 10px;">CMD</a> <a href="/tags/Centos软件安装/" style="font-size: 15px;">Centos软件安装</a> <a href="/tags/CommonJS/" style="font-size: 10px;">CommonJS</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Nginx/" style="font-size: 10px;">Nginx</a> <a href="/tags/PostgreSQL基础/" style="font-size: 15px;">PostgreSQL基础</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/cassandra/" style="font-size: 10px;">cassandra</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/javascript函数/" style="font-size: 15px;">javascript函数</a> <a href="/tags/javascript基础/" style="font-size: 15px;">javascript基础</a> <a href="/tags/n2n/" style="font-size: 10px;">n2n</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/健身/" style="font-size: 10px;">健身</a> <a href="/tags/协议/" style="font-size: 10px;">协议</a> <a href="/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/tags/多线程-锁/" style="font-size: 10px;">多线程 锁</a> <a href="/tags/安全/" style="font-size: 10px;">安全</a> <a href="/tags/意志/" style="font-size: 10px;">意志</a> <a href="/tags/授权/" style="font-size: 10px;">授权</a> <a href="/tags/服务/" style="font-size: 10px;">服务</a> <a href="/tags/模块化/" style="font-size: 10px;">模块化</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/源码阅读/" style="font-size: 10px;">源码阅读</a> <a href="/tags/灰度发布/" style="font-size: 10px;">灰度发布</a> <a href="/tags/版本控制/" style="font-size: 10px;">版本控制</a> <a href="/tags/编码/" style="font-size: 15px;">编码</a> <a href="/tags/编程/" style="font-size: 10px;">编程</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/运动/" style="font-size: 10px;">运动</a> <a href="/tags/进程/" style="font-size: 10px;">进程</a> <a href="/tags/阅读/" style="font-size: 10px;">阅读</a>
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CMD/" style="font-size: 10px;">CMD</a> <a href="/tags/Centos软件安装/" style="font-size: 15px;">Centos软件安装</a> <a href="/tags/CommonJS/" style="font-size: 10px;">CommonJS</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Nginx/" style="font-size: 10px;">Nginx</a> <a href="/tags/PostgreSQL基础/" style="font-size: 15px;">PostgreSQL基础</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/cassandra/" style="font-size: 10px;">cassandra</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/javascript函数/" style="font-size: 15px;">javascript函数</a> <a href="/tags/javascript基础/" style="font-size: 15px;">javascript基础</a> <a href="/tags/lua/" style="font-size: 10px;">lua</a> <a href="/tags/n2n/" style="font-size: 10px;">n2n</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/健身/" style="font-size: 10px;">健身</a> <a href="/tags/协议/" style="font-size: 10px;">协议</a> <a href="/tags/压力测试/" style="font-size: 10px;">压力测试</a> <a href="/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/tags/多线程-锁/" style="font-size: 10px;">多线程 锁</a> <a href="/tags/安全/" style="font-size: 10px;">安全</a> <a href="/tags/意志/" style="font-size: 10px;">意志</a> <a href="/tags/授权/" style="font-size: 10px;">授权</a> <a href="/tags/服务/" style="font-size: 10px;">服务</a> <a href="/tags/模块化/" style="font-size: 10px;">模块化</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/源码阅读/" style="font-size: 10px;">源码阅读</a> <a href="/tags/灰度发布/" style="font-size: 10px;">灰度发布</a> <a href="/tags/版本控制/" style="font-size: 10px;">版本控制</a> <a href="/tags/编码/" style="font-size: 15px;">编码</a> <a href="/tags/编程/" style="font-size: 10px;">编程</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/运动/" style="font-size: 10px;">运动</a> <a href="/tags/进程/" style="font-size: 10px;">进程</a> <a href="/tags/阅读/" style="font-size: 10px;">阅读</a>
     </div>
   </div>
 
@@ -1323,6 +1357,10 @@
           </li>
         
           <li>
+            <a href="/2018/08/30/wrk-压力测试/">wrk 压力测试</a>
+          </li>
+        
+          <li>
             <a href="/2018/08/22/Supervisor的使用/">Supervisor的使用</a>
           </li>
         
@@ -1332,10 +1370,6 @@
         
           <li>
             <a href="/2018/08/05/Nginx-Lua-实现灰度发布/">Nginx+Lua 实现灰度发布</a>
-          </li>
-        
-          <li>
-            <a href="/2018/07/22/大白话简记TCP/">大白话简记TCP</a>
           </li>
         
       </ul>
