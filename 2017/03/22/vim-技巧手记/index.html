@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Poxi哥的博客">
 <meta property="og:description" content="根据文件内容查找文件：vimgrep 1234:vimgrep /Exception/ *.log    #查找目录下  所有含Exception 的 .log文件:vimgrep /Exception/ */*.log # 遍历子目录#搜索到的文件列表会加入到quickfix中去，执行::copen  排序，删除重复行 1234:sort   //可以直接排序，这个太好用了:g/^\(.*\)">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-07-27T15:45:03.531Z">
+<meta property="og:updated_time" content="2019-06-26T10:57:06.923Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="vim 技巧手记">
 <meta name="twitter:description" content="根据文件内容查找文件：vimgrep 1234:vimgrep /Exception/ *.log    #查找目录下  所有含Exception 的 .log文件:vimgrep /Exception/ */*.log # 遍历子目录#搜索到的文件列表会加入到quickfix中去，执行::copen  排序，删除重复行 1234:sort   //可以直接排序，这个太好用了:g/^\(.*\)">
@@ -105,7 +105,7 @@
 <figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">"ay</span></span><br><span class="line"><span class="comment">"ap</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>数字递增</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">插入模式下：Ctrl+r  ===&gt; =(等号) ===&gt; <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">100</span>)  回车</span><br></pre></td></tr></table></figure>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">插入模式下：Ctrl+r  ===&gt; =(等号) ===&gt; <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">100</span>)  回车</span><br><span class="line"># 格式化补齐 <span class="number">4</span> 位，<span class="number">0001</span>,<span class="number">0002</span>....</span><br><span class="line">=<span class="keyword">map</span>(<span class="built_in">range</span>(<span class="number">1</span>,<span class="number">100</span>), <span class="string">'printf('</span><span class="string">'%04d'</span><span class="string">', v:val)'</span>)</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>多文件内容查找替换</p>
 <figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">:<span class="keyword">args</span> *.jsp  #第一步：择定范围 *.jsp</span><br><span class="line">:<span class="keyword">argdo</span> %s#<span class="symbol">&lt;title&gt;</span>光大保德信&lt;/title&gt;#<span class="symbol">&lt;title&gt;</span>光大保德信基金&lt;/title&gt;#gc|<span class="keyword">update</span>   #替换内容“|<span class="keyword">update</span>”执行替换后并且存盘。</span><br></pre></td></tr></table></figure>
@@ -138,7 +138,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/22/vim-技巧手记/" data-id="cjwfuf39y004opmrjm2ehpeye" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/22/vim-技巧手记/" data-id="cjxd4kurw004oabrjroqu12et" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vim/">vim</a></li></ul>
