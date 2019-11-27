@@ -66,6 +66,59 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-字节序" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/16/字节序/" class="article-date">
+  <time datetime="2017-05-16T01:31:57.000Z" itemprop="datePublished">2017-05-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/16/字节序/">字节序</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>其实已经有几次写到过有关字节序的问题了，这里单独拎出来再写一次，是因为又淡忘了，特意抽象其根本问题再做一个简要的记录。</p>
+<p>抽象出的两个概念：</p>
+<ol>
+<li>存储地址：内存地址“从左至右”递增，可以理解往左是低位地址，往右是高位地址</li>
+<li>要存的值：比如1个数字 112233(十进制)、1个字符串 “112233”  —(这里两处的33都是尾巴)</li>
+</ol>
+<p>注意：1个xx需要多个字节表示的时候，才会有字节序的问题</p>
+<h4 id="面临的问题：-尾巴放到高的位置还是低的位置？"><a href="#面临的问题：-尾巴放到高的位置还是低的位置？" class="headerlink" title="面临的问题： 尾巴放到高的位置还是低的位置？"></a>面临的问题： 尾巴放到高的位置还是低的位置？</h4><p><strong>高尾端：高的位置存尾巴</strong></p>
+<p><strong>低尾端：低的位置存尾巴</strong></p>
+<p><img src="http://wx4.sinaimg.cn/mw690/929194b4gy1ffmybwhwrwj20jm0ax0sr.jpg" alt="字节序"></p>
+<h4 id="比拟"><a href="#比拟" class="headerlink" title="比拟"></a>比拟</h4><p>一个<code>词</code>中<code>字</code>的顺序 (普遍：从左至右念，牌匾：从右至左念)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">法语，公主，四十</span><br></pre></td></tr></table></figure></p>
+<p>一行文字中字的读取顺序<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">严管妻是本；妇顺夫为实.</span><br></pre></td></tr></table></figure></p>
+<p>解析的顺序不一样意义就大不一样咯。</p>
+<h4 id="其他叫法"><a href="#其他叫法" class="headerlink" title="其他叫法"></a>其他叫法</h4><p><code>高尾端/大端序/大尾序</code></p>
+<p><code>低尾端/小端序/小尾序</code></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2017/05/16/字节序/" data-id="ck3gpyxxo005xb4rjao6y6yhk" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编码/">编码</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-事务及隔离级别" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/05/08/事务及隔离级别/" class="article-date">
@@ -133,7 +186,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/05/08/事务及隔离级别/" data-id="ck3gpol8000518trjwzaqyz6u" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/05/08/事务及隔离级别/" data-id="ck3gpyxx00054b4rjx8modwrd" class="article-share-link">Share</a>
       
       
     </footer>
@@ -220,7 +273,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/04/14/书单/" data-id="ck3gpol7y004x8trjn13qi0qs" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/04/14/书单/" data-id="ck3gpyxwz0051b4rjgav0ta4l" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
@@ -269,7 +322,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/04/12/Linux操作常用命令/" data-id="ck3gpol6k00318trjenk7qf9k" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/04/12/Linux操作常用命令/" data-id="ck3gpyxve0032b4rjysilafvo" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
@@ -742,7 +795,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/04/06/java多线程编程核心技术/" data-id="ck3gpol9h007a8trj6co360ap" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/04/06/java多线程编程核心技术/" data-id="ck3gpyxy5007bb4rjz5uo0jj2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li></ul>
@@ -864,7 +917,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/23/Thread类join方法中的 wait(0) 能用 sleep(0) 来替代模拟吗/" data-id="ck3gpol6v003k8trjmivz391w" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/23/Thread类join方法中的 wait(0) 能用 sleep(0) 来替代模拟吗/" data-id="ck3gpyxvx003nb4rj2k7hgl0c" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/源码阅读/">源码阅读</a></li></ul>
@@ -945,7 +998,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/22/vim-技巧手记/" data-id="ck3gpol7t004n8trjbnqy6vnk" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/22/vim-技巧手记/" data-id="ck3gpyxwt004pb4rjmvk1drj3" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vim/">vim</a></li></ul>
@@ -1054,7 +1107,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/10/Read-Later/" data-id="ck3gpol6r003d8trj7dbb6sp8" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/10/Read-Later/" data-id="ck3gpyxvs003fb4rj4631edxs" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1136,7 +1189,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/08/svn-分支管理/" data-id="ck3gpol7r004l8trjucgo375t" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/08/svn-分支管理/" data-id="ck3gpyxws004nb4rjopcntr6a" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/版本控制/">版本控制</a></li></ul>
@@ -1196,99 +1249,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/02/27/glossary-生词本/" data-id="ck3gpol75003t8trj1mjm28wc" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/02/27/glossary-生词本/" data-id="ck3gpyxw4003wb4rjovxysegn" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/英语/">英语</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/计划/">计划</a></li></ul>
 
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-UML类图" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/02/04/UML类图/" class="article-date">
-  <time datetime="2017-02-04T03:01:43.000Z" itemprop="datePublished">2017-02-04</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/04/UML类图/">UML类图</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><img src="http://ww1.sinaimg.cn/large/929194b4gy1ftlvuuqc02j20pm0m2qaj.jpg" alt=""></p>
-<h4 id="1-类，-动物矩形框代表一个类-Class-，类分为三层"><a href="#1-类，-动物矩形框代表一个类-Class-，类分为三层" class="headerlink" title="1. 类， 动物矩形框代表一个类(Class)，类分为三层"></a>1. 类， <code>动物</code>矩形框代表一个类(Class)，类分为三层</h4><ul>
-<li>第一层显示类的名称，如果是抽象类，则用斜体表示</li>
-<li>第二层显示类的特性，通常是字段和属性</li>
-<li>第三层是累的操作，通常是方法和行为，注意前面的符号，<code>+</code>表示<code>public</code>，<code>-</code>表示<code>private</code>，<code>#</code>表示<code>protected</code></li>
-</ul>
-<div style="margin: auto;"><br>    <img src="http://ww1.sinaimg.cn/large/929194b4gy1ftlvqqyqrsj209v030q3d.jpg"><br></div>
-
-<h4 id="2-接口，-飞翔表示一个接口"><a href="#2-接口，-飞翔表示一个接口" class="headerlink" title="2. 接口， 飞翔表示一个接口"></a>2. 接口， <code>飞翔</code>表示一个接口</h4><ol>
-<li><p>第一种：</p>
-<ul>
-<li>第一行是接口名称，顶部有<code>&lt;&lt;interface&gt;&gt;</code></li>
-<li>第二行是接口方法</li>
-</ul>
-</li>
-<li><p>另一种接口表示方法：</p>
-<ul>
-<li>棒棒糖表示法，就是唐老鸭实现了‘讲人话’接口</li>
-</ul>
-</li>
-</ol>
-<div style="margin: auto;"><br>    <img src="http://ww1.sinaimg.cn/large/929194b4gy1ftlvro0f3bj20tb0b541v.jpg"><br></div>
-
-<h4 id="3-继承"><a href="#3-继承" class="headerlink" title="3. 继承"></a>3. 继承</h4><ul>
-<li><code>空心三角</code> + <code>实线</code>，鸟继承自动物</li>
-</ul>
-<div style="margin: auto;"><br>    <img src="http://ww1.sinaimg.cn/large/929194b4gy1ftlvs26w67j209y08xwfk.jpg"><br></div>
-
-<h4 id="4-实现接口"><a href="#4-实现接口" class="headerlink" title="4. 实现接口"></a>4. 实现接口</h4><ul>
-<li><code>空心三角</code> + <code>虚线</code>， 大雁实线了飞翔接口</li>
-</ul>
-<div style="margin: auto;"><br>    <img src="http://ww1.sinaimg.cn/large/929194b4gy1ftlvsepdv8j20tb0awgo5.jpg"><br></div>
-
-<h4 id="5-关联关系"><a href="#5-关联关系" class="headerlink" title="5. 关联关系"></a>5. 关联关系</h4><ul>
-<li><code>实线箭头</code>表示关联关系，企鹅要知道气候的变化</li>
-</ul>
-<div style="margin: auto;"><br>    <img src="http://ww1.sinaimg.cn/large/929194b4gy1ftlvsokl81j20tb09jtb8.jpg"><br></div>
-
-<h4 id="6-聚合关系（Aggregation）"><a href="#6-聚合关系（Aggregation）" class="headerlink" title="6. 聚合关系（Aggregation）"></a>6. 聚合关系（Aggregation）</h4><ul>
-<li><code>空心菱形</code> + <code>实线箭头</code>，大雁是群居动物，每只大雁都是属于一个雁群，一个雁群可以有多只大雁，所以他们就是聚合(Aggregation)关系。<strong>聚合表示一种弱‘拥有’关系，体现A对象可包含B对象，但B对象不是A对象的一部分。</strong></li>
-</ul>
-<div style="margin: auto;"><br>    <img src="http://ww1.sinaimg.cn/large/929194b4gy1ftlvt8ot25j208y06gdgh.jpg"><br>    <img src="http://ww1.sinaimg.cn/large/929194b4gy1ftlvtizur7j20tg041401.jpg"><br></div>
-
-<h4 id="7-组合-合成关系（Composition）"><a href="#7-组合-合成关系（Composition）" class="headerlink" title="7. 组合/合成关系（Composition）"></a>7. 组合/合成关系（Composition）</h4><ul>
-<li><code>实心菱形</code> + <code>实线箭头</code>，<strong>组合关系是一种强拥有关系，体现了严格的部分和整体的关系。</strong> 鸟和其翅膀是组合关系，他们是部分和整体的关系，生命周期相同。连线两端的数字称为基数，表明这一端的类可以有几个实例。关联关系、聚合关系也可以有基数。</li>
-</ul>
-<div style="margin: auto;"><br>    <img src="http://ww1.sinaimg.cn/large/929194b4gy1ftlvtvsp64j20tk0ddq66.jpg"><br></div>
-
-<h4 id="8-依赖关系"><a href="#8-依赖关系" class="headerlink" title="8. 依赖关系"></a>8. 依赖关系</h4><ul>
-<li><code>虚线箭头</code>表示依赖关系，动物有新陈代谢、能繁殖的特征，需要依赖氧气、水等。所以动物依赖氧气和水。</li>
-</ul>
-<div style="margin: auto;"><br>    <img src="http://ww1.sinaimg.cn/large/929194b4gy1ftlvu8tmokj20ia09nwg6.jpg"><br>    <img src="http://ww1.sinaimg.cn/large/929194b4gy1ftlvujtknbj20th06l3zy.jpg"><br></div>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/02/04/UML类图/" data-id="ck3gpol6x003n8trj78mkxu0x" class="article-share-link">Share</a>
-      
-      
     </footer>
   </div>
   
@@ -1340,7 +1305,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li></ul>
     </div>
   </div>
 
@@ -1351,6 +1316,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/11/27/Idea简记/">Idea </a>
+          </li>
         
           <li>
             <a href="/2018/08/31/Cassandra-数据库使用小记/">Cassandra 数据库使用小记</a>
@@ -1366,10 +1335,6 @@
         
           <li>
             <a href="/2018/08/09/Lua-OpenResty-开发环境搭建/">Lua OpenResty 开发环境搭建</a>
-          </li>
-        
-          <li>
-            <a href="/2018/08/05/Nginx-Lua-实现灰度发布/">Nginx+Lua 实现灰度发布</a>
           </li>
         
       </ul>
