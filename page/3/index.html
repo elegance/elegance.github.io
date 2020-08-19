@@ -66,6 +66,72 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-javascript模块化方式简记" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/23/javascript模块化方式简记/" class="article-date">
+  <time datetime="2017-05-23T03:19:46.000Z" itemprop="datePublished">2017-05-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/23/javascript模块化方式简记/">javascript模块化方式简记</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h5 id="CommonJS-规范"><a href="#CommonJS-规范" class="headerlink" title="CommonJS 规范"></a><code>CommonJS</code> 规范</h5><p><code>node.js</code>是服务端的编程，需要与操作系统、其他应用互动，需要模块化，否则无法编程，而在浏览器其复杂性有限，没有模块化也不是特别大的问题。而<code>node.js</code>的模块系统就是操作<code>CommonJS</code>规范实现的。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 文件A</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 文件B</span></span><br><span class="line"><span class="keyword">var</span> b = <span class="built_in">require</span>(<span class="string">'./A'</span>);</span><br></pre></td></tr></table></figure></p>
+<h5 id="AMD-规范"><a href="#AMD-规范" class="headerlink" title="AMD 规范"></a><code>AMD</code> 规范</h5><p>有了服务端模块化后，很自然地，大家就想要客户端模块化。而且最好能与服务端兼容，模块都不用修改，在服务器和浏览器都可以运行。但是<strong>浏览器加载<code>模块文件</code>是跨网络的</strong>，加载可能会造成假死，后面的代码无法运行。而服务端是在本地硬盘的，这对服务端不是问题。因此，浏览器端的模块，不能采用”同步加载”（synchronous），只能采用”异步加载”（asynchronous）。这就是AMD规范诞生的背景。</p>
+<p><code>AMD</code>是”Asynchronous Module Definition”，意识就是“异步模块定义”。它采用异步方式加载模块，模块的加载不影响他后面语句的运行。所有依赖这个模块的语句，都定义在回调函数中，等模块加载完成后，这个回调函数才会运行。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">require</span>([<span class="string">'a'</span>, <span class="string">'b'</span>], <span class="function"><span class="keyword">function</span>(<span class="params">a, b</span>) </span>&#123; <span class="comment">// 依赖前置，提前执行</span></span><br><span class="line">    a.xx();</span><br><span class="line">    b.xx();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p><a href="http://requirejs.org/" target="_blank" rel="noopener"><code>require.js</code></a>是<code>AMD</code>规范的一个实现。</p>
+<h5 id="CMD-规范"><a href="#CMD-规范" class="headerlink" title="CMD 规范"></a><code>CMD</code> 规范</h5><p><code>CMD</code> 是 <code>SeaJS</code> 在推广过程中对模块定义的规范化产出<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">define(<span class="function"><span class="keyword">function</span>(<span class="params">require, exports, module</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="built_in">require</span>(<span class="string">'./a'</span>);</span><br><span class="line">    a.xxx();</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">var</span> b = <span class="built_in">require</span>(<span class="string">'./b'</span>); <span class="comment">//依赖就近书写</span></span><br><span class="line">    b.xxx();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<h4 id="静态加载与动态加载"><a href="#静态加载与动态加载" class="headerlink" title="静态加载与动态加载"></a>静态加载与动态加载</h4><p><code>es6</code>之前模块加载的两种方式</p>
+<ul>
+<li>静态加载：在编译阶段进行，把所有需要的依赖打包到一个文件</li>
+<li>动态加载：在运行时加载</li>
+</ul>
+<p><code>AMD</code>标准是动态加载的代表，而<code>CommonJS</code>是静态加载的代表。</p>
+<p><code>AMD</code>主要用在浏览器上，是异步加载的，而<code>NodeJS</code>在服务端，同步加载的方式更易被接收，所以用的是<code>CommonJS</code>。</p>
+<h5 id="ES6"><a href="#ES6" class="headerlink" title="ES6"></a><code>ES6</code></h5><p><code>ES6</code>采用哪种加载机制了？ <code>ES6</code>既希望用简单的声明来完成静态加载，有不愿放弃动态加载的特性，而这两种方式几乎不能简单的同时实现，所以<code>ES6</code>提供了两种独立的模块加载方法。</p>
+<ol>
+<li><p>声明的方式</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;foo&#125; <span class="keyword">from</span> some_module;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过<code>System.import</code> API</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">System.import(<span class="string">'some_module)</span></span><br><span class="line"><span class="string">    .then(some_module =&gt; &#123;</span></span><br><span class="line"><span class="string">        // ...</span></span><br><span class="line"><span class="string">    &#125;)</span></span><br><span class="line"><span class="string">    .catch(error =&gt; &#123;</span></span><br><span class="line"><span class="string">        // ...</span></span><br><span class="line"><span class="string">    &#125;);</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>模块导出：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// some_module.js</span></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">abc</span>(<span class="params"></span>) </span>&#123;&#125; <span class="comment">// export 一个命名 function</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125; <span class="comment">// export default function</span></span><br><span class="line"><span class="keyword">export</span> num = <span class="number">123</span> <span class="comment">// export 一个数值</span></span><br><span class="line"><span class="keyword">export</span> obj = &#123;&#125;</span><br><span class="line"><span class="keyword">export</span> &#123; obj <span class="keyword">as</span> <span class="keyword">default</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// import</span></span><br><span class="line"><span class="keyword">import</span> exp <span class="keyword">from</span> <span class="string">'some_module'</span> <span class="comment">// default export</span></span><br><span class="line"><span class="keyword">import</span> &#123;<span class="keyword">default</span> <span class="keyword">as</span> myModule&#125; <span class="keyword">from</span> <span class="string">'some_module'</span> <span class="comment">// rename</span></span><br><span class="line"><span class="keyword">import</span> &#123;abc, num, obj&#125; <span class="keyword">from</span> <span class="string">'some_module'</span></span><br></pre></td></tr></table></figure></p>
+<p>参考自：</p>
+<ul>
+<li><a href="https://blog.wilddog.com/?p=587" target="_blank" rel="noopener">写了十年JS却不知道模块化为何物？</a></li>
+<li><a href="https://github.com/seajs/seajs/issues/277" target="_blank" rel="noopener">Sea.js 与 RequireJS 的异同</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2012/10/asynchronous_module_definition.html" target="_blank" rel="noopener">Javascript模块化编程（二）：AMD规范</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2017/05/23/javascript模块化方式简记/" data-id="cke189pyf004ghnrjgd0c5dt3" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AMD/">AMD</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CMD/">CMD</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CommonJS/">CommonJS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/模块化/">模块化</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-字节序" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/05/16/字节序/" class="article-date">
@@ -107,7 +173,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/05/16/字节序/" data-id="ckcfz6cy50063d2rjnfuig097" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/05/16/字节序/" data-id="cke189pzg0064hnrjn5dsymfz" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编码/">编码</a></li></ul>
@@ -186,7 +252,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/05/08/事务及隔离级别/" data-id="ckcfz6cxp005ad2rj0nviel3j" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/05/08/事务及隔离级别/" data-id="cke189pz3005ehnrjy26s6xtb" class="article-share-link">Share</a>
       
       
     </footer>
@@ -273,7 +339,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/04/14/书单/" data-id="ckcfz6cxi0057d2rjblj0au0x" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/04/14/书单/" data-id="cke189pyx0059hnrjap9ikgox" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
@@ -322,7 +388,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/04/12/Linux操作常用命令/" data-id="ckcfz6cw90038d2rjnneeo5z5" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/04/12/Linux操作常用命令/" data-id="cke189pxl003chnrj5hnjp126" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
@@ -795,7 +861,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/04/06/java多线程编程核心技术/" data-id="ckcfz6cyr007hd2rjy8gqf23t" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/04/06/java多线程编程核心技术/" data-id="cke189q01007ihnrjj67zl8fc" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li></ul>
@@ -917,7 +983,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/23/Thread类join方法中的 wait(0) 能用 sleep(0) 来替代模拟吗/" data-id="ckcfz6cwk003td2rjfji9p7xw" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/23/Thread类join方法中的 wait(0) 能用 sleep(0) 来替代模拟吗/" data-id="cke189pxw003vhnrjvl3sgd34" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/源码阅读/">源码阅读</a></li></ul>
@@ -998,7 +1064,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/22/vim-技巧手记/" data-id="ckcfz6cxd004vd2rjcis4a7hx" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/22/vim-技巧手记/" data-id="cke189pyn004zhnrjt8y09xp7" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vim/">vim</a></li></ul>
@@ -1107,7 +1173,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/10/Read-Later/" data-id="ckcfz6cwf003ld2rjkarmi7ca" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/10/Read-Later/" data-id="cke189pxs003phnrjv69aaq6j" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1189,70 +1255,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/08/svn-分支管理/" data-id="ckcfz6cxb004td2rj70qu0o2t" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/08/svn-分支管理/" data-id="cke189pym004uhnrj5rwtrefn" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/版本控制/">版本控制</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-glossary-生词本" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/02/27/glossary-生词本/" class="article-date">
-  <time datetime="2017-02-27T08:29:42.000Z" itemprop="datePublished">2017-02-27</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/英语/">英语</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/27/glossary-生词本/">glossary-生词本</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="2017年10月"><a href="#2017年10月" class="headerlink" title="2017年10月"></a>2017年10月</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">determine   确定；判断</span><br></pre></td></tr></table></figure>
-<h4 id="2017年9月"><a href="#2017年9月" class="headerlink" title="2017年9月"></a>2017年9月</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">biased      有偏见的；有偏的</span><br><span class="line">coarsening  粗化；（使）变粗糙</span><br><span class="line">elimination 消除；淘汰</span><br><span class="line">adaptive    适应的；有适应能力的</span><br><span class="line">spinning    使...旋转；纺纱</span><br><span class="line">arrange     安排</span><br><span class="line">threats     威胁</span><br><span class="line">earnings    收益</span><br><span class="line">emerged     出现</span><br></pre></td></tr></table></figure>
-<h4 id="2017年8月"><a href="#2017年8月" class="headerlink" title="2017年8月"></a>2017年8月</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conventionality 惯例；习俗</span><br><span class="line">barrier     屏障</span><br><span class="line">etcetera    等等;etc</span><br></pre></td></tr></table></figure>
-<h4 id="2017年7月"><a href="#2017年7月" class="headerlink" title="2017年7月"></a>2017年7月</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">simulate    模拟</span><br><span class="line">genuine     真正的</span><br><span class="line">avoid       避免；避开</span><br><span class="line">slight      轻微；略</span><br><span class="line">aboundant   丰富</span><br><span class="line">corresponds 对应</span><br><span class="line">proving     证明</span><br><span class="line">idempotent  幂等</span><br><span class="line">resigned    辞职</span><br><span class="line">painful     痛苦</span><br><span class="line">implicit    含蓄；简化</span><br><span class="line">injustice   不公平；冤屈</span><br><span class="line">witness     目睹；见证</span><br><span class="line">principals  身份</span><br><span class="line">credentials 证书；凭证</span><br></pre></td></tr></table></figure>
-<h4 id="2017年6月"><a href="#2017年6月" class="headerlink" title="2017年6月"></a>2017年6月</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">celebrate   庆祝；歌颂</span><br><span class="line">elixir      炼金药；长生不老药</span><br><span class="line">briefly     简要的；略略</span><br><span class="line">skeptics    怀疑者</span><br><span class="line">strangers   陌生人；外人</span><br><span class="line">exploration 勘探</span><br></pre></td></tr></table></figure>
-<h4 id="2017年5月"><a href="#2017年5月" class="headerlink" title="2017年5月"></a>2017年5月</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">paradigm    范例；模范</span><br><span class="line">shortcuts   快捷键</span><br><span class="line">consensus   共识；合意</span><br><span class="line">majority    多数；成年</span><br><span class="line">vote        投票；投票表决</span><br><span class="line">hipster     潮人；（指衣服）低到臀部的</span><br><span class="line">collaborator  协作者；合作者</span><br><span class="line">elusive     难以捉摸的；不易记住的</span><br><span class="line">sensitive   敏感的；易受影响的；</span><br><span class="line">throttle    节流；减速</span><br></pre></td></tr></table></figure>
-<h4 id="2017年4月"><a href="#2017年4月" class="headerlink" title="2017年4月"></a>2017年4月</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">triangle    三角形；三人一组</span><br><span class="line">supplementary 增补的；追加的</span><br><span class="line">multilingual 使用多语言的</span><br><span class="line">surrogate   代理；代表</span><br><span class="line">brief       短暂的；简明的</span><br><span class="line">desire      渴望；希望</span><br><span class="line">innovation  改革；创新</span><br><span class="line">undergraduate 大学生；本科</span><br><span class="line">volunteer   志愿者；自愿的</span><br><span class="line">sweep       打扫；清除</span><br><span class="line">elapsed     过去；消逝</span><br><span class="line">pursuit     追赶</span><br><span class="line">finery      华丽；服饰</span><br><span class="line">sneakers    运动鞋；球鞋</span><br><span class="line">trouser     裤子</span><br><span class="line">leather     皮革制品；皮的</span><br></pre></td></tr></table></figure>
-<h4 id="2017年3月"><a href="#2017年3月" class="headerlink" title="2017年3月"></a>2017年3月</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">candidate   候选；候选人</span><br><span class="line">snippet     片段；小片</span><br><span class="line">compete     竞争；竞赛</span><br><span class="line">peek        偷看；窥视</span><br><span class="line">trait       特性；少许</span><br><span class="line">assembly    装配；集会</span><br><span class="line">interrupt   打断；阻止</span><br><span class="line">instead     代替；反而</span><br><span class="line">inherently  本质上；固有地</span><br><span class="line">illegal     非法的；违反规则的</span><br><span class="line">segment     环节；部分</span><br><span class="line">pessimistic 悲观的；厌世的</span><br><span class="line">mutex       互斥</span><br><span class="line">acquire     学到；获得</span><br><span class="line">stamp       邮票；戳</span><br><span class="line">volatile    易变的；不稳定的</span><br><span class="line">reentrant   再进去</span><br><span class="line">mutation    变异；变化</span><br><span class="line">additional   额外的；附加的</span><br><span class="line">spread      伸开；展开</span><br><span class="line">combine     使结合；兼有</span><br><span class="line">craft       手艺；诡计</span><br><span class="line">behaviour   行为；举止</span><br></pre></td></tr></table></figure>
-<h4 id="2017年2月"><a href="#2017年2月" class="headerlink" title="2017年2月"></a>2017年2月</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">stage       舞台；阶段</span><br><span class="line">pick        挑选；选中</span><br><span class="line">omit        省略；删掉</span><br><span class="line">severity    严重性</span><br><span class="line">trivial     不重要的；琐屑的</span><br><span class="line">critical    危急；关键</span><br><span class="line">major       重大的；主要</span><br><span class="line">minor       次要；二流的</span><br><span class="line">clarity     清晰度</span><br><span class="line">lack        缺乏；缺少</span><br><span class="line">irrelevant  不相干；落后</span><br><span class="line">shim        垫片</span><br><span class="line">concrete    具体的</span><br><span class="line">paragraph   段落</span><br><span class="line">tidy        整洁的</span><br><span class="line">messy       混乱的</span><br><span class="line">accumulator 累加器</span><br><span class="line">embed       嵌入</span><br><span class="line">capability   能力；性能</span><br></pre></td></tr></table></figure>
-<h4 id="2017年1月"><a href="#2017年1月" class="headerlink" title="2017年1月"></a>2017年1月</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">primitive   原始的；原生的</span><br><span class="line">explicitly  明确的</span><br><span class="line">wildcard    通配符</span><br><span class="line">investment  投资；投入</span><br><span class="line">equity      公平；产权</span><br><span class="line">venture     创业；风险</span><br><span class="line">partner     伙伴；搭档</span><br><span class="line">limited     限定；有限</span><br><span class="line">improve     提高；改善</span><br><span class="line">atomicity   原子性</span><br><span class="line">consistency 一致性</span><br><span class="line">principle   原则；原理</span><br><span class="line">isolatioin  隔离；隔绝</span><br><span class="line">durable     持久的；耐用的</span><br><span class="line">lasting     持久；永久</span><br><span class="line">partition   划分；分割</span><br><span class="line">segregation 隔离</span><br><span class="line">prevent     防止；预防</span><br><span class="line">leak        泄漏；透露</span><br><span class="line">least       最小</span><br><span class="line">nested      嵌套</span><br><span class="line">obtain      获得；得到</span><br><span class="line">various     各种；各个</span><br></pre></td></tr></table></figure>
-<h4 id="2016年"><a href="#2016年" class="headerlink" title="2016年"></a>2016年</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">coercion    强迫；压迫</span><br><span class="line">inherit     继承</span><br><span class="line">introduction 介绍；引言</span><br><span class="line">legacy      遗产</span><br><span class="line">tutorial    教程；个别指导</span><br><span class="line">syntax      语法；句法</span><br><span class="line">recommended 推荐的</span><br><span class="line">below       以下；下面</span><br><span class="line">above       以上；上</span><br><span class="line">integrate   整合</span><br><span class="line">properly    正确的；适当的</span><br><span class="line">following   以下</span><br><span class="line">prepare     准备</span><br><span class="line">hook        钩子</span><br><span class="line">manipulation 操纵；伪造</span><br><span class="line">centric     中心</span><br><span class="line">specific    具体；特定</span><br><span class="line">encounter   遭遇；面临</span><br><span class="line">effects     影响</span><br><span class="line">via         经过；通过</span><br><span class="line">intentionally 故意地</span><br><span class="line">stateless   无状态；无国籍</span><br><span class="line">obfuscate   是模糊；使混乱</span><br><span class="line">also        也</span><br><span class="line">rely        依靠；依赖</span><br><span class="line">incorporate 包含；合并</span><br><span class="line">perhaps     也许（表示不确定）</span><br><span class="line">analytics   分析</span><br><span class="line">domestic    国内的；家庭的</span><br><span class="line">manual      手册；手工</span><br><span class="line">cause       原因；事业</span><br><span class="line">external    外部的</span><br><span class="line">terminated  终止</span><br><span class="line">delimited   分隔；划界</span><br><span class="line">coalesce    联合；合并</span><br><span class="line">exact       精确；确切</span><br><span class="line">enhanced    增强；提高</span><br><span class="line">original    原始的</span><br><span class="line">correct     正确的；更正</span><br><span class="line">expect      预期</span><br><span class="line">deferred    延期；推迟</span><br><span class="line">optimized   优化的</span><br><span class="line">structured  结构化的</span><br><span class="line">handful     少数</span><br><span class="line">visit       访问；参观</span><br><span class="line">compatible  兼容</span><br><span class="line">seveval     一些；几个</span><br><span class="line">scene       场面；现场</span><br><span class="line">launch      发射；发动</span><br><span class="line">detect      发现</span><br><span class="line">latency     潜伏；延迟</span><br><span class="line">responder   响应者；应答器</span><br><span class="line">scaffold    脚手架</span><br><span class="line">draft       草稿；草案</span><br><span class="line">landscape   景观；风景</span><br><span class="line">asset       资产</span><br><span class="line">blame       怪；责备</span><br><span class="line">partial     部分</span><br><span class="line">separate    分离</span><br><span class="line">promote     促进；提升</span><br><span class="line">demote      降级</span><br></pre></td></tr></table></figure>
-<h4 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">for demonstration purpose 为了演示(示范)的目的</span><br><span class="line">think about         想一想；()</span><br><span class="line">aka (also known as) 又名；也称为</span><br><span class="line">CISC (Complex Instruction Set Computing)  复杂指令集；(如x86指令集)</span><br><span class="line">RISC (Reduce Instruction Set Computing)   精简指令集；</span><br><span class="line">in other words      换句话说</span><br><span class="line">no longer           不再</span><br><span class="line">such as             例如</span><br><span class="line">table of contents   目录</span><br><span class="line">getting started     入门；开始</span><br><span class="line">should nerver       不应该</span><br><span class="line">general purpose     一般用途；通用的</span><br><span class="line">comes with          自带；配备</span><br><span class="line">behind the scenes   幕后</span><br></pre></td></tr></table></figure>
-<h4 id="clojure-flavored-javascript"><a href="#clojure-flavored-javascript" class="headerlink" title="clojure-flavored-javascript"></a><a href="https://oyanglul.us/clojure-flavored-javascript/" target="_blank" rel="noopener">clojure-flavored-javascript</a></h4><blockquote>
-<p>Think about how we gonna implement the same thing if not using map </p>
-</blockquote>
-<blockquote>
-<p>Programmer need to think about nearly every step the machine can understand.</p>
-</blockquote>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/02/27/glossary-生词本/" data-id="ckcfz6cwr0042d2rj4exeqc3x" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/英语/">英语</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/计划/">计划</a></li></ul>
 
     </footer>
   </div>
@@ -1305,7 +1311,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li></ul>
     </div>
   </div>
 
@@ -1316,6 +1322,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/08/19/ConnectTimeout、SocketTimeout/">ConnectTimeout、SocketTimeout</a>
+          </li>
         
           <li>
             <a href="/2019/11/27/Idea简记/">Idea </a>
@@ -1331,10 +1341,6 @@
         
           <li>
             <a href="/2018/08/22/Supervisor的使用/">Supervisor的使用</a>
-          </li>
-        
-          <li>
-            <a href="/2018/08/09/Lua-OpenResty-开发环境搭建/">Lua OpenResty 开发环境搭建</a>
           </li>
         
       </ul>
