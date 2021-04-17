@@ -7,18 +7,18 @@
   
   <title>Linux操作常用命令 | 我的个人poxi</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="记录一些常用的技巧，隔一段时间不用又给淡忘了。 打包压缩、解压1234567// .tar.bz2 包# tar -jcv -f /root/test/etc.tar.bz2 /etc/# tar -jxv -f  /root/test/etc.tar.bz2  -C /tmp/// .tar.gz 包# tar -zcv -f /root/test/etc.tar.gz /etc/# tar -">
+  <meta name="description" content="记录一些常用的技巧，隔一段时间不用又给淡忘了。 开机启动项 创建服务  12345678910vim /etc/systemd/system/disk-space-check.service[Unit]After=network.service[Service]ExecStart=/usr/local/bin/disk-space-check.sh[Install]WantedBy=default">
 <meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux操作常用命令">
 <meta property="og:url" content="http://blog.ouronghui.com/2017/04/12/Linux操作常用命令/index.html">
 <meta property="og:site_name" content="我的个人poxi">
-<meta property="og:description" content="记录一些常用的技巧，隔一段时间不用又给淡忘了。 打包压缩、解压1234567// .tar.bz2 包# tar -jcv -f /root/test/etc.tar.bz2 /etc/# tar -jxv -f  /root/test/etc.tar.bz2  -C /tmp/// .tar.gz 包# tar -zcv -f /root/test/etc.tar.gz /etc/# tar -">
+<meta property="og:description" content="记录一些常用的技巧，隔一段时间不用又给淡忘了。 开机启动项 创建服务  12345678910vim /etc/systemd/system/disk-space-check.service[Unit]After=network.service[Service]ExecStart=/usr/local/bin/disk-space-check.sh[Install]WantedBy=default">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-07-22T06:09:17.211Z">
+<meta property="og:updated_time" content="2021-04-17T12:41:15.140Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux操作常用命令">
-<meta name="twitter:description" content="记录一些常用的技巧，隔一段时间不用又给淡忘了。 打包压缩、解压1234567// .tar.bz2 包# tar -jcv -f /root/test/etc.tar.bz2 /etc/# tar -jxv -f  /root/test/etc.tar.bz2  -C /tmp/// .tar.gz 包# tar -zcv -f /root/test/etc.tar.gz /etc/# tar -">
+<meta name="twitter:description" content="记录一些常用的技巧，隔一段时间不用又给淡忘了。 开机启动项 创建服务  12345678910vim /etc/systemd/system/disk-space-check.service[Unit]After=network.service[Service]ExecStart=/usr/local/bin/disk-space-check.sh[Install]WantedBy=default">
   
     <link rel="alternate" href="/atom.xml" title="我的个人poxi" type="application/atom+xml">
   
@@ -92,7 +92,25 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>记录一些常用的技巧，隔一段时间不用又给淡忘了。</p>
-<h3 id="打包压缩、解压"><a href="#打包压缩、解压" class="headerlink" title="打包压缩、解压"></a>打包压缩、解压</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// .tar.bz2 包</span><br><span class="line"><span class="meta">#</span><span class="bash"> tar -jcv -f /root/<span class="built_in">test</span>/etc.tar.bz2 /etc/</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> tar -jxv -f  /root/<span class="built_in">test</span>/etc.tar.bz2  -C /tmp/</span></span><br><span class="line"></span><br><span class="line">// .tar.gz 包</span><br><span class="line"><span class="meta">#</span><span class="bash"> tar -zcv -f /root/<span class="built_in">test</span>/etc.tar.gz /etc/</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> tar -zxv -f  /root/<span class="built_in">test</span>/etc.tar.gz  -C /tmp/</span></span><br></pre></td></tr></table></figure>
+<h3 id="开机启动项"><a href="#开机启动项" class="headerlink" title="开机启动项"></a>开机启动项</h3><ol>
+<li>创建服务</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/systemd/system/disk-space-check.service</span><br><span class="line"></span><br><span class="line">[Unit]</span><br><span class="line">After=network.service</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">ExecStart=/usr/local/bin/disk-space-check.sh</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=default.target</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>创建脚本</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/bin/bash</span><br><span class="line">date &gt; /root/disk_space_report.txt</span><br><span class="line">du -sh /home/ &gt;&gt; /root/disk_space_report.txt</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li><p>设置脚本权限</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> sudo chmod 744 /usr/local/bin/disk-space-check.sh</span><br><span class="line"><span class="meta">$</span> sudo chmod 664 /etc/systemd/system/disk-space-check.service</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启用</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> sudo systemctl daemon-reload</span><br><span class="line"><span class="meta">$</span> sudo systemctl enable disk-space-check.service</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启验证下吧</p>
+</li>
+</ol>
+<h3 id="打包压缩、解压"><a href="#打包压缩、解压" class="headerlink" title="打包压缩、解压"></a>打包压缩、解压</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// .tar.bz2 包</span><br><span class="line"><span class="meta">#</span> tar -jcv -f /root/test/etc.tar.bz2 /etc/</span><br><span class="line"><span class="meta">#</span> tar -jxv -f  /root/test/etc.tar.bz2  -C /tmp/</span><br><span class="line"></span><br><span class="line">// .tar.gz 包</span><br><span class="line"><span class="meta">#</span> tar -zcv -f /root/test/etc.tar.gz /etc/</span><br><span class="line"><span class="meta">#</span> tar -zxv -f  /root/test/etc.tar.gz  -C /tmp/</span><br></pre></td></tr></table></figure>
 <h3 id="建立链接"><a href="#建立链接" class="headerlink" title="建立链接"></a>建立链接</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ln -sf /usr/local/postgresql-9.2.4 /usr/local/pgsql</span></span><br><span class="line"><span class="comment">## -s: symbole 软链接，-f: force 如果目标链接已经存在则删除重新建立</span></span><br><span class="line"><span class="comment">## 如果9.2.5的版本发布了，升级只需停掉数据库在这里改下软链接地址就可以了</span></span><br></pre></td></tr></table></figure>
 <h3 id="当前目录-各文件夹-大小-linux"><a href="#当前目录-各文件夹-大小-linux" class="headerlink" title="当前目录 各文件夹 大小 linux"></a>当前目录 各文件夹 大小 linux</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># find $1 -maxdepth 1 | xargs du -sh</span></span><br></pre></td></tr></table></figure>
 <h3 id="强制停止应用的两种方式"><a href="#强制停止应用的两种方式" class="headerlink" title="强制停止应用的两种方式"></a>强制停止应用的两种方式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ps -ef|grep java|grep 'tomcat-web-api'|awk '&#123;print $2&#125;'|xargs kill -9</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ps -ef|grep java|grep 'tomcat-web-api'|awk '&#123;system("kill -9 " $2)&#125;'</span></span><br></pre></td></tr></table></figure>
@@ -106,7 +124,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/04/12/Linux操作常用命令/" data-id="ckgrsth7j003c1brj1vcuymtk" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/04/12/Linux操作常用命令/" data-id="cjk0gup8h002aa3rj0l6b62w6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
@@ -218,7 +236,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2020 orh<br>
+      &copy; 2021 orh<br>
       湘ICP备16002846号 <a href="http://www.beian.miit.gov.cn" target="_blank"> 湘ICP备16002846号</a>
     </div>
   </div>
