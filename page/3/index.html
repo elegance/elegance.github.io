@@ -120,7 +120,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/05/23/javascript模块化方式简记/" data-id="cjk0gup900035a3rj1sl5axgd" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/05/23/javascript模块化方式简记/" data-id="cknwl46v1004h8grjv6b5ufe6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AMD/">AMD</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CMD/">CMD</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CommonJS/">CommonJS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/模块化/">模块化</a></li></ul>
@@ -173,7 +173,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/05/16/字节序/" data-id="cjk0gup9r004ja3rjspis1tth" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/05/16/字节序/" data-id="cknwl46w300668grjoksd91dq" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编码/">编码</a></li></ul>
@@ -252,7 +252,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/05/08/事务及隔离级别/" data-id="cjk0gup9g003ya3rjw4tw7agp" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/05/08/事务及隔离级别/" data-id="cknwl46vq005d8grjrr5l309o" class="article-share-link">Share</a>
       
       
     </footer>
@@ -339,7 +339,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/04/14/书单/" data-id="cjk0gup9e003ua3rjy5f4h1rt" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/04/14/书单/" data-id="cknwl46vp00598grjf7qd0w9h" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
@@ -357,6 +357,10 @@
   <time datetime="2017-04-12T02:33:08.000Z" itemprop="datePublished">2017-04-12</time>
 </a>
     
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </div>
+
   </div>
   <div class="article-inner">
     
@@ -374,6 +378,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>记录一些常用的技巧，隔一段时间不用又给淡忘了。</p>
+<h3 id="ssh-免密登录"><a href="#ssh-免密登录" class="headerlink" title="ssh 免密登录"></a>ssh 免密登录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1. 本地生成 密钥对 , 默认生成 id_rsa ， id_rsa.pub</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ssh-keygen</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 2. 上传公钥到服务器</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.1.22</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 服务器对应账户目录下 ~/.ssh/authorized_keys 增加了公钥的内容</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 3.测试免密登录</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ssh root@192.168.1.22 -i ~/.ssh/id_rsa.pub   </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 默认是 ~/.ssh/id_rsa.pub， 可以不指定 -i 选项</span></span><br></pre></td></tr></table></figure>
 <h3 id="开机启动项"><a href="#开机启动项" class="headerlink" title="开机启动项"></a>开机启动项</h3><ol>
 <li>创建服务</li>
 </ol>
@@ -395,22 +400,20 @@
 <h3 id="打包压缩、解压"><a href="#打包压缩、解压" class="headerlink" title="打包压缩、解压"></a>打包压缩、解压</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// .tar.bz2 包</span><br><span class="line"><span class="meta">#</span><span class="bash"> tar -jcv -f /root/<span class="built_in">test</span>/etc.tar.bz2 /etc/</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> tar -jxv -f  /root/<span class="built_in">test</span>/etc.tar.bz2  -C /tmp/</span></span><br><span class="line"></span><br><span class="line">// .tar.gz 包</span><br><span class="line"><span class="meta">#</span><span class="bash"> tar -zcv -f /root/<span class="built_in">test</span>/etc.tar.gz /etc/</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> tar -zxv -f  /root/<span class="built_in">test</span>/etc.tar.gz  -C /tmp/</span></span><br></pre></td></tr></table></figure>
 <h3 id="建立链接"><a href="#建立链接" class="headerlink" title="建立链接"></a>建立链接</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ln -sf /usr/local/postgresql-9.2.4 /usr/local/pgsql</span></span><br><span class="line"><span class="comment">## -s: symbole 软链接，-f: force 如果目标链接已经存在则删除重新建立</span></span><br><span class="line"><span class="comment">## 如果9.2.5的版本发布了，升级只需停掉数据库在这里改下软链接地址就可以了</span></span><br></pre></td></tr></table></figure>
 <h3 id="当前目录-各文件夹-大小-linux"><a href="#当前目录-各文件夹-大小-linux" class="headerlink" title="当前目录 各文件夹 大小 linux"></a>当前目录 各文件夹 大小 linux</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># find $1 -maxdepth 1 | xargs du -sh</span></span><br></pre></td></tr></table></figure>
-<h3 id="强制停止应用的两种方式"><a href="#强制停止应用的两种方式" class="headerlink" title="强制停止应用的两种方式"></a>强制停止应用的两种方式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ps -ef|grep java|grep 'tomcat-web-api'|awk '&#123;print $2&#125;'|xargs kill -9</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ps -ef|grep java|grep 'tomcat-web-api'|awk '&#123;system("kill -9 " $2)&#125;'</span></span><br></pre></td></tr></table></figure>
-<h3 id="某次服务器中毒，删除与病毒文件同样大小字节的文件"><a href="#某次服务器中毒，删除与病毒文件同样大小字节的文件" class="headerlink" title="某次服务器中毒，删除与病毒文件同样大小字节的文件"></a>某次服务器中毒，删除与病毒文件同样大小字节的文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># find / -size 1223123c | xargs rm -rf</span></span><br></pre></td></tr></table></figure>
-<h3 id="find类-其他"><a href="#find类-其他" class="headerlink" title="find类 其他"></a>find类 其他</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 正则匹配删除</span><br><span class="line"><span class="comment"># find ./ -maxdepth 1|grep "2016-12-1[2-7]"|xargs rm -rf</span></span><br><span class="line"></span><br><span class="line">// 反向匹配，找出名字不含 <span class="string">"tar"</span> 的文件/文件夹</span><br><span class="line"><span class="comment"># find ./ -maxdepth 1|grep "tar" -v</span></span><br></pre></td></tr></table></figure>
+<h3 id="强制停止应用的两种方式"><a href="#强制停止应用的两种方式" class="headerlink" title="强制停止应用的两种方式"></a>强制停止应用的两种方式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ps -ef|grep java|grep <span class="string">'tomcat-web-api'</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</span><br><span class="line"></span><br><span class="line">ps -ef|grep java|grep <span class="string">'tomcat-web-api'</span>|awk <span class="string">'&#123;system("kill -9 " $2)&#125;'</span></span><br></pre></td></tr></table></figure>
+<h3 id="某次服务器中毒，删除与病毒文件同样大小字节的文件"><a href="#某次服务器中毒，删除与病毒文件同样大小字节的文件" class="headerlink" title="某次服务器中毒，删除与病毒文件同样大小字节的文件"></a>某次服务器中毒，删除与病毒文件同样大小字节的文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -size 1223123c | xargs rm -rf</span><br></pre></td></tr></table></figure>
+<h3 id="find类-其他"><a href="#find类-其他" class="headerlink" title="find类 其他"></a>find类 其他</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 正则匹配删除</span><br><span class="line">find ./ -maxdepth 1|grep <span class="string">"2016-12-1[2-7]"</span>|xargs rm -rf</span><br><span class="line"></span><br><span class="line">// 反向匹配，找出名字不含 <span class="string">"tar"</span> 的文件/文件夹</span><br><span class="line">find ./ -maxdepth 1|grep <span class="string">"tar"</span> -v</span><br></pre></td></tr></table></figure>
 <h3 id="根据进程获取进程号，打印进程的运行信息"><a href="#根据进程获取进程号，打印进程的运行信息" class="headerlink" title="根据进程获取进程号，打印进程的运行信息"></a>根据进程获取进程号，打印进程的运行信息</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># pgrep mysql | xargs -I &#123;&#125; ls -l /proc/&#123;&#125;</span></span><br></pre></td></tr></table></figure>
-<h3 id="crontab-同步时间，"><a href="#crontab-同步时间，" class="headerlink" title="crontab 同步时间，"></a>crontab 同步时间，</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// crontab 分、时、日、月、周</span><br><span class="line">// 10分钟同步一次</span><br><span class="line"><span class="comment"># */10 * * * * /usr/sbin/ntpdate time.windows.com &amp;&amp; hwclock -w</span></span><br></pre></td></tr></table></figure>
-<h3 id="输出磁盘的读写情况"><a href="#输出磁盘的读写情况" class="headerlink" title="输出磁盘的读写情况"></a>输出磁盘的读写情况</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># iostat -k 2</span></span><br></pre></td></tr></table></figure>
+<h3 id="crontab-同步时间，"><a href="#crontab-同步时间，" class="headerlink" title="crontab 同步时间，"></a>crontab 同步时间，</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// crontab 分、时、日、月、周</span><br><span class="line">// 10分钟同步一次</span><br><span class="line">*/10 * * * * /usr/sbin/ntpdate time.windows.com &amp;&amp; hwclock -w</span><br></pre></td></tr></table></figure>
+<h3 id="输出磁盘的读写情况"><a href="#输出磁盘的读写情况" class="headerlink" title="输出磁盘的读写情况"></a>输出磁盘的读写情况</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iostat -k 2</span><br></pre></td></tr></table></figure>
 <h3 id="新增磁盘"><a href="#新增磁盘" class="headerlink" title="新增磁盘"></a>新增磁盘</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// fdisk: 操作磁盘分区表</span><br><span class="line">// mkfs：对磁盘分区进行文件系统格式化</span><br><span class="line"></span><br><span class="line">// 列出磁盘装置，找到我们要操作的装置名称，便于对其进行分区</span><br><span class="line"><span class="comment"># fdisk -l </span></span><br><span class="line"></span><br><span class="line">// 开始对磁盘进行分区处理，注意不要加上数字</span><br><span class="line"><span class="comment"># fdisk /dev/xvdb  </span></span><br><span class="line"></span><br><span class="line">// 对分区进行格式化</span><br><span class="line"><span class="comment"># mkfs -t ext4 -c /dev/xvdb1</span></span><br><span class="line"></span><br><span class="line">// 建立磁盘挂载目录</span><br><span class="line"><span class="comment"># mkdir /data</span></span><br><span class="line"></span><br><span class="line">// 手动挂载</span><br><span class="line"><span class="comment"># mount /dev/xvdb1 /data/</span></span><br><span class="line"></span><br><span class="line">// 开机自动挂载</span><br><span class="line"><span class="comment"># echo "/dev/xvdb1 /data/ ext4 defaults 0 0" &gt;&gt; /etc/fstab</span></span><br></pre></td></tr></table></figure>
 <h3 id="看你在Linux下最常用的命令是哪些？"><a href="#看你在Linux下最常用的命令是哪些？" class="headerlink" title="看你在Linux下最常用的命令是哪些？"></a>看你在Linux下最常用的命令是哪些？</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">history</span> | awk <span class="string">'&#123;CMD[$2]++;count++;&#125; END &#123; for (a in CMD )print CMD[ a ]" " CMD[ a ]/count*100 "% " a &#125;'</span> | grep -v <span class="string">"./"</span> | column -c3 -s <span class="string">" "</span> -t |sort -nr | nl | head -n10</span><br></pre></td></tr></table></figure>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/04/12/Linux操作常用命令/" data-id="cjk0gup8h002aa3rj0l6b62w6" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/04/12/Linux操作常用命令/" data-id="cknwl46u9003c8grj2xt75sjo" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
-
     </footer>
   </div>
   
@@ -879,7 +882,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/04/06/java多线程编程核心技术/" data-id="cjk0gupad005pa3rjdr56olha" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/04/06/java多线程编程核心技术/" data-id="cknwl46wq007i8grjqysoswsl" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li></ul>
@@ -1001,7 +1004,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/23/Thread类join方法中的 wait(0) 能用 sleep(0) 来替代模拟吗/" data-id="cjk0gup8o002ja3rj1rc2dnac" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/23/Thread类join方法中的 wait(0) 能用 sleep(0) 来替代模拟吗/" data-id="cknwl46uk003v8grjog8llzic" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多线程/">多线程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/源码阅读/">源码阅读</a></li></ul>
@@ -1082,7 +1085,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/22/vim-技巧手记/" data-id="cjk0gup9a003oa3rj2fntlrt8" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/22/vim-技巧手记/" data-id="cknwl46vk00508grjwgbgxxk9" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vim/">vim</a></li></ul>
@@ -1191,7 +1194,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/10/Read-Later/" data-id="cjk0gup8l002da3rjx0rtmlod" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/10/Read-Later/" data-id="cknwl46ug003p8grjp73hmlmp" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1273,7 +1276,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/03/08/svn-分支管理/" data-id="cjk0gup99003ma3rjxe57fsh2" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/03/08/svn-分支管理/" data-id="cknwl46vj004w8grjg29rx2v0" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/版本控制/">版本控制</a></li></ul>
@@ -1310,7 +1313,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMD/">CMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CommonJS/">CommonJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/">Nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript基础/">javascript基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lua/">lua</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/n2n/">n2n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/健身/">健身</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/协议/">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/压力测试/">压力测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程-锁/">多线程 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/意志/">意志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/授权/">授权</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/服务/">服务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模块化/">模块化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码阅读/">源码阅读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/灰度发布/">灰度发布</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/版本控制/">版本控制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编码/">编码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/英语/">英语</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计划/">计划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运动/">运动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/进程/">进程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AMD/">AMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CMD/">CMD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CommonJS/">CommonJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/">Nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cassandra/">cassandra</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript基础/">javascript基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lua/">lua</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/n2n/">n2n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/健身/">健身</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/协议/">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/压力测试/">压力测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程-锁/">多线程 锁</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/意志/">意志</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/授权/">授权</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/服务/">服务</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模块化/">模块化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码/">源码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码阅读/">源码阅读</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/灰度发布/">灰度发布</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/版本控制/">版本控制</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编码/">编码</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/英语/">英语</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计划/">计划</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运动/">运动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/进程/">进程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/阅读/">阅读</a></li></ul>
     </div>
   </div>
 
@@ -1320,7 +1323,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CMD/" style="font-size: 10px;">CMD</a> <a href="/tags/Centos软件安装/" style="font-size: 15px;">Centos软件安装</a> <a href="/tags/CommonJS/" style="font-size: 10px;">CommonJS</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Nginx/" style="font-size: 10px;">Nginx</a> <a href="/tags/PostgreSQL基础/" style="font-size: 15px;">PostgreSQL基础</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/cassandra/" style="font-size: 10px;">cassandra</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/javascript函数/" style="font-size: 15px;">javascript函数</a> <a href="/tags/javascript基础/" style="font-size: 15px;">javascript基础</a> <a href="/tags/lua/" style="font-size: 10px;">lua</a> <a href="/tags/n2n/" style="font-size: 10px;">n2n</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/健身/" style="font-size: 10px;">健身</a> <a href="/tags/协议/" style="font-size: 10px;">协议</a> <a href="/tags/压力测试/" style="font-size: 10px;">压力测试</a> <a href="/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/tags/多线程-锁/" style="font-size: 10px;">多线程 锁</a> <a href="/tags/安全/" style="font-size: 10px;">安全</a> <a href="/tags/意志/" style="font-size: 10px;">意志</a> <a href="/tags/授权/" style="font-size: 10px;">授权</a> <a href="/tags/服务/" style="font-size: 10px;">服务</a> <a href="/tags/模块化/" style="font-size: 10px;">模块化</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/源码阅读/" style="font-size: 10px;">源码阅读</a> <a href="/tags/灰度发布/" style="font-size: 10px;">灰度发布</a> <a href="/tags/版本控制/" style="font-size: 10px;">版本控制</a> <a href="/tags/编码/" style="font-size: 15px;">编码</a> <a href="/tags/编程/" style="font-size: 10px;">编程</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/运动/" style="font-size: 10px;">运动</a> <a href="/tags/进程/" style="font-size: 10px;">进程</a> <a href="/tags/阅读/" style="font-size: 10px;">阅读</a>
+      <a href="/tags/AMD/" style="font-size: 10px;">AMD</a> <a href="/tags/CMD/" style="font-size: 10px;">CMD</a> <a href="/tags/Centos软件安装/" style="font-size: 15px;">Centos软件安装</a> <a href="/tags/CommonJS/" style="font-size: 10px;">CommonJS</a> <a href="/tags/Nginx/" style="font-size: 10px;">Nginx</a> <a href="/tags/PostgreSQL基础/" style="font-size: 15px;">PostgreSQL基础</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/cassandra/" style="font-size: 10px;">cassandra</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/javascript函数/" style="font-size: 15px;">javascript函数</a> <a href="/tags/javascript基础/" style="font-size: 15px;">javascript基础</a> <a href="/tags/lua/" style="font-size: 10px;">lua</a> <a href="/tags/n2n/" style="font-size: 10px;">n2n</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/健身/" style="font-size: 10px;">健身</a> <a href="/tags/协议/" style="font-size: 10px;">协议</a> <a href="/tags/压力测试/" style="font-size: 10px;">压力测试</a> <a href="/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/tags/多线程-锁/" style="font-size: 10px;">多线程 锁</a> <a href="/tags/安全/" style="font-size: 10px;">安全</a> <a href="/tags/意志/" style="font-size: 10px;">意志</a> <a href="/tags/授权/" style="font-size: 10px;">授权</a> <a href="/tags/服务/" style="font-size: 10px;">服务</a> <a href="/tags/模块化/" style="font-size: 10px;">模块化</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/源码阅读/" style="font-size: 10px;">源码阅读</a> <a href="/tags/灰度发布/" style="font-size: 10px;">灰度发布</a> <a href="/tags/版本控制/" style="font-size: 10px;">版本控制</a> <a href="/tags/编码/" style="font-size: 15px;">编码</a> <a href="/tags/编程/" style="font-size: 10px;">编程</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/运动/" style="font-size: 10px;">运动</a> <a href="/tags/进程/" style="font-size: 10px;">进程</a> <a href="/tags/阅读/" style="font-size: 10px;">阅读</a>
     </div>
   </div>
 
