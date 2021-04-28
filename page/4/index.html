@@ -66,6 +66,90 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-svn-分支管理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/03/08/svn-分支管理/" class="article-date">
+  <time datetime="2017-03-08T09:20:15.000Z" itemprop="datePublished">2017-03-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/03/08/svn-分支管理/">svn 分支管理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="http://www.iteye.com/topic/28013" target="_blank" rel="noopener">参考</a></p>
+<h2 id="1-svn-初始目录结构"><a href="#1-svn-初始目录结构" class="headerlink" title="1. svn 初始目录结构"></a>1. svn 初始目录结构</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">D:\pro-repo</span><br><span class="line">├─branches</span><br><span class="line">├─tags</span><br><span class="line">└─trunk</span><br></pre></td></tr></table></figure>
+<p>如果没有对应的结构目录，可以使用以下命令来创建：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn mkdir branches</span><br></pre></td></tr></table></figure></p>
+<h2 id="2-branchs-tags-的建立"><a href="#2-branchs-tags-的建立" class="headerlink" title="2. branchs/tags 的建立"></a>2. branchs/tags 的建立</h2><p>需求一：产品开发已经基本完成，并且通过很严格的测试，这时候我们就想发布给客户使用，发布我们的1.0版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn copy svn://server/trunk svn://server/tags/release-1.0 -m <span class="string">"1.0 released"</span></span><br></pre></td></tr></table></figure>
+<p>需求二: 需要开发一个新的功能<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn copy svn://server/trunk svn://server/branches/fea-01 -m <span class="string">"新开分支开发01新需求"</span></span><br></pre></td></tr></table></figure></p>
+<p>咦，这个和branches有什么区别，好像啥区别也没有？<br>是的，branches和tags是一样的，都是目录，只是我们不会对这个release-1.0的tag做修改了，不再提交了，如果提交那么就是branches </p>
+<p>需求三：有一天，突然在线上发现一个致命的bug,那么所有的branches一定也一样了，该怎么办？<br>首先我们是从线上发现的，那么我第一步先：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn copy svn://server/tags/release-1.0 svn://server/branches/bugfix-01 -m <span class="string">"1.0 线上bug (copy from tags/release-1.0) "</span></span><br></pre></td></tr></table></figure></p>
+<p>然后我们拉去分支<code>bugfix-01</code>代码到本地，开发、测试，如果没有问题的话，合并分支到<code>在生命周期</code>的分支，这里是：<code>branches/fea-01</code>、<code>trunk/</code><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ svn -r 6:7 merge  https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/branches/bugfix-01 trunk <span class="comment"># bug 合并至主干</span></span><br><span class="line">$ svn -r 0:HEAD merge https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/trunk branches/fea-01 <span class="comment"># 主干合并至需求分支</span></span><br><span class="line">$ svn delete  https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/branches/bugfix-01 -m <span class="string">"删除-bug-01"</span></span><br></pre></td></tr></table></figure></p>
+<p>新的bug产生时(上次升级没有打tag，直接取trunk):<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ svn copy https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/trunk https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/branches/bugfix-02 -m <span class="string">"1.0 线上bug (copy from trunk) "</span></span><br><span class="line">$ <span class="built_in">cd</span> trunk/</span><br><span class="line">$ svn mergeinfo https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/branches/bugfix-02  --show-revs eligible <span class="comment"># 查看Branch中那些改动还未合并 </span></span><br><span class="line">$ svn merge https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/branches/bugfix-02 <span class="comment"># bug 合并至主干 （和上面的指定版本功能效果一样，这里省去了指定版本的麻烦）</span></span><br><span class="line">$ svn mergeinfo https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/branches/bugfix-02 <span class="comment"># 查看当前Branch中已经有那些改动已经被合并到Trunk中</span></span><br><span class="line">$ <span class="built_in">cd</span> ../branches/fea-01</span><br><span class="line">$ svn merge https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/trunk <span class="comment"># 主干合并至分支fea-01</span></span><br></pre></td></tr></table></figure></p>
+<p>合并后对 trunk 严格测试没问题的话，就可以发布<code>release-1.1</code>了。</p>
+<h2 id="3-几个问题"><a href="#3-几个问题" class="headerlink" title="3. 几个问题"></a>3. 几个问题</h2><h4 id="1-考虑到部署release时，每次都要打上tag，会略显繁琐，-tags-不一定非得有，也就是上面用trunk作为线上分支"><a href="#1-考虑到部署release时，每次都要打上tag，会略显繁琐，-tags-不一定非得有，也就是上面用trunk作为线上分支" class="headerlink" title="1. 考虑到部署release时，每次都要打上tag，会略显繁琐， tags 不一定非得有，也就是上面用trunk作为线上分支"></a>1. 考虑到部署release时，每次都要打上tag，会略显繁琐， <code>tags</code> 不一定非得有，也就是上面用<code>trunk</code>作为线上分支</h4><h4 id="2-上面有提到在生命周期的分支，这是为了强调branchs下的分支尽可能缩短其生命周期，因为在生命周期的分支都得维护，线上bug、其他分支新功能这些代码所有修改都得合并入在生命周期的分支"><a href="#2-上面有提到在生命周期的分支，这是为了强调branchs下的分支尽可能缩短其生命周期，因为在生命周期的分支都得维护，线上bug、其他分支新功能这些代码所有修改都得合并入在生命周期的分支" class="headerlink" title="2. 上面有提到在生命周期的分支，这是为了强调branchs下的分支尽可能缩短其生命周期，因为在生命周期的分支都得维护，线上bug、其他分支新功能这些代码所有修改都得合并入在生命周期的分支"></a>2. 上面有提到<code>在生命周期</code>的分支，这是为了强调<code>branchs</code>下的分支尽可能缩短其生命周期，因为在生命周期的分支都得维护，线上bug、其他分支新功能这些代码所有修改都得合并入<code>在生命周期</code>的分支</h4><p>在生命周期的分支，一般有：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">trunk/</span><br><span class="line"></span><br><span class="line">branches/fea-01</span><br><span class="line">branches/fea-02</span><br><span class="line">branches/fea-....</span><br><span class="line"></span><br><span class="line">branches/bugfix-01</span><br></pre></td></tr></table></figure></p>
+<p>同时开发的需求<code>fea-n</code>可能有几个，<code>bugfix</code>线上bug通常就作为一个了。</p>
+<h4 id="3-冲突解决"><a href="#3-冲突解决" class="headerlink" title="3. 冲突解决"></a>3. 冲突解决</h4><p>如果一个文件在两个分支上都被修改，那么合并两个分支时将可能发生冲突。</p>
+<p>之所以说可能发生冲突，是因为如果两个分支修改的文件明显不同，<code>merge</code>会自动的帮我们处理好。比如一端对文件第一行修改了内容，一端对文件增加了一行内容这种情况。</p>
+<p>当文件发生冲突时可以有以下方式来处理：</p>
+<h4 id="工具设置"><a href="#工具设置" class="headerlink" title="工具设置"></a>工具设置</h4><p>我们可以使用<code>TortoiseSVN</code>设置下对比工具来方便我们compare和merge，比如<code>BeyondCompare</code></p>
+<p>操作步骤：<code>项目目录-右键</code>  —&gt; <code>TortoiseSVN</code> —&gt; <code>Settings</code> —&gt; <code>Diff Viewer</code><br><img src="http://ww1.sinaimg.cn/large/929194b4gy1ftlvm6ch10j20jf0c03zt.jpg" alt="Diff-tool-set"><br>其中代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;D:\tools\BeyondCompare\Beyond Compare\BCompare.exe&quot; %base %mine /title1=%bname /title2=%yname /leftreadonly</span><br><span class="line">&quot;D:\tools\BeyondCompare\Beyond Compare\BCompare.exe&quot;</span><br></pre></td></tr></table></figure></p>
+<p>合并工具设置：<br><img src="http://ww1.sinaimg.cn/large/929194b4gy1ftlvn97kt0j20jf0c0gmg.jpg" alt="merge-tool-set"><br>其中代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;D:\tools\BeyondCompare\Beyond Compare\BCompare.exe&quot;  %mine %theirs %base %merged /title1=%yname /title2=%tname /title3=%bname /title4=%mname</span><br></pre></td></tr></table></figure></p>
+<h4 id="解决冲突"><a href="#解决冲突" class="headerlink" title="解决冲突"></a>解决冲突</h4><p><img src="http://ww1.sinaimg.cn/large/929194b4gy1ftlvnmj1ohj20gg0c1wf8.jpg" alt="edit-conflict"><br><img src="http://ww1.sinaimg.cn/large/929194b4gy1ftlvo2po9vj21gc0qojvz.jpg" alt="merging"><br>在上一步合并完后，就可以标记解决完冲突了：<br><img src="http://ww1.sinaimg.cn/large/929194b4gy1ftlvogcfolj20fq0ep0tp.jpg" alt="resolve"></p>
+<p><del>#### 3. <code>merge</code>的几种方式及应用场景， 参考<a href="http://chunanyong.iteye.com/blog/697255" target="_blank" rel="noopener">svn分支合并类型</a></del></p>
+<h4 id="3-merge-我使用merge的两种方式"><a href="#3-merge-我使用merge的两种方式" class="headerlink" title="3. merge 我使用merge的两种方式"></a>3. <code>merge</code> 我使用merge的两种方式</h4><ol>
+<li><p>指定分支地址，合并至当前目录:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将 `bug-01`分支 合并到 `trunk`</span></span><br><span class="line">$ <span class="built_in">cd</span> trunk/</span><br><span class="line">$ svn merge https://server/svn/pro/branches/bug-01</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将 `trunk` 合并至 分支 `fea-01`</span></span><br><span class="line">$ <span class="built_in">cd</span> ../branches/fea-01</span><br><span class="line">$ svn merge https://server/svn/pro/trunk</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>指定分支地址和版本，合并至指定分支目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将 bugfix-01 分支 合并至trunk</span></span><br><span class="line">$ svn -r 6:7 merge  https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/branches/bugfix-01 trunk/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 强 trunk 合并至 需求分支</span></span><br><span class="line">$ svn -r 0:HEAD merge https://orh-vm-pc/svn/<span class="built_in">test</span>-tzbms/trunk branches/fea-01</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h4><ol>
+<li><p><strong>以上的<code>svn copy -m &quot;comment&quot;</code>命令会直接发给服务端执行，也就是说操作即时生效，无需手动commit，所以copy时最好加上<code>-m 注释内容</code></strong></p>
+</li>
+<li><p>一般分支分为两种：需求分支、bug修复分支(暂时撇开tags、trunk)，一般约定其命名规则：<code>fea-xxx</code>、<code>bugfix-xxx</code>，这其实都属于临时性分支，使用完应该删除（为了方便开发，不用每次签出新的bug分支，有时会把把bug作为一个长期性的分支，但要注意与trunk保持同步）。<br>同名分支，重建(同名分支，前bug已经delete)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ svn copy https://orh-vm-pc/svn/test-tzbms/trunk https://orh-vm-pc/svn/test-tzbms/branches/bugfix-live -m &quot;bug长期分支（完成后delete，需要时同名重建）&quot;</span><br><span class="line">... 修改、测试、合并后</span><br><span class="line">$ svn delete https://orh-vm-pc/svn/test-tzbms/branches/bugfix-live -m &quot;bug长期分支（完成后delete，需要时同名重建）&quot;</span><br><span class="line">... 下次有新的bug时</span><br><span class="line">$ svn copy https://orh-vm-pc/svn/test-tzbms/trunk https://orh-vm-pc/svn/test-tzbms/branches/bugfix-live -m &quot;bug长期分支（完成后delete，需要时同名重建）&quot;</span><br><span class="line">... 重复上面的步骤</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>svn merge</code> merge动作是在本地执行的，所以可以放心执行，如果有出现失误，不提交，使用<code>$ svn revert . -R</code>回滚工作区， 再重新<code>merge</code>分支即可。</p>
+</li>
+<li><p>合并前保证<code>目标分支</code>是clean的，不要忘记<code>来源分支</code>都提交了</p>
+</li>
+<li><p>合并完分之后，<strong>切记维护<code>生命周期</code>还未结束的分支</strong>。一般分支的合并都是基于<code>trunk</code>来交互的，这就是说的<strong>经常的与主干保持同步</strong>，比如有以下情况</p>
+<ol>
+<li>新开分支解决了<code>bug</code>, 新的分支<code>bug-02</code>开发测试完，合入<code>trunk</code>。此时别的分支代码应该也是存在bug的，解决同样的bug我们当然<strong>不需要再在其他分支上手动去修复bug</strong>了，而是把<code>trunk</code>上的修改<strong>尽快</strong><code>merge</code>到其他分支，有冲突就在此时解决，不然隔的时间长了，鬼还记得修改了什么。</li>
+<li>新开分支完成了<code>某个功能</code>, 新的分支<code>fea-02</code>开发测试完，合入<code>trunk</code>。此时其他分支应尽快的与<code>trunk</code>同步，将<code>trunk</code>分支<code>merge</code>至其他分支，如果<code>bug</code>分支作为长期分支，也需要同步，否则bug分支应该已经delete掉了。</li>
+</ol>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.ouronghui.com/2017/03/08/svn-分支管理/" data-id="cko1mo22b0050c9rjbqwos7ax" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/版本控制/">版本控制</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-glossary-生词本" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/02/27/glossary-生词本/" class="article-date">
@@ -114,7 +198,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/02/27/glossary-生词本/" data-id="cknwl46uu00458grj079p8wpd" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/02/27/glossary-生词本/" data-id="cko1mo21x0048c9rj07mn01r2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/英语/">英语</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/计划/">计划</a></li></ul>
@@ -204,7 +288,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2017/02/04/UML类图/" data-id="cknwl46ul003z8grjmyox94kv" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2017/02/04/UML类图/" data-id="cko1mo21u0042c9rjw25l64gr" class="article-share-link">Share</a>
       
       
     </footer>
@@ -247,7 +331,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2016/10/13/node-js中的exports与module-exports/" data-id="cknwl46vf004s8grjqvji2fip" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2016/10/13/node-js中的exports与module-exports/" data-id="cko1mo22a004wc9rjdqkfhd8g" class="article-share-link">Share</a>
       
       
     </footer>
@@ -292,7 +376,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2016/07/01/PostgreSQL之psql的使用/" data-id="cknwl46ud003l8grje2guxnzd" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2016/07/01/PostgreSQL之psql的使用/" data-id="cko1mo21b003lc9rjawofd9d9" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li></ul>
@@ -356,7 +440,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2016/07/01/CentOS6-5-PostgreSQL源码编译安装/" data-id="cknwl46u300358grj3t0oa9ae" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2016/07/01/CentOS6-5-PostgreSQL源码编译安装/" data-id="cko1mo20x0035c9rjr4el0se0" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL基础/">PostgreSQL基础</a></li></ul>
@@ -416,7 +500,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2016/06/29/javascript之apply与call方法/" data-id="cknwl46uz004f8grjemgwukul" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2016/06/29/javascript之apply与call方法/" data-id="cko1mo222004hc9rjnsms7ct6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript基础/">javascript基础</a></li></ul>
@@ -463,7 +547,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2016/06/29/javascript之Bind方法/" data-id="cknwl46uy004b8grj4j2plyp9" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2016/06/29/javascript之Bind方法/" data-id="cko1mo220004ec9rjrd0g29uq" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript函数/">javascript函数</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript基础/">javascript基础</a></li></ul>
@@ -534,7 +618,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2016/06/29/centos6-5-x64-subversion安装文档/" data-id="cknwl46us00428grj206298of" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2016/06/29/centos6-5-x64-subversion安装文档/" data-id="cko1mo21v0045c9rj1ptl7i2u" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Centos软件安装/">Centos软件安装</a></li></ul>
@@ -589,7 +673,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2016/06/29/500公里计划/" data-id="cknwl46tz002z8grjo6pdcf3w" class="article-share-link">Share</a>
+      <a data-url="http://blog.ouronghui.com/2016/06/29/500公里计划/" data-id="cko1mo20u002zc9rjbsd11mao" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/健身/">健身</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/意志/">意志</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/运动/">运动</a></li></ul>
@@ -601,82 +685,11 @@
 
 
   
-    <article id="post-七个对我最重要的职业建议" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/06/29/七个对我最重要的职业建议/" class="article-date">
-  <time datetime="2016-06-29T08:17:24.000Z" itemprop="datePublished">2016-06-29</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/29/七个对我最重要的职业建议/">七个对我最重要的职业建议</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>转自：<a href="http://www.ruanyifeng.com/blog/2015/09/career-advice.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2015/09/career-advice.html</a></p>
-<h3 id="一、不要别人点什么，就做什么"><a href="#一、不要别人点什么，就做什么" class="headerlink" title="一、不要别人点什么，就做什么"></a>一、不要别人点什么，就做什么</h3><p>我的第一份工作，只干了8个月，那家公司就倒闭了。我问经理，接下来我该怎么办，他说：</p>
-<blockquote>
-<p>“小伙子，千万不要当一个被人点菜的厨师，别人点什么，你就烧什么。不要接受那样一份工作，别人下命令你该干什么，以及怎么干。你要去一个地方，那里的人肯定你对产品的想法，相信你的能力，放手让你去做。”</p>
-</blockquote>
-<p>我从此明白，单单实现一个产品是不够的，你还必须参与决定怎么实现。好的工程师并不仅仅服从命令，而且还给出反馈，帮助产品的拥有者改进它。</p>
-<h3 id="二、推销自己"><a href="#二、推销自己" class="headerlink" title="二、推销自己"></a>二、推销自己</h3><p>我进入雅虎公司以后，经理有一天跟我谈话，他觉得我还做得不够。</p>
-<blockquote>
-<p>“你工作得很好，代码看上去不错，很少出Bug。但是，问题是别人都没看到这一点。为了让其他人相信你，你必须首先让别人知道你做了什么。你需要推销自己，引起别人的注意。”</p>
-</blockquote>
-<p>我这才意识到，即使做出了很好的工作，别人都不知道，也没用。做一个角落里静静编码的工程师，并不可取。你的主管会支持你，但是他没法替你宣传。公司的其他人需要明白你的价值，最好的办法就是告诉别人你做了什么。一封简单的Email：”嗨，我完成了XXX，欢迎将你的想法告诉我”，就很管用。</p>
-<h3 id="三、学会带领团队"><a href="#三、学会带领团队" class="headerlink" title="三、学会带领团队"></a>三、学会带领团队</h3><p>工作几年后，已经没人怀疑我的技术能力了，大家知道我能写出高质量的可靠代码。有一次，我问主管，怎么才能得到提升，他说：</p>
-<blockquote>
-<p>“当你的技术能力过关以后，就要考验你与他人相处的能力了。”</p>
-</blockquote>
-<p>于是，我看到了，自己缺乏的是领导能力，如何带领一个团队，有效地与其他人协同工作，取到更大的成果。</p>
-<h3 id="四、生活才是最重要的"><a href="#四、生活才是最重要的" class="headerlink" title="四、生活才是最重要的"></a>四、生活才是最重要的</h3><p>有一段时间，我在雅虎公司很有挫折感，对公司的一些做法不认同，经常会对别人发火。我问一个同事，他怎么能对这种事情保持平静，他回答：</p>
-<blockquote>
-<p>“你要想通，这一切并不重要。有人提交了烂代码，网站下线了，又怎么样？工作并不是你的整个生活。它们不是真正的问题，只是工作上的问题。真正重要的事情都发生在工作以外。我回到家，家里人正在等我，这才重要啊。”</p>
-</blockquote>
-<p>从此，我就把工作和生活分开了，只把它当作”工作问题”看待。这样一来，我对工作就总能心平气和，与人交流也更顺利了。</p>
-<h3 id="五、自己找到道路"><a href="#五、自己找到道路" class="headerlink" title="五、自己找到道路"></a>五、自己找到道路</h3><p>我被提升为主管以后，不知道该怎么做。我请教了上级，他回答：</p>
-<blockquote>
-<p>“以前都是我们告诉你做什么，从现在开始，你必须自己回答这个问题了，我期待你来告诉我，什么事情需要做。”</p>
-</blockquote>
-<p>很多工程师都没有完成这个转变，如果能够做到，可能就说明你成熟了，学会了取舍。你不可能把时间花在所有事情上面，必须找到一个重点。</p>
-<h3 id="六、把自己当成主人"><a href="#六、把自己当成主人" class="headerlink" title="六、把自己当成主人"></a>六、把自己当成主人</h3><p>我每天要开很多会，有些会议我根本无话可说。我对一个朋友说，我不知道自己为什么要参加这个会，也没有什么可以贡献，他说：</p>
-<blockquote>
-<p>“不要再去开这样的会了。你参加一个会，那是因为你参与了某件事。如果不确定自己为什么要在场，就停下来问。如果这件事不需要你，就离开。不要从头到尾都静静地参加一个会，要把自己当成负责人，大家会相信你的。”</p>
-</blockquote>
-<p>从那时起，我从没有一声不发地参加会议。我确保只参加那些需要我参加的会议。</p>
-<h3 id="七、找到水平更高的人"><a href="#七、找到水平更高的人" class="headerlink" title="七、找到水平更高的人"></a>七、找到水平更高的人</h3><p>最后，让我从自己的经历出发，给我的读者一个建议。</p>
-<blockquote>
-<p>“找到那些比你水平更高、更聪明的人，尽量和他们在一起，吃饭或者喝咖啡，向他们讨教，了解他们拥有的知识。你的职业，甚至你的生活，都会因此变得更好。”</p>
-</blockquote>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.ouronghui.com/2016/06/29/七个对我最重要的职业建议/" data-id="cknwl46vn00578grjldm1dxxb" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/3/">&laquo; 上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
+    <a class="extend prev" rel="prev" href="/page/3/">&laquo; 上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">下一页 &raquo;</a>
   </nav>
 
 </section>
@@ -716,7 +729,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li></ul>
     </div>
   </div>
 
@@ -727,6 +740,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2021/04/28/UDP-端口检测/">UDP 端口检测</a>
+          </li>
         
           <li>
             <a href="/2020/08/19/ConnectTimeout、SocketTimeout/">ConnectTimeout、SocketTimeout</a>
@@ -742,10 +759,6 @@
         
           <li>
             <a href="/2018/08/30/wrk-压力测试/">wrk 压力测试</a>
-          </li>
-        
-          <li>
-            <a href="/2018/08/22/Supervisor的使用/">Supervisor的使用</a>
           </li>
         
       </ul>
